@@ -6,7 +6,7 @@ from pathlib import Path
 import httpx
 import pandas as pd
 
-API_KEY = os.getenv("FOOTBALL_DATA_API_KEY", "")
+API_KEY = os.getenv("FOOTBALL_DATA_API_KEY", "").strip()
 BASE_URL = "https://api.football-data.org/v4"
 DATA_DIR = Path(__file__).parent.parent / "data"
 FIXTURES_PATH = DATA_DIR / "fixtures_2026.parquet"
