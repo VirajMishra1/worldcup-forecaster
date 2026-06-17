@@ -29,6 +29,7 @@ def run(
     min_train_years: int = 5,
 ) -> pd.DataFrame:
     df = pd.read_parquet(DATA_DIR / "historical_matches.parquet")
+    df["date"] = pd.to_datetime(df["date"])
     start_dt = pd.Timestamp(start)
     end_dt = pd.Timestamp(end)
 

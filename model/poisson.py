@@ -58,6 +58,7 @@ def fit(df: pd.DataFrame, neutral: bool = True) -> PoissonParams:
     neutral=True disables home advantage (correct for WC venues).
     """
     df = df.copy()
+    df["date"] = pd.to_datetime(df["date"])
     tw = _time_weight(df["date"])
     tourney_w = df.get("tournament_weight", pd.Series(1.0, index=df.index))
     df["w"] = tw * tourney_w.values
