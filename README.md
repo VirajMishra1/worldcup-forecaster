@@ -325,6 +325,18 @@ python -m cli.predict --home ENG --away USA
 - Hvattum, L. and Arntzen, H. (2010). "Using ELO ratings for match result prediction in association football." *International Journal of Forecasting*, 26(3), 460-470.
 - FiveThirtyEight Soccer Predictions methodology (archived).
 
+## Model Calibration
+
+A reliability diagram answers: when the model says 60%, does the outcome happen 60% of the time? Perfect calibration sits on the diagonal.
+
+![Calibration](reports/calibration.png)
+
+![Log-loss curve](reports/log_loss_curve.png)
+
+Historical backtest (walk-forward, no lookahead): **log_loss=0.8420 · brier=0.4950 · accuracy=61.2% · n=3,807 matches**
+
+---
+
 <!-- TRACK_RECORD_START -->
 _No completed matches yet._
 

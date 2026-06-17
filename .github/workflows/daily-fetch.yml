@@ -38,6 +38,9 @@ jobs:
       - name: Regenerate track record + README
         run: python -m scripts.generate_track_record
 
+      - name: Simulate tournament (winner odds)
+        run: python -m scripts.simulate_tournament
+
       - name: Commit
         run: |
           git config user.name "github-actions[bot]"
@@ -47,6 +50,7 @@ jobs:
             data/fixtures_2026.parquet \
             data/results.parquet \
             data/params_cache.json \
+            data/tournament.json \
             reports/track_record.md \
             README.md || true
           git diff --cached --quiet || \
