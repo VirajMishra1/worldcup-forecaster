@@ -72,7 +72,7 @@ def print_prediction(home: str, away: str, params) -> None:
     print(f"  {home}  vs  {away}")
     print(f"{sep}")
 
-    print("\nOUTCOME PROBABILITIES")
+    print("\nOUTCOME PROBABILITIES  (neutral venue — no home advantage)")
     print(f"  {home:<25} {m.p_home_win:.1%}")
     print(f"  {'Draw':<25} {m.p_draw:.1%}")
     print(f"  {away:<25} {m.p_away_win:.1%}")
@@ -93,8 +93,8 @@ def print_prediction(home: str, away: str, params) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="World Cup match predictor.")
-    parser.add_argument("--home", help="Home team (neutral venue)")
-    parser.add_argument("--away", help="Away team")
+    parser.add_argument("--team1", help="First team")
+    parser.add_argument("--team2", help="Second team")
     parser.add_argument("--list-teams", action="store_true", help="Print all known teams")
     parser.add_argument("--refit", action="store_true", help="Force model re-fit (ignore cache)")
     args = parser.parse_args()
@@ -106,10 +106,10 @@ def main() -> None:
             print(t)
         return
 
-    if not args.home or not args.away:
-        parser.error("--home and --away are required (or use --list-teams)")
+    if not args.team1 or not args.team2:
+        parser.error("--team1 and --team2 are required (or use --list-teams)")
 
-    print_prediction(args.home, args.away, params)
+    print_prediction(args.team1, args.team2, params)
 
 
 if __name__ == "__main__":
