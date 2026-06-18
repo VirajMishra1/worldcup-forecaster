@@ -15,7 +15,7 @@ def form_factors(home: str, away: str, match_date: str, df: pd.DataFrame,
     """
     date = pd.Timestamp(match_date)
     df = df[~df["tournament"].isin(_FRIENDLIES)].copy()
-    df["date"] = pd.to_datetime(df["date"])
+    df["date"] = pd.to_datetime(df["date"], utc=True).dt.tz_localize(None)
 
     def _team_form(team: str) -> float:
         rows = df[((df["home"] == team) | (df["away"] == team)) & (df["date"] < date)]

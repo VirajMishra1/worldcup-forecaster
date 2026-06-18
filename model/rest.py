@@ -14,7 +14,7 @@ def rest_factor(team: str, match_date: str, df: pd.DataFrame, alpha: float = 0.0
     """
     date = pd.Timestamp(match_date)
     df = df.copy()
-    df["date"] = pd.to_datetime(df["date"])
+    df["date"] = pd.to_datetime(df["date"], utc=True).dt.tz_localize(None)
     prev = df[((df["home"] == team) | (df["away"] == team)) & (df["date"] < date)]
     if prev.empty:
         return 1.0
