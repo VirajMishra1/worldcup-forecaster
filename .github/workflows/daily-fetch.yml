@@ -47,6 +47,9 @@ jobs:
       - name: Simulate tournament (winner odds)
         run: python -m scripts.simulate_tournament
 
+      - name: Generate HTML dashboard
+        run: python -m scripts.generate_html_dashboard
+
       - name: Commit
         run: |
           git config user.name "github-actions[bot]"
@@ -59,6 +62,7 @@ jobs:
             data/tournament.json \
             data/polymarket_odds.json \
             reports/track_record.md \
+            reports/dashboard.html \
             README.md || true
           git diff --cached --quiet || \
             git commit -m "chore: daily update $(date -u +%Y-%m-%d)"
