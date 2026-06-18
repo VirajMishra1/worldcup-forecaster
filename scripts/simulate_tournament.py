@@ -281,22 +281,38 @@ def run_simulation(
     for pts, gd, gf_val, team in third_place_teams[:8]:
         reached["qualify"][team] = 1
 
-    # Build 32-team pool
-    qualifiers = list(reached["qualify"].keys())
-    assert len(qualifiers) == 32, f"Expected 32 qualifiers, got {len(qualifiers)}"
+    # Categorise the 32 qualifiers by group position
+    group_winners = [standing[0][0] for standing in group_standings.values()]   # 12 teams
+    group_runners_up = [standing[1][0] for standing in group_standings.values()]  # 12 teams
+    group_thirds_q = [t for _, _, _, t in third_place_teams[:8]]                 # 8 teams
+    assert len(group_winners) == 12
+    assert len(group_runners_up) == 12
+    assert len(group_thirds_q) == 8
 
-    # --- Knockout rounds (simplified: random bracket seeding) ---
-    rng_list = qualifiers[:]
-    rng.shuffle(rng_list)
-    current_round = rng_list
+    # Shuffle within each tier (preserves seeding constraint across rounds)
+    rng.shuffle(group_winners)
+    rng.shuffle(group_runners_up)
+    rng.shuffle(group_thirds_q)
 
-    round_names = ["r16", "qf", "sf", "final"]
-    # R32 → 16 winners (no separate stage name needed — they enter R16)
-    # Actually: 32 teams → R32 → 16 → QF → SF → Final
-    # R32: mark winners as reaching r16
+    # --- Constrained R32 bracket ---
+    # Rule: no group winner faces another group winner in R32.
+    # 12 group winners each play one of the 20 non-winners.
+    # Remaining 8 non-winners play each other (4 matches).
+    # Total: 12 + 4 = 16 R32 matches.
+    non_winners = group_runners_up + group_thirds_q  # 20 teams
+    rng.shuffle(non_winners)
+
+    r32_pairs: List[Tuple[str, str]] = []
+    for i, w in enumerate(group_winners):
+        r32_pairs.append((w, non_winners[i]))         # winner vs non-winner
+    for i in range(0, 8, 2):                          # remaining 8 non-winners
+        r32_pairs.append((non_winners[12 + i], non_winners[12 + i + 1]))
+    assert len(r32_pairs) == 16
+
+    # R32 → 16 survivors
     winners_r32 = []
-    for i in range(0, 32, 2):
-        w = simulate_knockout_match(current_round[i], current_round[i + 1], tidx, p_advance, rng)
+    for team_a, team_b in r32_pairs:
+        w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng)
         winners_r32.append(w)
         reached["r16"][w] = 1
 
