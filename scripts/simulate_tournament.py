@@ -16,6 +16,7 @@ from typing import Dict, List, Tuple
 import numpy as np
 import pandas as pd
 
+from model.lineup import squad_ratio
 from model.markets import derive_markets
 from model.poisson import PoissonParams
 from model.predict import scoreline_grid
@@ -104,7 +105,11 @@ def build_advance_matrix(
         for j, away in enumerate(ALL_TEAMS):
             if i == j:
                 continue
-            grid = scoreline_grid(home, away, params, is_neutral=True)
+            grid = scoreline_grid(
+                home, away, params, is_neutral=True,
+                home_lineup_ratio=squad_ratio(home),
+                away_lineup_ratio=squad_ratio(away),
+            )
             m = derive_markets(grid)
             p_advance[i, j] = m.p_home_win + 0.5 * m.p_draw
             computed += 1
@@ -125,7 +130,11 @@ def build_group_match_info(params: PoissonParams) -> Dict[Tuple[str, str], Match
     info: Dict[Tuple[str, str], MatchInfo] = {}
     for group, teams in GROUPS.items():
         for home, away in combinations(teams, 2):
-            grid = scoreline_grid(home, away, params, is_neutral=True)
+            grid = scoreline_grid(
+                home, away, params, is_neutral=True,
+                home_lineup_ratio=squad_ratio(home),
+                away_lineup_ratio=squad_ratio(away),
+            )
             m = derive_markets(grid)
             info[(home, away)] = (
                 home, away,

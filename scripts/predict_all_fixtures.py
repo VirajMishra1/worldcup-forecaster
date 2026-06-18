@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from model.lineup import squad_ratio
 from model.poisson import PoissonParams
 from model.predict import scoreline_grid
 from model.markets import derive_markets
@@ -54,7 +55,11 @@ def main() -> None:
             logging.warning("Unknown team(s): %s vs %s — skipping", home, away)
             continue
 
-        grid = scoreline_grid(home, away, params, is_neutral=True)
+        grid = scoreline_grid(
+            home, away, params, is_neutral=True,
+            home_lineup_ratio=squad_ratio(home),
+            away_lineup_ratio=squad_ratio(away),
+        )
         mkts = derive_markets(grid)
 
         rows.append({

@@ -12,16 +12,16 @@ This is not a "pick the winner" tool. It is a forecasting system that estimates 
 
 | Team | Win% | Implied odds |
 |------|------|-------------|
-| 🇪🇸 Spain | 14.2% | 7.1:1 |
-| 🇫🇷 France | 12.8% | 7.8:1 |
-| 🇦🇷 Argentina | 12.2% | 8.2:1 |
-| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 10.3% | 9.7:1 |
-| 🇵🇹 Portugal | 9.6% | 10.4:1 |
-| 🇧🇷 Brazil | 7.0% | 14.4:1 |
-| 🇧🇪 Belgium | 5.6% | 18.0:1 |
-| 🇩🇪 Germany | 5.6% | 18.0:1 |
-| 🇲🇦 Morocco | 3.6% | 27.8:1 |
-| 🇳🇱 Netherlands | 3.0% | 33.4:1 |
+| 🇪🇸 Spain | 17.1% | 5.8:1 |
+| 🇫🇷 France | 13.7% | 7.3:1 |
+| 🇦🇷 Argentina | 12.1% | 8.3:1 |
+| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 12.1% | 8.3:1 |
+| 🇵🇹 Portugal | 10.5% | 9.5:1 |
+| 🇧🇷 Brazil | 7.4% | 13.5:1 |
+| 🇩🇪 Germany | 6.0% | 16.6:1 |
+| 🇧🇪 Belgium | 5.4% | 18.5:1 |
+| 🇳🇱 Netherlands | 2.9% | 34.5:1 |
+| 🇲🇦 Morocco | 2.3% | 43.5:1 |
 
 Retrospective on WC 2026 group-stage matches (model applied post-hoc): **12/24 correct** W/D/L calls (50% vs 33% random).
 
@@ -84,16 +84,19 @@ weight(match) = exp(-ln(2) * age_years / 1.5)
 
 Per-team strengths are pooled toward a country-prior mean (Brazil's mean is not Saudi Arabia's). Regularize via L2 on `alpha_i` and `delta_i` deviations from the pooled prior.
 
-### Lineup adjustment
+### Squad strength adjustment (Phase 3)
 
-One hour before kickoff, lineups are fetched. For each XI, compute the sum of Transfermarkt market values. Compare to the team's rolling 12-month average XI market value. The delta becomes a small adjustment to lambda:
+Every prediction applies a squad-value prior derived from Transfermarkt squad market values. This corrects for teams whose historical ratings are noisy (few competitive games, easy qualifier opponents) and anchors minnow vs elite mismatches.
 
 ```
-xi_strength_ratio = sum_market_value(announced_xi) / mean_market_value(team_xi_12mo)
-epsilon_lineup = 0.4 * log(xi_strength_ratio)
+squad_ratio  = transfermarkt_squad_value / mean_wc_squad_value
+epsilon_squad = 0.4 * log(clip(squad_ratio^0.375, 0.5, 1.5))
+              = 0.15 * log(squad_ratio)   (effective coefficient)
+lambda_h *= exp(epsilon_squad_h)
+lambda_a *= exp(epsilon_squad_a)
 ```
 
-The 0.4 coefficient is fit empirically on backtest data. Constrain `xi_strength_ratio` to `[0.5, 1.5]` to prevent outliers from blowing up lambda.
+Examples: France €1.2B vs mean €282M → +9% lambda. Haiti €18M → −16% lambda. The 0.375 exponent (effective coefficient 0.15) keeps the adjustment conservative — match-history ratings remain dominant.
 
 ### Red card handling (live extension, v2 only)
 
