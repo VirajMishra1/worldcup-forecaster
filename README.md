@@ -283,7 +283,7 @@ Goal: hands-off operation for the rest of WC.
 - [ ] Recent-form term separate from time-decay (last-5 competitive matches goal ratio)
 - [ ] Rest-days and travel-km features
 - [ ] Cross-validated regularization tuning
-- [ ] Per-market backtest comparisons (O/U 2.5, BTTS calibration curves)
+- [x] Per-market backtest comparisons (O/U 2.5, BTTS calibration curves) — `uv run python3 -m cli.market_stats`
 
 ### Phase 4 — In-play, v2
 
@@ -295,7 +295,7 @@ Goal: hands-off operation for the rest of WC.
 ### Phase 5 — Edge hunting, v3
 
 - [x] Polymarket arbitrage scanner using model probabilities (`cli/odds.py`)
-- [ ] Kelly-criterion sizing simulator on backtest
+- [x] Kelly-criterion sizing simulator (`cli/kelly.py`)
 - [ ] Cross-promotion with [polymath](https://github.com/VirajMishra1/polymath)
 
 ---

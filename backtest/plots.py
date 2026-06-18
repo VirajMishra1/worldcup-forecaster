@@ -38,6 +38,50 @@ def reliability_diagram(
     plt.close(fig)
 
 
+def market_calibration_plot(
+    df: pd.DataFrame,
+    out: Path = REPORTS / "market_calibration.png",
+    n_bins: int = 10,
+) -> None:
+    """Reliability diagrams for O/U 2.5 and BTTS side by side."""
+    markets = [
+        ("p_over_25", "actual_over_25", "O/U 2.5 (Over)", "#FF9800"),
+        ("p_btts", "actual_btts", "BTTS (Yes)", "#4CAF50"),
+    ]
+    fig, axes = plt.subplots(1, 2, figsize=(11, 5))
+    bins = [i / n_bins for i in range(n_bins + 1)]
+
+    for ax, (pred_col, actual_col, title, color) in zip(axes, markets):
+        sub = df[[pred_col, actual_col]].copy()
+        sub["pred"] = sub[pred_col].astype(float)
+        sub["actual"] = sub[actual_col].astype(float)
+        sub["bin"] = pd.cut(sub["pred"], bins=bins, labels=False, include_lowest=True)
+
+        mean_pred, mean_act, counts = [], [], []
+        for _, grp in sub.groupby("bin", observed=True):
+            if len(grp) >= 3:
+                mean_pred.append(float(grp["pred"].mean()))
+                mean_act.append(float(grp["actual"].mean()))
+                counts.append(len(grp))
+
+        ax.plot([0, 1], [0, 1], "k--", lw=1, label="Perfect")
+        ax.scatter(mean_pred, mean_act, s=[c * 3 for c in counts],
+                   color=color, alpha=0.8, label="Model")
+        ax.set(
+            xlabel="Predicted probability",
+            ylabel="Actual frequency",
+            title=title,
+            xlim=(0, 1),
+            ylim=(0, 1),
+        )
+        ax.legend()
+
+    fig.suptitle("Market calibration — bivariate Poisson + Dixon-Coles", fontsize=12)
+    fig.tight_layout()
+    fig.savefig(out, dpi=150)
+    plt.close(fig)
+
+
 def log_loss_curve(
     results: pd.DataFrame,
     out: Path = REPORTS / "log_loss_curve.png",

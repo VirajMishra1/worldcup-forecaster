@@ -41,6 +41,23 @@ def aggregate_metrics(predictions: pd.DataFrame) -> dict:
     }
 
 
+def binary_market_metrics(df: pd.DataFrame, pred_col: str, actual_col: str) -> dict:
+    """
+    Compute accuracy, log_loss, and n for a binary market column.
+    pred_col: float column of model probability (e.g. p_over_25).
+    actual_col: bool/int column of actual outcome.
+    """
+    preds = df[pred_col].astype(float).values
+    actuals = df[actual_col].astype(float).values
+    n = len(preds)
+    accuracy = float(np.mean((preds >= 0.5) == (actuals >= 0.5)))
+    ll = -float(np.mean(
+        actuals * np.log(np.maximum(preds, EPS))
+        + (1 - actuals) * np.log(np.maximum(1 - preds, EPS))
+    ))
+    return {"accuracy": round(accuracy, 4), "log_loss": round(ll, 4), "n": n}
+
+
 def calibration_bins(predictions: pd.DataFrame, n_bins: int = 10) -> pd.DataFrame:
     """Reliability diagram data: mean_predicted vs mean_actual per probability bin."""
     rows = []
