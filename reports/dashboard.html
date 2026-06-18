@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WC 2026 Forecaster</title>
+<meta http-equiv="refresh" content="60">
 <style>
   :root {
     --bg: #0d1117;
@@ -74,6 +75,8 @@
   }
   tr.upcoming:hover td { background: var(--hover); }
   tr.completed td { color: var(--muted); }
+  tr.live td { background: #1a1200; }
+  tr.live .home-prob, tr.live .draw-prob, tr.live .away-prob { font-weight: bold; }
   .date-col { width: 52px; color: var(--muted); font-size: 11px; }
   .team-col { max-width: 160px; overflow: hidden; text-overflow: ellipsis; }
   .home-team { text-align: right; }
@@ -180,7 +183,7 @@
           <td class="scores-col">0-1</td>
           <td class="result-col">1-3 <span class="verdict">✗</span></td>
         </tr>
-        <tr class="upcoming">
+        <tr class="completed">
           <td class="date-col">Jun 18</td>
           <td class="team-col home-team">Czech Republic</td>
           <td class="prob home-prob">56%</td>
@@ -188,7 +191,7 @@
           <td class="prob away-prob">17%</td>
           <td class="team-col away-team">South Africa</td>
           <td class="scores-col">1-0  1-1  2-0</td>
-          <td class="result-col"> <span class="verdict"></span></td>
+          <td class="result-col">1-1 <span class="verdict">~</span></td>
         </tr>
         <tr class="upcoming">
           <td class="date-col">Jun 18</td>
@@ -684,81 +687,81 @@
   <tbody>
         <tr>
           <td>Spain</td>
-          <td class="pct">15.5%</td>
+          <td class="pct">15.6%</td>
           <td class="bar-cell"><span class="bar">███░░░░░░░░░░░░░░░░░</span></td>
-          <td class="implied">5.5:1</td>
+          <td class="implied">5.4:1</td>
         </tr>
         <tr>
           <td>Argentina</td>
-          <td class="pct">14.6%</td>
+          <td class="pct">13.3%</td>
           <td class="bar-cell"><span class="bar">███░░░░░░░░░░░░░░░░░</span></td>
-          <td class="implied">5.9:1</td>
+          <td class="implied">6.5:1</td>
         </tr>
         <tr>
           <td>France</td>
-          <td class="pct">13.0%</td>
+          <td class="pct">13.1%</td>
           <td class="bar-cell"><span class="bar">███░░░░░░░░░░░░░░░░░</span></td>
-          <td class="implied">6.7:1</td>
+          <td class="implied">6.6:1</td>
         </tr>
         <tr>
           <td>England</td>
-          <td class="pct">11.1%</td>
+          <td class="pct">11.4%</td>
           <td class="bar-cell"><span class="bar">██░░░░░░░░░░░░░░░░░░</span></td>
-          <td class="implied">8.0:1</td>
+          <td class="implied">7.7:1</td>
         </tr>
         <tr>
           <td>Portugal</td>
-          <td class="pct">9.8%</td>
+          <td class="pct">9.6%</td>
           <td class="bar-cell"><span class="bar">██░░░░░░░░░░░░░░░░░░</span></td>
-          <td class="implied">9.2:1</td>
+          <td class="implied">9.4:1</td>
         </tr>
         <tr>
           <td>Brazil</td>
-          <td class="pct">9.1%</td>
+          <td class="pct">8.0%</td>
           <td class="bar-cell"><span class="bar">██░░░░░░░░░░░░░░░░░░</span></td>
-          <td class="implied">10.0:1</td>
+          <td class="implied">11.6:1</td>
         </tr>
         <tr>
           <td>Germany</td>
-          <td class="pct">5.6%</td>
+          <td class="pct">5.8%</td>
           <td class="bar-cell"><span class="bar">█░░░░░░░░░░░░░░░░░░░</span></td>
-          <td class="implied">16.7:1</td>
+          <td class="implied">16.1:1</td>
         </tr>
         <tr>
           <td>Belgium</td>
-          <td class="pct">4.4%</td>
+          <td class="pct">5.8%</td>
           <td class="bar-cell"><span class="bar">█░░░░░░░░░░░░░░░░░░░</span></td>
-          <td class="implied">21.6:1</td>
+          <td class="implied">16.3:1</td>
         </tr>
         <tr>
           <td>Netherlands</td>
-          <td class="pct">2.9%</td>
+          <td class="pct">3.3%</td>
           <td class="bar-cell"><span class="bar">█░░░░░░░░░░░░░░░░░░░</span></td>
-          <td class="implied">33.8:1</td>
+          <td class="implied">29.5:1</td>
         </tr>
         <tr>
           <td>Morocco</td>
-          <td class="pct">2.7%</td>
+          <td class="pct">2.9%</td>
           <td class="bar-cell"><span class="bar">█░░░░░░░░░░░░░░░░░░░</span></td>
-          <td class="implied">35.9:1</td>
+          <td class="implied">33.6:1</td>
         </tr>
         <tr>
           <td>Colombia</td>
           <td class="pct">2.5%</td>
           <td class="bar-cell"><span class="bar">█░░░░░░░░░░░░░░░░░░░</span></td>
-          <td class="implied">38.8:1</td>
+          <td class="implied">38.5:1</td>
         </tr>
         <tr>
           <td>Australia</td>
           <td class="pct">1.1%</td>
           <td class="bar-cell"><span class="bar">░░░░░░░░░░░░░░░░░░░░</span></td>
-          <td class="implied">89.1:1</td>
+          <td class="implied">87.5:1</td>
         </tr>
   </tbody>
 </table>
 
 <footer>
-  Generated 2026-06-18 09:06 UTC &middot;
+  Generated 2026-06-18 20:36 UTC &middot;
   <a href="https://github.com/VirajMishra1/worldcup-forecaster" style="color:var(--blue);text-decoration:none">github.com/VirajMishra1/worldcup-forecaster</a>
   &middot; also see <a href="https://github.com/VirajMishra1/polymath" style="color:var(--blue);text-decoration:none">Polymath</a> (Polymarket analytics terminal)
 </footer>
