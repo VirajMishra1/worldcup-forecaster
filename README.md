@@ -6,6 +6,27 @@ This is not a "pick the winner" tool. It is a forecasting system that estimates 
 
 ---
 
+## WC 2026 — Model Winner Odds
+
+10,000 Monte Carlo simulations · updated daily · [model details](#model)
+
+| Team | Win% | Implied odds |
+|------|------|-------------|
+| 🇦🇷 Argentina | 14.9% | 6.7:1 |
+| 🇧🇷 Brazil | 13.0% | 7.7:1 |
+| 🇪🇸 Spain | 11.7% | 8.5:1 |
+| 🇵🇹 Portugal | 9.5% | 10.5:1 |
+| 🇫🇷 France | 9.0% | 11.1:1 |
+| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 8.5% | 11.8:1 |
+| 🇨🇴 Colombia | 4.9% | 20.4:1 |
+| 🇧🇪 Belgium | 4.4% | 22.7:1 |
+| 🇺🇾 Uruguay | 4.4% | 22.7:1 |
+| 🇩🇪 Germany | 4.2% | 23.8:1 |
+
+Pre-tournament retrospective on WC 2026 group-stage matches: **9/20 correct** W/D/L calls.
+
+---
+
 ## The bet
 
 | | |
@@ -55,10 +76,10 @@ The Dixon-Coles `tau` correction inflates probabilities at low-score outcomes (0
 
 ### Parameter fitting
 
-Maximum likelihood estimation on historical match data, with exponential time-decay weighting (half-life two years):
+Maximum likelihood estimation on historical match data (13,779 matches, 2010–2024), with exponential time-decay weighting (half-life 1.5 years). Friendly matches are downweighted at 0.15× relative to competitive fixtures; UEFA Nations League and CONCACAF Nations League matches carry full competitive weight.
 
 ```
-weight(match) = exp(-ln(2) * age_years / 2.0)
+weight(match) = exp(-ln(2) * age_years / 1.5)
 ```
 
 Per-team strengths are pooled toward a country-prior mean (Brazil's mean is not Saudi Arabia's). Regularize via L2 on `alpha_i` and `delta_i` deviations from the pooled prior.
@@ -234,13 +255,14 @@ The README always shows the current state. Anyone landing on the GitHub page see
 - [ ] Time-decay Elo computation, sanity-check vs ClubElo
 - [ ] Bivariate Poisson + Dixon-Coles MLE fit
 - [ ] CLI: `predict ENG vs USA` outputs scoreline grid plus all markets
-- [ ] Walk-forward backtest on 2018-2024, generate calibration plot
+- [x] Walk-forward backtest on 2018-2024, generate calibration plot
 - [ ] Manual run: predict every remaining WC fixture, commit results
 
 Goal: be predicting before tomorrow's matchday.
 
 ### Phase 2 — Automation, 1 week
 
+- [x] Monte Carlo tournament simulator (10,000 simulations, bracket-aware)
 - [ ] Football-Data.org integration for live fixtures + lineups
 - [ ] Transfermarkt market-value scrape + lineup-delta adjustment
 - [ ] Pinnacle + Polymarket odds scraping for benchmarking
