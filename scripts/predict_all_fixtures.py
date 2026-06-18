@@ -1,25 +1,35 @@
 """Lock predictions for all upcoming WC fixtures. predictions.parquet is append-only."""
+import json
 import logging
 from pathlib import Path
 
 import pandas as pd
 
-from model.poisson import fit
+from model.poisson import PoissonParams
 from model.predict import scoreline_grid
 from model.markets import derive_markets
 
 DATA_DIR = Path(__file__).parent.parent / "data"
-HIST_PATH = DATA_DIR / "historical_matches.parquet"
+CACHE_PATH = DATA_DIR / "params_cache.json"
 FIXTURES_PATH = DATA_DIR / "fixtures_2026.parquet"
 PREDICTIONS_PATH = DATA_DIR / "predictions.parquet"
+
+
+def _load_params() -> PoissonParams:
+    with open(CACHE_PATH) as f:
+        d = json.load(f)
+    return PoissonParams(attack=d["attack"], defense=d["defense"],
+                         rho=d["rho"], gamma=d["gamma"], teams=d["teams"])
 
 
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
-    df = pd.read_parquet(HIST_PATH)
-    logging.info("Fitting model on %d matches...", len(df))
-    params = fit(df, neutral=True)
+    if not CACHE_PATH.exists():
+        logging.error("No params cache. Run scripts/refit_params.py first.")
+        return
+    params = _load_params()
+    logging.info("Loaded cached params (%d teams)", len(params.teams))
 
     if not FIXTURES_PATH.exists():
         logging.error("No fixtures file. Run scripts/fetch_fixtures.py first.")
