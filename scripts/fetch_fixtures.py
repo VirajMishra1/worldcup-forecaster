@@ -7,6 +7,13 @@ import httpx
 import pandas as pd
 
 API_KEY = os.getenv("FOOTBALL_DATA_API_KEY", "").strip()
+if not API_KEY:
+    _env = Path(__file__).parent.parent / ".env"
+    if _env.exists():
+        for _line in _env.read_text().splitlines():
+            if _line.startswith("FOOTBALL_DATA_API_KEY="):
+                API_KEY = _line.split("=", 1)[1].strip()
+                break
 BASE_URL = "https://api.football-data.org/v4"
 DATA_DIR = Path(__file__).parent.parent / "data"
 FIXTURES_PATH = DATA_DIR / "fixtures_2026.parquet"

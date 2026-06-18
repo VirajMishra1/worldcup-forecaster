@@ -23,7 +23,7 @@ This is not a "pick the winner" tool. It is a forecasting system that estimates 
 | 🇺🇾 Uruguay | 4.4% | 22.7:1 |
 | 🇩🇪 Germany | 4.2% | 23.8:1 |
 
-Pre-tournament retrospective on WC 2026 group-stage matches: **9/20 correct** W/D/L calls.
+Retrospective on WC 2026 group-stage matches (model applied post-hoc): **12/24 correct** W/D/L calls (50% vs 33% random).
 
 ---
 
@@ -355,7 +355,7 @@ A reliability diagram answers: when the model says 60%, does the outcome happen 
 
 ![Log-loss curve](reports/log_loss_curve.png)
 
-Historical backtest (walk-forward, no lookahead): **log_loss=0.8420 · brier=0.4950 · accuracy=61.2% · n=3,807 matches**
+Historical backtest (walk-forward, no lookahead): **log_loss=0.8947 · brier=0.5273 · accuracy=58.7% · n=5,518 matches** (2018–2023, refit every 30 days)
 
 ---
 
