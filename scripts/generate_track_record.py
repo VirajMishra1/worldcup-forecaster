@@ -1,4 +1,5 @@
 """Regenerate reports/track_record.md and splice it into README.md."""
+import json
 import logging
 from pathlib import Path
 
@@ -12,6 +13,9 @@ README = Path(__file__).parent.parent / "README.md"
 
 MARKER_START = "<!-- TRACK_RECORD_START -->"
 MARKER_END = "<!-- TRACK_RECORD_END -->"
+
+ODDS_MARKER_START = "<!-- ODDS_COMPARISON_START -->"
+ODDS_MARKER_END = "<!-- ODDS_COMPARISON_END -->"
 
 
 def _outcome(hg: int, ag: int) -> str:
@@ -86,20 +90,88 @@ def build_track_record() -> str:
     return "\n".join(lines) + "\n"
 
 
-def update_readme(track_record: str) -> None:
-    content = README.read_text()
-    start = content.find(MARKER_START)
-    end = content.find(MARKER_END)
+def build_odds_comparison() -> str:
+    """Build a top-5 model vs Polymarket comparison table for the README."""
+    tournament_path = DATA_DIR / "tournament.json"
+    polymarket_path = DATA_DIR / "polymarket_odds.json"
+
+    if not tournament_path.exists():
+        return "_Tournament win probabilities not yet generated._\n"
+
+    with open(tournament_path) as f:
+        tournament = json.load(f)
+    model_win: dict = tournament.get("win", {})
+
+    market_win: dict = {}
+    market_note = ""
+    market_updated = ""
+    if polymarket_path.exists():
+        with open(polymarket_path) as f:
+            poly = json.load(f)
+        market_win = poly.get("win", {})
+        market_note = poly.get("note", "")
+        market_updated = poly.get("updated_at", "")
+
+    if not market_win:
+        note = market_note or "run python -m scripts.fetch_odds"
+        return f"_Polymarket data unavailable ({note})._\n"
+
+    # Build top-5 by model win%, showing edge
+    teams = sorted(
+        [t for t in model_win if model_win[t] >= 0.001 and t in market_win],
+        key=lambda t: model_win[t],
+        reverse=True,
+    )[:5]
+
+    updated_str = ""
+    if market_updated:
+        try:
+            from datetime import datetime
+            dt = datetime.fromisoformat(market_updated)
+            updated_str = f" · market updated {dt.strftime('%b %d %H:%M UTC')}"
+        except ValueError:
+            updated_str = f" · market updated {market_updated}"
+
+    lines = [
+        f"## Model vs Polymarket{updated_str}\n",
+        "| Team | Model | Market | Edge |",
+        "|------|-------|--------|------|",
+    ]
+    for team in teams:
+        pm = model_win[team]
+        mk = market_win[team]
+        edge = pm - mk
+        lines.append(
+            f"| {team} | {pm*100:.1f}% | {mk*100:.1f}% | {edge*100:+.1f}% |"
+        )
+
+    lines.append(
+        "\n_Edge = Model% − Market%. Positive = model thinks team is underpriced on Polymarket._"
+    )
+    return "\n".join(lines) + "\n"
+
+
+def _splice_section(content: str, start_marker: str, end_marker: str, body: str) -> str:
+    start = content.find(start_marker)
+    end = content.find(end_marker)
     if start == -1 or end == -1:
-        content += f"\n{MARKER_START}\n{track_record}\n{MARKER_END}\n"
+        content += f"\n{start_marker}\n{body}\n{end_marker}\n"
     else:
         content = (
-            content[: start + len(MARKER_START)]
+            content[: start + len(start_marker)]
             + "\n"
-            + track_record
+            + body
             + "\n"
             + content[end:]
         )
+    return content
+
+
+def update_readme(track_record: str) -> None:
+    content = README.read_text()
+    content = _splice_section(content, MARKER_START, MARKER_END, track_record)
+    odds_comparison = build_odds_comparison()
+    content = _splice_section(content, ODDS_MARKER_START, ODDS_MARKER_END, odds_comparison)
     README.write_text(content)
 
 

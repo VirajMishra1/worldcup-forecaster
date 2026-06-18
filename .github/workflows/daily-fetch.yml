@@ -32,6 +32,9 @@ jobs:
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
         run: python -m scripts.fetch_results
 
+      - name: Fetch Polymarket odds
+        run: python -m scripts.fetch_odds
+
       - name: Refit model (historical + completed WC results)
         run: python -m scripts.refit_params
 
@@ -54,6 +57,7 @@ jobs:
             data/results.parquet \
             data/params_cache.json \
             data/tournament.json \
+            data/polymarket_odds.json \
             reports/track_record.md \
             README.md || true
           git diff --cached --quiet || \

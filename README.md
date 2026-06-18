@@ -381,3 +381,8 @@ Historical backtest (walk-forward, no lookahead): **log_loss=0.8947 · brier=0.5
 | 2026-06-18 | Uzbekistan vs Colombia | 11%/25%/64% | Colombia (1-3) | 0.442 | ✓ |
 
 <!-- TRACK_RECORD_END -->
+
+<!-- ODDS_COMPARISON_START -->
+_Polymarket data unavailable (Market not found)._
+
+<!-- ODDS_COMPARISON_END -->
