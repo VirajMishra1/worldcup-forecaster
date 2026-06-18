@@ -52,7 +52,7 @@ def _match_ll(hg: int, ag: int, lam_h: float, lam_a: float, rho: float, w: float
     )
 
 
-def fit(df: pd.DataFrame, neutral: bool = True) -> PoissonParams:
+def fit(df: pd.DataFrame, neutral: bool = True, base_reg: float = 0.003) -> PoissonParams:
     """
     Fit team attack/defense via MLE with time-decay + tournament weighting.
     neutral=True disables home advantage (correct for WC venues).
@@ -81,7 +81,7 @@ def fit(df: pd.DataFrame, neutral: bool = True) -> PoissonParams:
         appearances[idx] += 1
     for idx in away_idx:
         appearances[idx] += 1
-    reg_strength = 0.01 * (1.0 + 150.0 / np.maximum(appearances, 50.0))
+    reg_strength = base_reg * (1.0 + 150.0 / np.maximum(appearances, 50.0))
 
     n_params = 2 * n + 1 + (0 if neutral else 1)
 

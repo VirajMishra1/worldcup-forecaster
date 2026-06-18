@@ -282,21 +282,21 @@ Goal: hands-off operation for the rest of WC.
 - [x] Country-prior pooling via adaptive per-team L2 regularization (thin-data nations 3× shrinkage)
 - [x] Recent-form term separate from time-decay (last-5 competitive matches goal ratio)
 - [x] Rest-days feature (±3% per day vs 4-day baseline; travel-km skipped — WC venues within same country)
-- [ ] Cross-validated regularization tuning
+- [x] Cross-validated regularization tuning (grid: 0.003–0.030, best found reported in reports/reg_tuning.json)
 - [x] Per-market backtest comparisons (O/U 2.5, BTTS calibration curves) — `uv run python3 -m cli.market_stats`
 
 ### Phase 4 — In-play, v2
 
 - [ ] SofaScore polling for live events (goals, red cards)
 - [ ] Real-time lambda updates and remaining-time integration
-- [ ] Live win-probability chart on a single static HTML page
+- [x] Static win-probability dashboard (`reports/dashboard.html`, regenerated daily)
 - [ ] Snapshot every 30 seconds for post-match in-play accuracy analysis
 
 ### Phase 5 — Edge hunting, v3
 
 - [x] Polymarket arbitrage scanner using model probabilities (`cli/odds.py`)
 - [x] Kelly-criterion sizing simulator (`cli/kelly.py`)
-- [ ] Cross-promotion with [polymath](https://github.com/VirajMishra1/polymath)
+- [x] Cross-promotion with [polymath](https://github.com/VirajMishra1/polymath) — Polymarket analytics terminal by the same author
 
 ---
 
