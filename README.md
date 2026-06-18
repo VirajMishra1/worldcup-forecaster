@@ -12,16 +12,16 @@ This is not a "pick the winner" tool. It is a forecasting system that estimates 
 
 | Team | Win% | Implied odds |
 |------|------|-------------|
-| 🇦🇷 Argentina | 14.9% | 6.7:1 |
-| 🇧🇷 Brazil | 13.9% | 7.2:1 |
-| 🇪🇸 Spain | 12.0% | 8.3:1 |
-| 🇫🇷 France | 9.4% | 10.6:1 |
-| 🇵🇹 Portugal | 8.7% | 11.5:1 |
-| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 7.8% | 12.9:1 |
-| 🇨🇴 Colombia | 5.0% | 19.9:1 |
-| 🇺🇾 Uruguay | 4.5% | 22.3:1 |
-| 🇧🇪 Belgium | 4.3% | 23.1:1 |
-| 🇩🇪 Germany | 3.9% | 25.6:1 |
+| 🇪🇸 Spain | 14.2% | 7.1:1 |
+| 🇫🇷 France | 12.8% | 7.8:1 |
+| 🇦🇷 Argentina | 12.2% | 8.2:1 |
+| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 10.3% | 9.7:1 |
+| 🇵🇹 Portugal | 9.6% | 10.4:1 |
+| 🇧🇷 Brazil | 7.0% | 14.4:1 |
+| 🇧🇪 Belgium | 5.6% | 18.0:1 |
+| 🇩🇪 Germany | 5.6% | 18.0:1 |
+| 🇲🇦 Morocco | 3.6% | 27.8:1 |
+| 🇳🇱 Netherlands | 3.0% | 33.4:1 |
 
 Retrospective on WC 2026 group-stage matches (model applied post-hoc): **12/24 correct** W/D/L calls (50% vs 33% random).
 

@@ -34,7 +34,10 @@ jobs:
           FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
         run: python -m scripts.fetch_results
 
-      - name: Lock predictions (uses cached params — fast)
+      - name: Refit model (historical + completed WC results)
+        run: python -m scripts.refit_params
+
+      - name: Lock predictions
         run: python -m scripts.predict_all_fixtures
 
       - name: Regenerate track record
