@@ -62,6 +62,7 @@ def main() -> None:
         )
         mkts = derive_markets(grid)
 
+        top3 = sorted(mkts.exact_scores.items(), key=lambda x: -x[1])[:3]
         rows.append({
             "locked_at": pd.Timestamp.now(),
             "match_date": fix["date"],
@@ -75,7 +76,10 @@ def main() -> None:
             "p_btts": mkts.p_btts,
             "xg_home": mkts.expected_home_goals,
             "xg_away": mkts.expected_away_goals,
-            "top_scoreline": max(mkts.exact_scores, key=mkts.exact_scores.get),
+            "top_scoreline": top3[0][0],
+            "top_scoreline_p": round(top3[0][1], 4),
+            "top_2_scoreline": top3[1][0] if len(top3) > 1 else "",
+            "top_3_scoreline": top3[2][0] if len(top3) > 2 else "",
         })
         logging.info(
             "%s vs %s → H%.0f%% D%.0f%% A%.0f%%",

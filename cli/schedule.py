@@ -31,7 +31,7 @@ def main() -> None:
         results["date"] = pd.to_datetime(results["date"]).dt.date
         preds["_date"] = preds["match_date"].dt.date
 
-    hdr = f"{'Date':<8}  {'Team 1':<26}  {'Team 2':<26}  {'T1%':>5}  {'D%':>5}  {'T2%':>5}  {'xG':>7}  {'Best score':<8}  Result"
+    hdr = f"{'Date':<8}  {'Team 1':<26}  {'Team 2':<26}  {'T1%':>5}  {'D%':>5}  {'T2%':>5}  {'xG':>7}  {'Top-3 scores':<22}  Result"
     print(hdr)
     print("-" * len(hdr))
 
@@ -47,12 +47,17 @@ def main() -> None:
                 m = match.iloc[0]
                 result_str = f"{int(m['home_goals'])}-{int(m['away_goals'])}"
 
+        s1 = r.get("top_scoreline") or ""
+        s2 = r.get("top_2_scoreline") or ""
+        s3 = r.get("top_3_scoreline") or ""
+        scores_str = f"{s1}  {s2}  {s3}".strip() if (s2 or s3) else s1
+
         print(
             f"{r['match_date'].strftime('%b %d'):<8}  "
             f"{r['home']:<26}  {r['away']:<26}  "
             f"{r['p_home']:>4.0%}  {r['p_draw']:>4.0%}  {r['p_away']:>4.0%}  "
             f"{r['xg_home']:.1f}-{r['xg_away']:.1f}  "
-            f"{r['top_scoreline']:<8}  {result_str}"
+            f"{scores_str:<22}  {result_str}"
         )
 
 

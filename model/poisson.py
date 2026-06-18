@@ -73,6 +73,16 @@ def fit(df: pd.DataFrame, neutral: bool = True) -> PoissonParams:
     ag_arr = df["away_goals"].values.astype(int)
     w_arr = df["w"].values
 
+    # Per-team regularization: teams with few matches pulled harder toward 0.
+    # Shrinkage factor = 1 + 150/max(appearances, 50). Thin-data nations
+    # (Curaçao ~96, New Zealand ~91) get ~3× stronger prior than top nations.
+    appearances = np.zeros(n)
+    for idx in home_idx:
+        appearances[idx] += 1
+    for idx in away_idx:
+        appearances[idx] += 1
+    reg_strength = 0.01 * (1.0 + 150.0 / np.maximum(appearances, 50.0))
+
     n_params = 2 * n + 1 + (0 if neutral else 1)
 
     def neg_ll(x: np.ndarray) -> float:
@@ -103,7 +113,7 @@ def fit(df: pd.DataFrame, neutral: bool = True) -> PoissonParams:
         tau_v = np.clip(tau_v, 1e-9, np.inf)
 
         total = float(np.sum(w_arr * (np.log(tau_v) + log_p)))
-        reg = 0.01 * (float(np.sum(atk**2)) + float(np.sum(dfc**2)))
+        reg = float(np.sum(reg_strength * (atk**2 + dfc**2)))
         return -(total - reg)
 
     x0 = np.zeros(n_params)

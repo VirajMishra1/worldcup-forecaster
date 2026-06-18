@@ -12,18 +12,20 @@ This is not a "pick the winner" tool. It is a forecasting system that estimates 
 
 | Team | Win% | Implied odds |
 |------|------|-------------|
-| 🇪🇸 Spain | 17.1% | 5.8:1 |
-| 🇫🇷 France | 13.7% | 7.3:1 |
-| 🇦🇷 Argentina | 12.1% | 8.3:1 |
-| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 12.1% | 8.3:1 |
-| 🇵🇹 Portugal | 10.5% | 9.5:1 |
-| 🇧🇷 Brazil | 7.4% | 13.5:1 |
-| 🇩🇪 Germany | 6.0% | 16.6:1 |
-| 🇧🇪 Belgium | 5.4% | 18.5:1 |
+| 🇪🇸 Spain | 15.5% | 6.5:1 |
+| 🇦🇷 Argentina | 14.6% | 6.8:1 |
+| 🇫🇷 France | 13.0% | 7.7:1 |
+| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 11.1% | 9.0:1 |
+| 🇵🇹 Portugal | 9.8% | 10.2:1 |
+| 🇧🇷 Brazil | 9.1% | 11.0:1 |
+| 🇩🇪 Germany | 5.6% | 17.9:1 |
+| 🇧🇪 Belgium | 4.4% | 22.7:1 |
 | 🇳🇱 Netherlands | 2.9% | 34.5:1 |
-| 🇲🇦 Morocco | 2.3% | 43.5:1 |
+| 🇲🇦 Morocco | 2.7% | 37.0:1 |
 
-Retrospective on WC 2026 group-stage matches (model applied post-hoc): **12/24 correct** W/D/L calls (50% vs 33% random).
+_Squad-value adjustment applied (Transfermarkt €M, exponent 0.375). 24 completed WC results included in refit._
+
+Retrospective on WC 2026 group-stage matches (model applied post-hoc): **13/24 correct** W/D/L calls (54% vs 33% random).
 
 ---
 
