@@ -16,10 +16,12 @@ from typing import Dict, List, Tuple
 import numpy as np
 import pandas as pd
 
+from model.form import form_factors
 from model.lineup import squad_ratio
 from model.markets import derive_markets
 from model.poisson import PoissonParams
 from model.predict import scoreline_grid
+from model.rest import rest_factor
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 log = logging.getLogger(__name__)
@@ -90,10 +92,13 @@ def load_results(path: str = "data/results.parquet") -> pd.DataFrame:
 
 def build_advance_matrix(
     params: PoissonParams,
+    all_matches: pd.DataFrame,
+    ko_date: str = "2026-07-01",
 ) -> Tuple[Dict[str, int], np.ndarray]:
     """
     Returns (team_index, p_advance) where p_advance[i, j] = P(team i beats team j).
     Draws give 0.5 to each side (penalty shoot-out).
+    Form and rest adjustments use ko_date as the reference knockout date.
     """
     n = len(ALL_TEAMS)
     tidx = {t: i for i, t in enumerate(ALL_TEAMS)}
@@ -105,10 +110,13 @@ def build_advance_matrix(
         for j, away in enumerate(ALL_TEAMS):
             if i == j:
                 continue
+            hf, af = form_factors(home, away, ko_date, all_matches)
+            hr = rest_factor(home, ko_date, all_matches)
+            ar = rest_factor(away, ko_date, all_matches)
             grid = scoreline_grid(
                 home, away, params, is_neutral=True,
-                home_lineup_ratio=squad_ratio(home),
-                away_lineup_ratio=squad_ratio(away),
+                home_lineup_ratio=squad_ratio(home) * hf * hr,
+                away_lineup_ratio=squad_ratio(away) * af * ar,
             )
             m = derive_markets(grid)
             p_advance[i, j] = m.p_home_win + 0.5 * m.p_draw
@@ -125,15 +133,22 @@ MatchInfo = Tuple[str, str, float, float, float, float, float]
 # (home, away, p_home_win, p_draw, p_away_win, xg_home, xg_away)
 
 
-def build_group_match_info(params: PoissonParams) -> Dict[Tuple[str, str], MatchInfo]:
+def build_group_match_info(
+    params: PoissonParams,
+    all_matches: pd.DataFrame,
+    group_stage_date: str = "2026-06-11",
+) -> Dict[Tuple[str, str], MatchInfo]:
     """For every C(4,2)=6 matchup in each group, store market probabilities."""
     info: Dict[Tuple[str, str], MatchInfo] = {}
     for group, teams in GROUPS.items():
         for home, away in combinations(teams, 2):
+            hf, af = form_factors(home, away, group_stage_date, all_matches)
+            hr = rest_factor(home, group_stage_date, all_matches)
+            ar = rest_factor(away, group_stage_date, all_matches)
             grid = scoreline_grid(
                 home, away, params, is_neutral=True,
-                home_lineup_ratio=squad_ratio(home),
-                away_lineup_ratio=squad_ratio(away),
+                home_lineup_ratio=squad_ratio(home) * hf * hr,
+                away_lineup_ratio=squad_ratio(away) * af * ar,
             )
             m = derive_markets(grid)
             info[(home, away)] = (
@@ -381,10 +396,13 @@ def main() -> None:
         )
     log.info(f"  {len(completed)} completed matches loaded.")
 
-    log.info("Pre-computing group match info...")
-    match_info = build_group_match_info(params)
+    hist = pd.read_parquet("data/historical_matches.parquet")
+    all_matches = pd.concat([hist, results_df], ignore_index=True)
 
-    tidx, p_advance = build_advance_matrix(params)
+    log.info("Pre-computing group match info...")
+    match_info = build_group_match_info(params, all_matches)
+
+    tidx, p_advance = build_advance_matrix(params, all_matches)
 
     # Accumulators: stage → team → count
     counts: Dict[str, Dict[str, int]] = {

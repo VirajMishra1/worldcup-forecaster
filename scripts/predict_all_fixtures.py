@@ -5,10 +5,12 @@ from pathlib import Path
 
 import pandas as pd
 
+from model.form import form_factors
 from model.lineup import squad_ratio
 from model.poisson import PoissonParams
 from model.predict import scoreline_grid
 from model.markets import derive_markets
+from model.rest import rest_factor
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 CACHE_PATH = DATA_DIR / "params_cache.json"
@@ -38,6 +40,14 @@ def main() -> None:
 
     fixtures = pd.read_parquet(FIXTURES_PATH)
 
+    hist = pd.read_parquet(DATA_DIR / "historical_matches.parquet")
+    results_path = DATA_DIR / "results.parquet"
+    if results_path.exists():
+        results = pd.read_parquet(results_path)
+        all_matches = pd.concat([hist, results], ignore_index=True)
+    else:
+        all_matches = hist
+
     existing_keys: set[tuple] = set()
     if PREDICTIONS_PATH.exists():
         existing = pd.read_parquet(PREDICTIONS_PATH)
@@ -55,10 +65,14 @@ def main() -> None:
             logging.warning("Unknown team(s): %s vs %s — skipping", home, away)
             continue
 
+        hf, af = form_factors(home, away, str(fix["date"]), all_matches)
+        hr = rest_factor(home, str(fix["date"]), all_matches)
+        ar = rest_factor(away, str(fix["date"]), all_matches)
+
         grid = scoreline_grid(
             home, away, params, is_neutral=True,
-            home_lineup_ratio=squad_ratio(home),
-            away_lineup_ratio=squad_ratio(away),
+            home_lineup_ratio=squad_ratio(home) * hf * hr,
+            away_lineup_ratio=squad_ratio(away) * af * ar,
         )
         mkts = derive_markets(grid)
 

@@ -280,8 +280,8 @@ Goal: hands-off operation for the rest of WC.
 ### Phase 3 — Refinement, ongoing
 
 - [x] Country-prior pooling via adaptive per-team L2 regularization (thin-data nations 3× shrinkage)
-- [ ] Recent-form term separate from time-decay (last-5 competitive matches goal ratio)
-- [ ] Rest-days and travel-km features
+- [x] Recent-form term separate from time-decay (last-5 competitive matches goal ratio)
+- [x] Rest-days feature (±3% per day vs 4-day baseline; travel-km skipped — WC venues within same country)
 - [ ] Cross-validated regularization tuning
 - [x] Per-market backtest comparisons (O/U 2.5, BTTS calibration curves) — `uv run python3 -m cli.market_stats`
 
