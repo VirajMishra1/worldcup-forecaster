@@ -287,9 +287,9 @@ Goal: hands-off operation for the rest of WC.
 
 ### Phase 4 — In-play, v2
 
-- [ ] SofaScore polling for live events (goals, red cards)
-- [ ] Real-time lambda updates and remaining-time integration
-- [x] Static win-probability dashboard (`reports/dashboard.html`, regenerated daily)
+- [x] SofaScore polling for live events (`scripts/fetch_live_events.py`, no API key needed)
+- [x] Real-time lambda updates (`model/inplay.py` — remaining-time Poisson + red card adjustment)
+- [x] Live win-probability dashboard at [virajmishra1.github.io/worldcup-forecaster](https://virajmishra1.github.io/worldcup-forecaster/) — updates every 5 min during matches, auto-refreshes in browser
 - [ ] Snapshot every 30 seconds for post-match in-play accuracy analysis
 
 ### Phase 5 — Edge hunting, v3

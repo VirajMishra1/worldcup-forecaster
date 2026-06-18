@@ -61,8 +61,10 @@ jobs:
             data/params_cache.json \
             data/tournament.json \
             data/polymarket_odds.json \
+            data/live_events.json \
             reports/track_record.md \
             reports/dashboard.html \
+            docs/index.html \
             README.md || true
           git diff --cached --quiet || \
             git commit -m "chore: daily update $(date -u +%Y-%m-%d)"

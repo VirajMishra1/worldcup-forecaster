@@ -12,7 +12,19 @@ def _bar(p: float, width: int = 20) -> str:
     return "█" * filled + "░" * (width - filled)
 
 
+def _load_live() -> dict:
+    p = DATA_DIR / "live_events.json"
+    if not p.exists():
+        return {}
+    import json as _json
+    try:
+        return _json.loads(p.read_text())
+    except Exception:
+        return {}
+
+
 def main() -> None:
+    live = _load_live()  # {"{home} vs {away}": {"minute": 67, "home_goals": 1, "away_goals": 0, "red_cards": {"home":0,"away":0}, "p_home":0.72,"p_draw":0.18,"p_away":0.10}}
     preds = pd.read_parquet(DATA_DIR / "predictions.parquet")
     preds["match_date"] = pd.to_datetime(preds["match_date"], utc=True)
     preds = preds.sort_values("match_date")
@@ -60,10 +72,18 @@ def main() -> None:
             else:
                 correct = "✗"
 
-        # Progress bar widths for inline style (flex-based)
-        ph = p["p_home"]
-        pd_ = p["p_draw"]
-        pa = p["p_away"]
+        live_key = f"{p['home']} vs {p['away']}"
+        live_data = live.get(live_key, {})
+        ph = live_data.get("p_home", p["p_home"])
+        pd_ = live_data.get("p_draw", p["p_draw"])
+        pa = live_data.get("p_away", p["p_away"])
+        live_score = ""
+        if live_data:
+            hg = live_data.get("home_goals", 0)
+            ag = live_data.get("away_goals", 0)
+            minute = live_data.get("minute", "?")
+            live_score = f"🔴 {hg}-{ag} ({minute}')"
+            status = "live"
 
         rows_html += f"""
         <tr class="{status}">
@@ -74,7 +94,7 @@ def main() -> None:
           <td class="prob away-prob">{pa:.0%}</td>
           <td class="team-col away-team">{p['away']}</td>
           <td class="scores-col">{scores}</td>
-          <td class="result-col">{actual} <span class="verdict">{correct}</span></td>
+          <td class="result-col">{live_score or actual} <span class="verdict">{correct}</span></td>
         </tr>"""
 
     # Build winner odds rows
@@ -101,6 +121,7 @@ def main() -> None:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WC 2026 Forecaster</title>
+<meta http-equiv="refresh" content="60">
 <style>
   :root {{
     --bg: #0d1117;
@@ -171,6 +192,8 @@ def main() -> None:
   }}
   tr.upcoming:hover td {{ background: var(--hover); }}
   tr.completed td {{ color: var(--muted); }}
+  tr.live td {{ background: #1a1200; }}
+  tr.live .home-prob, tr.live .draw-prob, tr.live .away-prob {{ font-weight: bold; }}
   .date-col {{ width: 52px; color: var(--muted); font-size: 11px; }}
   .team-col {{ max-width: 160px; overflow: hidden; text-overflow: ellipsis; }}
   .home-team {{ text-align: right; }}
@@ -280,11 +303,13 @@ def main() -> None:
 </body>
 </html>"""
 
+    DOCS_DIR = Path(__file__).parent.parent / "docs"
+    DOCS_DIR.mkdir(exist_ok=True)
     REPORTS_DIR.mkdir(exist_ok=True)
-    out = REPORTS_DIR / "dashboard.html"
-    out.write_text(html, encoding="utf-8")
-    size_kb = out.stat().st_size / 1024
-    print(f"Dashboard written to {out}  ({size_kb:.1f} KB)")
+    for out in [DOCS_DIR / "index.html", REPORTS_DIR / "dashboard.html"]:
+        out.write_text(html, encoding="utf-8")
+    size_kb = (DOCS_DIR / "index.html").stat().st_size / 1024
+    print(f"Dashboard written to docs/index.html  ({size_kb:.1f} KB)")
 
 
 if __name__ == "__main__":
