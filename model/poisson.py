@@ -9,7 +9,7 @@ import pandas as pd
 from scipy.optimize import minimize
 from scipy.special import gammaln
 
-HALF_LIFE_YEARS = 2.0
+HALF_LIFE_YEARS = 1.5
 MAX_GOALS = 10
 
 

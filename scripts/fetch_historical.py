@@ -23,7 +23,10 @@ TOURNAMENT_WEIGHTS = {
     "CONCACAF Gold Cup": 0.85,
     "FIFA World Cup qualification": 0.85,
     "UEFA Euro qualification": 0.8,
-    "Friendly": 0.4,
+    "UEFA Nations League": 0.8,
+    "CONCACAF Nations League": 0.75,
+    "Copa América qualification": 0.65,
+    "Friendly": 0.15,
 }
 
 
@@ -56,7 +59,8 @@ def clean(df: pd.DataFrame) -> pd.DataFrame:
     df = df.dropna(subset=["home_goals", "away_goals"])
     df["home_goals"] = df["home_goals"].astype(int)
     df["away_goals"] = df["away_goals"].astype(int)
-    df = df[df["date"] >= "1994-01-01"].copy()
+    df["date"] = pd.to_datetime(df["date"], format="mixed", dayfirst=False, errors="coerce")
+    df = df[df["date"] >= pd.Timestamp("2010-01-01")].copy()
     df = df.sort_values("date").reset_index(drop=True)
     df["tournament_weight"] = df["tournament"].map(_tournament_weight)
     return df
