@@ -255,35 +255,35 @@ The README always shows the current state. Anyone landing on the GitHub page see
 
 ### Phase 1 — MVP, 72 hours
 
-- [ ] Pull Football-Data.co.uk historical CSVs (1995-2024)
-- [ ] Clean and join into one parquet
-- [ ] Time-decay Elo computation, sanity-check vs ClubElo
-- [ ] Bivariate Poisson + Dixon-Coles MLE fit
-- [ ] CLI: `predict ENG vs USA` outputs scoreline grid plus all markets
+- [x] Pull historical match data (JamshadAli18 GitHub mirror, 13,779 matches 2010–2024)
+- [x] Clean and join into one parquet
+- [x] Time-decay weighting (half-life 1.5yr), friendly downweight (0.15)
+- [x] Bivariate Poisson + Dixon-Coles MLE fit (scipy L-BFGS-B, vectorised)
+- [x] CLI: `predict` outputs scoreline grid plus all markets (W/D/L, O/U 2.5, BTTS, exact scores)
 - [x] Walk-forward backtest on 2018-2024, generate calibration plot
-- [ ] Manual run: predict every remaining WC fixture, commit results
+- [x] Predict every remaining WC fixture — append-only predictions.parquet, top-3 scorelines stored
 
 Goal: be predicting before tomorrow's matchday.
 
 ### Phase 2 — Automation, 1 week
 
 - [x] Monte Carlo tournament simulator (10,000 simulations, bracket-aware)
-- [ ] Football-Data.org integration for live fixtures + lineups
-- [ ] Transfermarkt market-value scrape + lineup-delta adjustment
-- [ ] Pinnacle + Polymarket odds scraping for benchmarking
-- [ ] GitHub Action: daily fetch + pre-match prediction lock
-- [ ] GitHub Action: post-match update + README regeneration
-- [ ] Auto-generated reliability diagram + log-loss curve in README
+- [x] Football-Data.org integration for live fixtures + results (daily CI)
+- [x] Transfermarkt squad-value adjustment via `model/lineup.py` + `data/squad_values.json`
+- [x] Polymarket odds fetch + model-vs-market edge table (`cli/odds.py`)
+- [x] GitHub Action: daily fetch + pre-match prediction lock (`daily-fetch.yml`)
+- [x] GitHub Action: post-match track record update + README regeneration
+- [x] Auto-generated reliability diagram + log-loss curve in README (see below)
 
 Goal: hands-off operation for the rest of WC.
 
 ### Phase 3 — Refinement, ongoing
 
-- [ ] Country-prior pooling for small-sample national teams
-- [ ] Recent-form term separate from Elo
+- [x] Country-prior pooling via adaptive per-team L2 regularization (thin-data nations 3× shrinkage)
+- [ ] Recent-form term separate from time-decay (last-5 competitive matches goal ratio)
 - [ ] Rest-days and travel-km features
 - [ ] Cross-validated regularization tuning
-- [ ] Per-market backtest comparisons
+- [ ] Per-market backtest comparisons (O/U 2.5, BTTS calibration curves)
 
 ### Phase 4 — In-play, v2
 
@@ -294,7 +294,7 @@ Goal: hands-off operation for the rest of WC.
 
 ### Phase 5 — Edge hunting, v3
 
-- [ ] Polymarket arbitrage scanner using model probabilities
+- [x] Polymarket arbitrage scanner using model probabilities (`cli/odds.py`)
 - [ ] Kelly-criterion sizing simulator on backtest
 - [ ] Cross-promotion with [polymath](https://github.com/VirajMishra1/polymath)
 
