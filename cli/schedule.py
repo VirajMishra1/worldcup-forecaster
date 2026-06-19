@@ -47,10 +47,13 @@ def main() -> None:
                 m = match.iloc[0]
                 result_str = f"{int(m['home_goals'])}-{int(m['away_goals'])}"
 
-        s1 = r.get("top_scoreline") or ""
-        s2 = r.get("top_2_scoreline") or ""
-        s3 = r.get("top_3_scoreline") or ""
-        scores_str = f"{s1}  {s2}  {s3}".strip() if (s2 or s3) else s1
+        def _clean(v) -> str:
+            return "" if (v is None or v != v or str(v) == "nan") else str(v)
+        s1 = _clean(r.get("top_scoreline"))
+        s2 = _clean(r.get("top_2_scoreline"))
+        s3 = _clean(r.get("top_3_scoreline"))
+        parts = [x for x in [s1, s2, s3] if x]
+        scores_str = "  ".join(parts) if parts else "—"
 
         print(
             f"{r['match_date'].strftime('%b %d'):<8}  "

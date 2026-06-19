@@ -92,9 +92,13 @@ def print_prediction(home: str, away: str, params) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="World Cup match predictor.")
-    parser.add_argument("--team1", help="First team")
-    parser.add_argument("--team2", help="Second team")
+    parser = argparse.ArgumentParser(
+        description="World Cup match predictor.",
+        usage="%(prog)s [HOME] [AWAY]  or  %(prog)s --home HOME --away AWAY",
+    )
+    parser.add_argument("teams", nargs="*", help="Home and away team (positional)")
+    parser.add_argument("--home", "--team1", dest="home", help="Home team")
+    parser.add_argument("--away", "--team2", dest="away", help="Away team")
     parser.add_argument("--list-teams", action="store_true", help="Print all known teams")
     parser.add_argument("--refit", action="store_true", help="Force model re-fit (ignore cache)")
     args = parser.parse_args()
@@ -106,10 +110,14 @@ def main() -> None:
             print(t)
         return
 
-    if not args.team1 or not args.team2:
-        parser.error("--team1 and --team2 are required (or use --list-teams)")
+    # Accept positional or named args
+    home = args.home or (args.teams[0] if len(args.teams) > 0 else None)
+    away = args.away or (args.teams[1] if len(args.teams) > 1 else None)
 
-    print_prediction(args.team1, args.team2, params)
+    if not home or not away:
+        parser.error("Provide two teams: predict France Iraq  or  predict --home France --away Iraq")
+
+    print_prediction(home, away, params)
 
 
 if __name__ == "__main__":
