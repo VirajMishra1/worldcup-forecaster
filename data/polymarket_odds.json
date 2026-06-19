@@ -1,5 +1,9 @@
 {
-  "updated_at": "2026-06-18T08:34:47.759716+00:00",
-  "win": {},
-  "note": "Market not found"
+  "updated_at": "2026-06-19T10:12:36.906180+00:00",
+  "win": {
+    "Yes": 0.1365,
+    "No": 0.8635
+  },
+  "market_id": "558934",
+  "market_question": "Will Spain win the 2026 FIFA World Cup?"
 }

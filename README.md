@@ -365,13 +365,13 @@ Historical backtest (walk-forward, no lookahead): **log_loss=0.8947 · brier=0.5
 ---
 
 <!-- TRACK_RECORD_START -->
-## Live Track Record (6 matches)
+## Live Track Record (8 matches)
 
 | Metric | Value | Random baseline |
 |--------|-------|-----------------|
-| W/D/L accuracy | 66.7% | 33.3% |
-| Log-loss | 0.9191 | 1.0986 |
-| Brier score | 0.5727 | 0.6667 |
+| W/D/L accuracy | 75.0% | 33.3% |
+| Log-loss | 0.9091 | 1.0986 |
+| Brier score | 0.5579 | 0.6667 |
 
 ### Per-match predictions
 
@@ -383,10 +383,17 @@ Historical backtest (walk-forward, no lookahead): **log_loss=0.8947 · brier=0.5
 | 2026-06-18 | Uzbekistan vs Colombia | 11%/25%/64% | Colombia (1-3) | 0.442 | ✓ |
 | 2026-06-18 | Czech Republic vs South Africa | 56%/27%/17% | Draw (1-1) | 1.297 | ✗ |
 | 2026-06-18 | Switzerland vs Bosnia and Herzegovina | 69%/20%/11% | Switzerland (4-1) | 0.369 | ✓ |
+| 2026-06-18 | Canada vs Qatar | 44%/31%/26% | Canada (6-0) | 0.823 | ✓ |
+| 2026-06-19 | Mexico vs South Korea | 39%/33%/28% | Mexico (1-0) | 0.935 | ✓ |
 
 <!-- TRACK_RECORD_END -->
 
 <!-- ODDS_COMPARISON_START -->
-_Polymarket data unavailable (Market not found)._
+## Model vs Polymarket · market updated Jun 19 10:12 UTC
+
+| Team | Model | Market | Edge |
+|------|-------|--------|------|
+
+_Edge = Model% − Market%. Positive = model thinks team is underpriced on Polymarket._
 
 <!-- ODDS_COMPARISON_END -->
