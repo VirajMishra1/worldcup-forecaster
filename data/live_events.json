@@ -1,17 +1,1 @@
-{
-  "United States vs Australia": {
-    "home": "United States",
-    "away": "Australia",
-    "home_goals": 2,
-    "away_goals": 0,
-    "minute": 45,
-    "red_cards": {
-      "home": 0,
-      "away": 0
-    },
-    "status": "STATUS_HALFTIME",
-    "p_home": 0.9525,
-    "p_draw": 0.0409,
-    "p_away": 0.0067
-  }
-}
+{}
