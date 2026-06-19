@@ -35,7 +35,7 @@ def main() -> None:
         live = live.rename(columns={"home_goals": "home_goals", "away_goals": "away_goals"})
         live["home"] = live["home"].replace(TEAM_NAME_MAP)
         live["away"] = live["away"].replace(TEAM_NAME_MAP)
-        live["tournament_weight"] = 1.0
+        live["tournament_weight"] = 3.0  # WC 2026 results weighted 3× — same tournament, highest signal
         live["date"] = pd.to_datetime(live["date"]).dt.tz_localize(None)
         live = live[["date", "home", "away", "home_goals", "away_goals", "tournament_weight"]]
         frames.append(live)

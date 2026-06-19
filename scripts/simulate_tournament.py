@@ -136,9 +136,11 @@ MatchInfo = Tuple[str, str, float, float, float, float, float]
 def build_group_match_info(
     params: PoissonParams,
     all_matches: pd.DataFrame,
-    group_stage_date: str = "2026-06-11",
+    group_stage_date: str | None = None,
 ) -> Dict[Tuple[str, str], MatchInfo]:
     """For every C(4,2)=6 matchup in each group, store market probabilities."""
+    if group_stage_date is None:
+        group_stage_date = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     info: Dict[Tuple[str, str], MatchInfo] = {}
     for group, teams in GROUPS.items():
         for home, away in combinations(teams, 2):
@@ -223,10 +225,12 @@ def simulate_group(
 ) -> List[Tuple[str, int, int, int]]:
     """
     Returns list of (team, points, goal_diff, goals_for) sorted by standing.
+    Tiebreaker: pts → H2H pts → H2H GD → overall GD → overall GF (FIFA rules).
     """
     pts: Dict[str, int] = {t: 0 for t in teams}
     gd: Dict[str, int] = {t: 0 for t in teams}
     gf: Dict[str, int] = {t: 0 for t in teams}
+    results: Dict[Tuple[str, str], Tuple[int, int]] = {}
 
     for home, away in combinations(teams, 2):
         key = (home, away)
@@ -238,6 +242,7 @@ def simulate_group(
         else:
             hg, ag = sample_match(home, away, match_info, rng)
 
+        results[(home, away)] = (hg, ag)
         gf[home] += hg
         gf[away] += ag
         gd[home] += hg - ag
@@ -250,12 +255,46 @@ def simulate_group(
         else:
             pts[away] += 3
 
-    standing = sorted(
-        teams,
-        key=lambda t: (pts[t], gd[t], gf[t]),
-        reverse=True,
-    )
-    return [(t, pts[t], gd[t], gf[t]) for t in standing]
+    def _h2h_pts(team: str, rivals: List[str]) -> int:
+        p = 0
+        for opp in rivals:
+            if (team, opp) in results:
+                hg, ag = results[(team, opp)]
+                p += 3 if hg > ag else (1 if hg == ag else 0)
+            elif (opp, team) in results:
+                ag, hg = results[(opp, team)]
+                p += 3 if hg > ag else (1 if hg == ag else 0)
+        return p
+
+    def _h2h_gd(team: str, rivals: List[str]) -> int:
+        d = 0
+        for opp in rivals:
+            if (team, opp) in results:
+                hg, ag = results[(team, opp)]
+                d += hg - ag
+            elif (opp, team) in results:
+                ag, hg = results[(opp, team)]
+                d += hg - ag
+        return d
+
+    def _sort_key(team: str, tied_with: List[str]) -> tuple:
+        return (pts[team], _h2h_pts(team, tied_with), _h2h_gd(team, tied_with), gd[team], gf[team])
+
+    # Sort with FIFA tiebreaker: group teams by pts, apply H2H within tied sets
+    from itertools import groupby
+    sorted_by_pts = sorted(teams, key=lambda t: pts[t], reverse=True)
+    final_order: List[str] = []
+    for _, group_iter in groupby(sorted_by_pts, key=lambda t: pts[t]):
+        tied = list(group_iter)
+        if len(tied) == 1:
+            final_order.extend(tied)
+        else:
+            tied.sort(key=lambda t: (_h2h_pts(t, [x for x in tied if x != t]),
+                                     _h2h_gd(t, [x for x in tied if x != t]),
+                                     gd[t], gf[t]), reverse=True)
+            final_order.extend(tied)
+
+    return [(t, pts[t], gd[t], gf[t]) for t in final_order]
 
 
 def simulate_knockout_match(
