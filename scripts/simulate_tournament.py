@@ -57,6 +57,71 @@ TEAM_TO_GROUP: Dict[str, str] = {
     t: g for g, teams in GROUPS.items() for t in teams
 }
 
+# ---------------------------------------------------------------------------
+# Actual WC 2026 R32 bracket (FIFA official)
+# Source: FIFA competition regulations + ESPN/Wikipedia knockout schedule
+# ---------------------------------------------------------------------------
+
+# Each entry: (slot_id, side_a, side_b)
+# side spec: ("W", group) = group winner, ("R", group) = runner-up,
+#            ("3", slot_id) = third-place team assigned to this slot
+R32_MATCHES: List[Tuple[str, Tuple[str, str], Tuple[str, str]]] = [
+    ("M73", ("R", "A"), ("R", "B")),
+    ("M74", ("W", "E"), ("3", "M74")),
+    ("M75", ("W", "F"), ("R", "C")),
+    ("M76", ("W", "C"), ("R", "F")),
+    ("M77", ("W", "I"), ("3", "M77")),
+    ("M78", ("R", "E"), ("R", "I")),
+    ("M79", ("W", "A"), ("3", "M79")),
+    ("M80", ("W", "L"), ("3", "M80")),
+    ("M81", ("W", "D"), ("3", "M81")),
+    ("M82", ("W", "G"), ("3", "M82")),
+    ("M83", ("R", "K"), ("R", "L")),
+    ("M84", ("W", "H"), ("R", "J")),
+    ("M85", ("W", "B"), ("3", "M85")),
+    ("M86", ("W", "J"), ("R", "H")),
+    ("M87", ("W", "K"), ("3", "M87")),
+    ("M88", ("R", "D"), ("R", "G")),
+]
+
+# Which groups' third-place teams are eligible for each slot
+THIRD_SLOT_ELIGIBLE: Dict[str, set] = {
+    "M74": {"A", "B", "C", "D", "F"},
+    "M77": {"C", "D", "F", "G", "H"},
+    "M79": {"C", "E", "F", "H", "I"},
+    "M80": {"E", "H", "I", "J", "K"},
+    "M81": {"B", "E", "F", "I", "J"},
+    "M82": {"A", "E", "H", "I", "J"},
+    "M85": {"E", "F", "G", "I", "J"},
+    "M87": {"D", "E", "I", "J", "L"},
+}
+
+# R16: which two R32 match winners play each other
+R16_MATCHES: List[Tuple[str, str, str]] = [
+    ("M89", "M74", "M77"),
+    ("M90", "M73", "M75"),
+    ("M91", "M76", "M78"),
+    ("M92", "M79", "M80"),
+    ("M93", "M83", "M84"),
+    ("M94", "M81", "M82"),
+    ("M95", "M86", "M88"),
+    ("M96", "M85", "M87"),
+]
+
+# QF: R16 winners bracket
+QF_MATCHES: List[Tuple[str, str, str]] = [
+    ("QF1", "M89", "M90"),
+    ("QF2", "M91", "M92"),
+    ("QF3", "M93", "M94"),
+    ("QF4", "M95", "M96"),
+]
+
+# SF
+SF_MATCHES: List[Tuple[str, str, str]] = [
+    ("SF1", "QF1", "QF2"),
+    ("SF2", "QF3", "QF4"),
+]
+
 
 # ---------------------------------------------------------------------------
 # Load helpers
@@ -297,6 +362,46 @@ def simulate_group(
     return [(t, pts[t], gd[t], gf[t]) for t in final_order]
 
 
+def _assign_thirds_to_slots(
+    qualifying_groups: List[str],
+    third_by_group: Dict[str, str],
+    rng: np.random.Generator,
+) -> Dict[str, str]:
+    """
+    Assign 8 qualifying third-place teams to their R32 slots via randomised
+    augmenting-path bipartite matching.  FIFA guarantees a perfect matching
+    exists for every valid set of 8 qualifying groups.
+
+    Returns {slot_id: team_name}.
+    """
+    eligible: Dict[str, List[str]] = {
+        slot: [g for g in groups if g in qualifying_groups]
+        for slot, groups in THIRD_SLOT_ELIGIBLE.items()
+    }
+
+    match_slot: Dict[str, str] = {}   # slot -> group
+    match_group: Dict[str, str] = {}  # group -> slot
+
+    def _augment(slot: str, visited: set) -> bool:
+        candidates = eligible[slot].copy()
+        rng.shuffle(candidates)
+        for grp in candidates:
+            if grp not in visited:
+                visited.add(grp)
+                if grp not in match_group or _augment(match_group[grp], visited):
+                    match_slot[slot] = grp
+                    match_group[grp] = slot
+                    return True
+        return False
+
+    slots = list(THIRD_SLOT_ELIGIBLE.keys())
+    rng.shuffle(slots)
+    for slot in slots:
+        _augment(slot, set())
+
+    return {slot: third_by_group[grp] for slot, grp in match_slot.items()}
+
+
 def simulate_knockout_match(
     team_a: str,
     team_b: str,
@@ -318,8 +423,8 @@ def run_simulation(
     rng: np.random.Generator,
 ) -> Dict[str, Dict[str, int]]:
     """
-    Returns dict of stage -> {team: 1 if reached}
-    Stages: qualify, r16, qf, sf, final, win
+    Simulate one full WC 2026 tournament using the actual FIFA bracket.
+    Returns {stage: {team: 1}} for stages: qualify, r16, qf, sf, final, win.
     """
     reached: Dict[str, Dict[str, int]] = {
         "qualify": {}, "r16": {}, "qf": {}, "sf": {}, "final": {}, "win": {},
@@ -327,81 +432,78 @@ def run_simulation(
 
     # --- Group stage ---
     group_standings: Dict[str, List[Tuple[str, int, int, int]]] = {}
-    third_place_teams: List[Tuple[int, int, int, str]] = []  # (pts, gd, gf, team)
+    third_place_all: List[Tuple[int, int, int, str]] = []
 
     for group, teams in GROUPS.items():
         standing = simulate_group(group, teams, completed, match_info, rng)
         group_standings[group] = standing
-        # 1st and 2nd qualify directly
         for pos, (team, pts, gd, gf_val) in enumerate(standing):
             if pos < 2:
                 reached["qualify"][team] = 1
             elif pos == 2:
-                third_place_teams.append((pts, gd, gf_val, team))
+                third_place_all.append((pts, gd, gf_val, team))
 
     # Best 8 third-place teams qualify
-    third_place_teams.sort(key=lambda x: (x[0], x[1], x[2]), reverse=True)
-    for pts, gd, gf_val, team in third_place_teams[:8]:
+    third_place_all.sort(key=lambda x: (x[0], x[1], x[2]), reverse=True)
+    qualifying_thirds = third_place_all[:8]
+    for _, _, _, team in qualifying_thirds:
         reached["qualify"][team] = 1
 
-    # Categorise the 32 qualifiers by group position
-    group_winners = [standing[0][0] for standing in group_standings.values()]   # 12 teams
-    group_runners_up = [standing[1][0] for standing in group_standings.values()]  # 12 teams
-    group_thirds_q = [t for _, _, _, t in third_place_teams[:8]]                 # 8 teams
-    assert len(group_winners) == 12
-    assert len(group_runners_up) == 12
-    assert len(group_thirds_q) == 8
+    # Group position lookups
+    gw: Dict[str, str] = {g: s[0][0] for g, s in group_standings.items()}   # winner
+    gr: Dict[str, str] = {g: s[1][0] for g, s in group_standings.items()}   # runner-up
+    third_by_group: Dict[str, str] = {
+        TEAM_TO_GROUP[t]: t for _, _, _, t in qualifying_thirds
+    }
+    qualifying_groups = list(third_by_group.keys())
 
-    # Shuffle within each tier (preserves seeding constraint across rounds)
-    rng.shuffle(group_winners)
-    rng.shuffle(group_runners_up)
-    rng.shuffle(group_thirds_q)
+    # Assign 3rd-place teams to their eligible R32 slots via bipartite matching
+    third_slot: Dict[str, str] = _assign_thirds_to_slots(
+        qualifying_groups, third_by_group, rng
+    )
 
-    # --- Constrained R32 bracket ---
-    # Rule: no group winner faces another group winner in R32.
-    # 12 group winners each play one of the 20 non-winners.
-    # Remaining 8 non-winners play each other (4 matches).
-    # Total: 12 + 4 = 16 R32 matches.
-    non_winners = group_runners_up + group_thirds_q  # 20 teams
-    rng.shuffle(non_winners)
+    def _resolve(spec: Tuple[str, str]) -> str:
+        kind, ref = spec
+        if kind == "W":
+            return gw[ref]
+        if kind == "R":
+            return gr[ref]
+        return third_slot.get(ref, "")  # ref = slot_id for 3rd-place
 
-    r32_pairs: List[Tuple[str, str]] = []
-    for i, w in enumerate(group_winners):
-        r32_pairs.append((w, non_winners[i]))         # winner vs non-winner
-    for i in range(0, 8, 2):                          # remaining 8 non-winners
-        r32_pairs.append((non_winners[12 + i], non_winners[12 + i + 1]))
-    assert len(r32_pairs) == 16
-
-    # R32 → 16 survivors
-    winners_r32 = []
-    for team_a, team_b in r32_pairs:
+    # --- R32 ---
+    r32_winners: Dict[str, str] = {}
+    for slot, side_a, side_b in R32_MATCHES:
+        team_a, team_b = _resolve(side_a), _resolve(side_b)
         w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng)
-        winners_r32.append(w)
+        r32_winners[slot] = w
         reached["r16"][w] = 1
 
-    # R16 → QF
-    winners_r16 = []
-    for i in range(0, 16, 2):
-        w = simulate_knockout_match(winners_r32[i], winners_r32[i + 1], tidx, p_advance, rng)
-        winners_r16.append(w)
+    # --- R16 ---
+    r16_winners: Dict[str, str] = {}
+    for slot, src_a, src_b in R16_MATCHES:
+        team_a, team_b = r32_winners[src_a], r32_winners[src_b]
+        w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng)
+        r16_winners[slot] = w
         reached["qf"][w] = 1
 
-    # QF → SF
-    winners_qf = []
-    for i in range(0, 8, 2):
-        w = simulate_knockout_match(winners_r16[i], winners_r16[i + 1], tidx, p_advance, rng)
-        winners_qf.append(w)
+    # --- QF ---
+    qf_winners: Dict[str, str] = {}
+    for slot, src_a, src_b in QF_MATCHES:
+        team_a, team_b = r16_winners[src_a], r16_winners[src_b]
+        w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng)
+        qf_winners[slot] = w
         reached["sf"][w] = 1
 
-    # SF → Final
-    winners_sf = []
-    for i in range(0, 4, 2):
-        w = simulate_knockout_match(winners_qf[i], winners_qf[i + 1], tidx, p_advance, rng)
-        winners_sf.append(w)
+    # --- SF ---
+    sf_winners: Dict[str, str] = {}
+    for slot, src_a, src_b in SF_MATCHES:
+        team_a, team_b = qf_winners[src_a], qf_winners[src_b]
+        w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng)
+        sf_winners[slot] = w
         reached["final"][w] = 1
 
-    # Final
-    champion = simulate_knockout_match(winners_sf[0], winners_sf[1], tidx, p_advance, rng)
+    # --- Final ---
+    champion = simulate_knockout_match(sf_winners["SF1"], sf_winners["SF2"], tidx, p_advance, rng)
     reached["win"][champion] = 1
 
     return reached
