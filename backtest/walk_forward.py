@@ -30,6 +30,7 @@ def run(
     refit_freq_days: int = 30,
     min_train_years: int = 5,
 ) -> pd.DataFrame:
+    """Walk-forward backtest. min_train_years: skip until that many years of history exist."""
     df = pd.read_parquet(DATA_DIR / "historical_matches.parquet")
     df["date"] = pd.to_datetime(df["date"])
     start_dt = pd.Timestamp(start)
@@ -45,7 +46,8 @@ def run(
 
         if match_date >= next_refit or params is None:
             train = df[df["date"] < match_date]
-            if len(train) < 500:
+            train_span = (match_date - train["date"].min()).days if not train.empty else 0
+            if len(train) < 500 or train_span < 365 * min_train_years:
                 next_refit = match_date + timedelta(days=refit_freq_days)
                 continue
             logging.info("Refitting at %s on %d matches", match_date.date(), len(train))

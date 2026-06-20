@@ -2,7 +2,7 @@
 
 # WC 2026 Forecaster
 
-**Probabilistic match predictions for FIFA World Cup 2026 — locked before kickoff, never touched after.**
+**Probabilistic match predictions for FIFA World Cup 2026. Locked before kickoff, never touched after.**
 
 [![daily-fetch](https://github.com/VirajMishra1/worldcup-forecaster/actions/workflows/daily-fetch.yml/badge.svg)](https://github.com/VirajMishra1/worldcup-forecaster/actions/workflows/daily-fetch.yml) [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
 
@@ -14,34 +14,34 @@
 
 ## What is this?
 
-Most football predictions are gut-feel opinion dressed up as analysis. This is a proper statistical model: Dixon-Coles score model fit on 13,779 international matches from 2010–2024, with time-decay weighting, squad-value adjustments, and calibration tuned on a 5,500-match walk-forward backtest.
+Most football predictions are gut-feel dressed up as analysis. This is a proper statistical model: a Dixon-Coles score model fit on 13,779 international matches from 2010 to 2024, with time-decay weighting, squad-value adjustments from Transfermarkt, and calibration tuned on a 5,500-match held-out backtest.
 
-Before every World Cup game, it produces a full probability distribution over every possible scoreline (0-0, 1-0, 2-1, ...). From that distribution it derives win/draw/loss odds, over/under 2.5, BTTS, and top-3 most likely exact scores. All of that gets committed to GitHub 60 minutes before kickoff and is never edited. After the match, actual outcomes are compared and the track record updates automatically.
+Before every World Cup game, it produces a full probability distribution over every possible scoreline (0-0, 1-0, 2-1, and so on). From that distribution it derives win/draw/loss odds, over/under 2.5 goals, BTTS, and the three most likely exact scores. All of that gets committed to GitHub 60 minutes before kickoff and is never edited. After the match, actual outcomes are compared and the track record updates automatically.
 
-The point isn't to beat bookmakers. It's to build something that's actually calibrated — and to prove it on live data with a verifiable track record, not cherry-picked examples.
+The goal is not to beat bookmakers. It is to build something genuinely calibrated and prove it on live data, with a verifiable record anyone can check in the git history.
 
 ---
 
-## WC 2026 — Winner Odds
+## WC 2026 Winner Odds
 
-10,000 Monte Carlo simulations · bracket-aware · updated daily after every result
+10,000 Monte Carlo simulations, bracket-aware, updated daily after every result
 
 | Team | Win probability |
 |------|----------------|
-| 🇦🇷 Argentina | 15.8% |
-| 🇧🇷 Brazil | 12.2% |
-| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 10.2% |
-| 🇺🇸 United States | 10.2% |
-| 🇩🇪 Germany | 9.3% |
-| 🇫🇷 France | 7.7% |
-| 🇪🇸 Spain | 5.9% |
-| 🇧🇪 Belgium | 5.2% |
-| 🇵🇹 Portugal | 4.8% |
-| 🇲🇦 Morocco | 4.1% |
-| 🇲🇽 Mexico | 3.9% |
-| 🇨🇴 Colombia | 2.6% |
+| Argentina | 15.8% |
+| Brazil | 12.2% |
+| England | 10.2% |
+| United States | 10.2% |
+| Germany | 9.3% |
+| France | 7.7% |
+| Spain | 5.9% |
+| Belgium | 5.2% |
+| Portugal | 4.8% |
+| Morocco | 4.1% |
+| Mexico | 3.9% |
+| Colombia | 2.6% |
 
-_32 completed WC 2026 results included in the refit · updated 2026-06-20_
+_32 completed WC 2026 results included in the refit. Updated 2026-06-20._
 
 ---
 
@@ -54,90 +54,139 @@ _32 completed WC 2026 results included in the refit · updated 2026-06-20_
 | Log-loss | 0.8687 | 1.0986 |
 | Brier score | 0.5136 | 0.6667 |
 
+_4 predictions from June 17 (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Colombia vs Uzbekistan) were generated after kickoff and are excluded from this table. They are visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
+
 ### Per-match predictions
 
-| Date | Match | H% / D% / A% | Result | LL | ✓ |
-|------|-------|--------------|--------|----|---|
-| 2026-06-18 | Czech Republic vs South Africa | 56%/27%/17% | Draw (1-1) | 1.297 | ✗ |
-| 2026-06-18 | Switzerland vs Bosnia and Herzegovina | 69%/20%/11% | Switzerland (4-1) | 0.369 | ✓ |
-| 2026-06-18 | Canada vs Qatar | 44%/31%/26% | Canada (6-0) | 0.823 | ✓ |
-| 2026-06-19 | Mexico vs South Korea | 39%/33%/28% | Mexico (1-0) | 0.935 | ✓ |
-| 2026-06-19 | United States vs Australia | 33%/33%/34% | United States (2-0) | 1.101 | ✗ |
-| 2026-06-19 | Scotland vs Morocco | 16%/29%/55% | Morocco (0-1) | 0.605 | ✓ |
-| 2026-06-20 | Brazil vs Haiti | 95%/4%/1% | Brazil (3-0) | 0.053 | ✓ |
-| 2026-06-20 | Turkey vs Paraguay | 56%/27%/17% | Paraguay (0-1) | 1.767 | ✗ |
+| Date | Match | H% / D% / A% | Result | LL | Correct |
+|------|-------|--------------|--------|----|---------|
+| 2026-06-18 | Czech Republic vs South Africa | 56%/27%/17% | Draw (1-1) | 1.297 | No |
+| 2026-06-18 | Switzerland vs Bosnia and Herzegovina | 69%/20%/11% | Switzerland (4-1) | 0.369 | Yes |
+| 2026-06-18 | Canada vs Qatar | 44%/31%/26% | Canada (6-0) | 0.823 | Yes |
+| 2026-06-19 | Mexico vs South Korea | 39%/33%/28% | Mexico (1-0) | 0.935 | Yes |
+| 2026-06-19 | United States vs Australia | 33%/33%/34% | United States (2-0) | 1.101 | No |
+| 2026-06-19 | Scotland vs Morocco | 16%/29%/55% | Morocco (0-1) | 0.605 | Yes |
+| 2026-06-20 | Brazil vs Haiti | 95%/4%/1% | Brazil (3-0) | 0.053 | Yes |
+| 2026-06-20 | Turkey vs Paraguay | 56%/27%/17% | Paraguay (0-1) | 1.767 | No |
 <!-- TRACK_RECORD_END -->
-
-Log-loss is the main metric here — it rewards calibration, not just picking winners. Lower is better. A random 1/3-1/3-1/3 guess scores 1.0986. The model is currently at 0.8687.
 
 ---
 
 <!-- ODDS_COMPARISON_START -->
-## Model vs Polymarket · market updated Jun 19 10:12 UTC
+## Model vs Polymarket
 
 | Team | Model | Market | Edge |
 |------|-------|--------|------|
 
-_Edge = Model% − Market%. Positive = model thinks team is underpriced._
+_Edge = Model minus Market. Positive means the model thinks the team is underpriced._
 
 <!-- ODDS_COMPARISON_END -->
 
 ---
 
-## How it works
+## How predictions are scored
 
-### Scoring model
+### Log-loss
 
-Every prediction starts from expected goals — one per team. The model learns these from historical results: each team has an attack rating and a defense rating, and those combine to give expected goals for any matchup. From expected goals you get a probability distribution over all possible scorelines, and from that distribution every market falls out — win/draw/loss, over/under, BTTS, exact score.
+Log-loss is the standard metric for probabilistic forecasters. For each match, the score is:
 
-One thing worth knowing: standard Poisson models underestimate how often low-scoring games happen in football. Dixon-Coles adds a correction term (τ) that inflates the probability on 0-0, 1-0, 0-1, and 1-1 results to match what the data actually shows.
+```
+LL = -[ y_H * ln(p_H) + y_D * ln(p_D) + y_A * ln(p_A) ]
+```
+
+Where `y_H`, `y_D`, `y_A` are 1 if that outcome happened (0 otherwise), and `p_H`, `p_D`, `p_A` are the predicted probabilities. You take the log of the predicted probability for the thing that actually happened, then negate it.
+
+A few examples to make this concrete:
+
+| Prediction | Outcome | Log-loss |
+|-----------|---------|----------|
+| 90% home win | Home wins | 0.105 (good) |
+| 60% home win | Home wins | 0.511 (ok) |
+| 60% home win | Away wins | 0.916 (bad) |
+| 90% home win | Away wins | 2.303 (terrible) |
+
+Being confidently wrong is heavily penalized. This is the point: log-loss rewards calibration. A model that says "60% home" when home teams win 60% of the time will score better long-term than one that says "90% home" when home teams win 60% of the time, even if the overconfident model has higher raw accuracy.
+
+Random guessing (33% each) scores 1.0986. The model targets below 1.0. The backtest sits at 0.8961. The live track record is at 0.8687.
+
+### Brier score
+
+Brier score is the mean squared error between predicted probabilities and outcomes:
+
+```
+Brier = (p_H - y_H)^2 + (p_D - y_D)^2 + (p_A - y_A)^2
+```
+
+Averaged across all matches. Lower is better. Random guessing gives 0.667. Perfect predictions give 0. The model backtest sits at 0.5265.
+
+Brier is more forgiving of confident mistakes than log-loss (squared vs logarithmic penalty), so the two metrics together give a fuller picture.
+
+---
+
+## How the model works
+
+### Why Poisson and Dixon-Coles
+
+Goals in football are rare, roughly independent events in a fixed 90-minute window. That is exactly the setup where Poisson is the right distribution. Match data across thousands of games confirms this: the marginal distribution of goals per team per match fits Poisson closely.
+
+The alternative approaches all have meaningful problems for this use case:
+
+**ELO**: gives a single win probability but no scoreline distribution. You cannot derive over/under 2.5 or exact scores from an ELO rating, which cuts off a large part of what a forecaster should be able to do.
+
+**Neural network / gradient boosting**: 13,779 matches is a tiny dataset for a deep learning model. Dixon-Coles has roughly 3N + 2 parameters (N = number of teams), which is around 930 parameters for this dataset. A neural network would need many thousands and would overfit badly on data this sparse. Tree-based models also produce black-box outputs with no interpretable team ratings.
+
+**Simple regression on recent form**: ignores the full historical record of how teams perform against each other and produces poorly calibrated probability estimates.
+
+Dixon-Coles (1997) is the established approach in the football modelling literature specifically because it handles low-scoring outcomes well. Standard independent Poisson models systematically underestimate how often 0-0, 1-0, 0-1, and 1-1 games happen. Dixon-Coles adds a correction term (tau) that inflates those four scorelines to match what the data shows.
 
 <details>
-<summary><strong>The math</strong></summary>
+<summary><strong>Model equations</strong></summary>
 
-Each team `i` has an attack parameter `α_i` and defense parameter `δ_i`. For a match between home team `i` and away team `j`:
+Each team `i` has an attack parameter `alpha_i` and defense parameter `delta_i`. For a match between home team `i` and away team `j`:
 
 ```
-λ_home = exp(α_i + δ_j + γ·is_home)
-λ_away = exp(α_j + δ_i)
+lambda_home = exp(alpha_i + delta_j + gamma * is_home)
+lambda_away = exp(alpha_j + delta_i)
 
-P(X=x, Y=y) = τ(x, y, λ_home, λ_away, ρ) · Poisson(x; λ_home) · Poisson(y; λ_away)
+P(X=x, Y=y) = tau(x, y, rho) * Poisson(x; lambda_home) * Poisson(y; lambda_away)
 ```
 
-`is_home = 0` for all WC matches (neutral venues). The Dixon-Coles τ correction applies only when `x + y ≤ 1`, parameterised by `ρ ≈ −0.065` (fitted from data). Parameters are found by MLE with L-BFGS-B.
+The tau correction applies only when `x + y <= 1`. The fitted rho is approximately -0.065. All 309 team parameters plus rho and the home-advantage coefficient gamma are found jointly by maximum likelihood (L-BFGS-B optimizer).
+
+`is_home = 0` for all WC matches since every game is at a neutral venue.
 
 </details>
 
 ### Training data
 
-13,779 international matches from 2010–2024:
+13,779 international matches from 2010 to 2024:
 
-- **Time decay** — exponential weighting with a 1.5-year half-life, so recent form matters more than historical results
-- **Friendly downweight** — friendly matches carry 15% of the weight of competitive fixtures
-- **WC tournament boosts** — WC 2022 matches weighted 3×, 2018 × 2.0, 2014 × 1.5, 2010 × 1.2 (same competition, strongest prior)
-- **xG substitution** — for 63 WC 2022 matches, actual scorelines are replaced with StatsBomb expected goals, since xG is a cleaner signal of team quality than luck-adjusted results
+- **Time decay:** exponential weighting with a 1.5-year half-life. A match from 2020 counts roughly 3x more than the same match from 2017.
+- **Friendly downweight:** friendlies carry 15% of the weight of competitive fixtures.
+- **WC tournament boosts:** WC 2022 weighted 3x, 2018 at 2x, 2014 at 1.5x, 2010 at 1.2x. Same competition format means stronger signal.
+- **xG substitution:** for 63 WC 2022 matches, actual scorelines are replaced with StatsBomb expected goals. xG removes the luck from finishing and gives a cleaner read on which team actually dominated.
 
-The model is refitted daily as WC 2026 results come in (weighted 3×).
+The model is refitted daily as WC 2026 results come in, which are added at 3x weight.
 
 ### Adjustments at prediction time
 
-**Squad values** — Transfermarkt market values anchor predictions for teams with thin historical data. Haiti at €18M vs France at €1.2B shouldn't require hundreds of historical matches to get right. Applied conservatively (exponent 0.375, capped effect).
+**Squad values:** Transfermarkt market values are used to correct for teams with thin historical records. Haiti at 18 million euros vs France at 1.2 billion should not require hundreds of historical matches to get right. Applied conservatively (exponent 0.375, capped at 50% effect).
 
-**Recent form** — last 5 competitive matches, weighted by opponent quality. Beating Argentina counts more than beating a bottom-ranked side. Clipped to ±15% on expected goals.
+**Recent form:** last 5 competitive matches, weighted by opponent quality. A win against Argentina counts more than a win against a bottom-ranked team. Capped at plus or minus 15% on expected goals.
 
-**Rest days** — small ±3% adjustment per day relative to a 4-day baseline.
+**Rest days:** small adjustment of plus or minus 3% per day relative to a 4-day baseline.
 
-**Calibration** — isotonic regression calibration, fitted on 5,518 backtest matches, adjusts the raw model outputs to better match empirical win rates.
+**Calibration:** temperature scaling fitted on a held-out 20% slice of the backtest (1,104 matches). The fitted temperature of 1.12 means the model is slightly overconfident in its raw outputs, and this step corrects for that. Unlike fitting three independent regressors, temperature scaling preserves the constraint that win/draw/loss probabilities sum to 1.
 
 ### How predictions stay honest
 
-Everything in `data/predictions.parquet` is append-only. A GitHub Action locks predictions 60 minutes before kickoff and commits them — there's no mechanism to overwrite a locked row. After the match, results are fetched and the track record updates. The git history is the audit trail.
+Everything in `data/predictions.parquet` is append-only. A GitHub Action locks predictions 60 minutes before kickoff and commits them to the repo. There is no mechanism to overwrite a locked row. After the match, results are fetched and the track record updates. The git history is the full audit trail.
 
 ---
 
 ## Model performance
 
-Walk-forward backtest — refitted every 30 days, no lookahead, 5,518 matches (2018–2023):
+Walk-forward backtest, refitted every 30 days, no lookahead, 5,518 matches (2018-2023):
 
 | Metric | Model | Random baseline |
 |--------|-------|-----------------|
@@ -147,7 +196,7 @@ Walk-forward backtest — refitted every 30 days, no lookahead, 5,518 matches (2
 
 ![Calibration](reports/calibration.png)
 
-The calibration plot shows how often predicted probabilities match actual outcomes — when the model says 60%, the team wins roughly 60% of the time. A perfectly calibrated model sits on the diagonal.
+The calibration plot shows whether predicted probabilities match actual frequencies. When the model says 60%, do the predicted teams win 60% of the time? A perfectly calibrated model lies on the diagonal.
 
 ![Log-loss curve](reports/log_loss_curve.png)
 
@@ -171,12 +220,11 @@ FOOTBALL_DATA_API_KEY=your_key_here
 Then:
 
 ```bash
-python -m scripts.fetch_fixtures      # fetch WC schedule
-python -m scripts.fetch_results       # fetch completed results
-python -m scripts.refit_params        # fit the model
-python -m scripts.predict_all_fixtures  # generate predictions
+python -m scripts.fetch_fixtures        # fetch WC 2026 schedule
+python -m scripts.fetch_results         # fetch completed results
+python -m scripts.refit_params          # fit the model
+python -m scripts.predict_all_fixtures  # generate and lock predictions
 python -m scripts.simulate_tournament   # 10k tournament simulation
-
 python -m cli.predict --home France --away Argentina  # single match
 python -m cli.backtest --start 2018-01-01 --end 2024-12-31  # historical backtest
 ```
@@ -186,15 +234,15 @@ python -m cli.backtest --start 2018-01-01 --end 2024-12-31  # historical backtes
 ## Stack
 
 - Python 3.11, numpy, scipy, pandas, pyarrow
-- scikit-learn for isotonic calibration
+- scikit-learn for temperature scaling calibration
 - httpx for data fetching
-- GitHub Actions for the full pipeline (zero infra cost)
+- GitHub Actions for the full daily pipeline
 - GitHub Pages for the dashboard
 
 ---
 
 ## References
 
-- Dixon, M. and Coles, S. (1997). "Modelling Association Football Scores and Inefficiencies in the Football Betting Market." *Applied Statistics*, 46(2), 265–280.
-- Karlis, D. and Ntzoufras, I. (2003). "Analysis of sports data by using bivariate Poisson models." *The Statistician*, 52(3), 381–393.
-- StatsBomb open data (WC 2022 xG): [github.com/statsbomb/open-data](https://github.com/statsbomb/open-data)
+- Dixon, M. and Coles, S. (1997). Modelling Association Football Scores and Inefficiencies in the Football Betting Market. *Applied Statistics*, 46(2), 265-280.
+- Karlis, D. and Ntzoufras, I. (2003). Analysis of sports data by using bivariate Poisson models. *The Statistician*, 52(3), 381-393.
+- StatsBomb open data (WC 2022 expected goals): [github.com/statsbomb/open-data](https://github.com/statsbomb/open-data)

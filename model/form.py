@@ -38,6 +38,7 @@ def form_factors(home: str, away: str, match_date: str, df: pd.DataFrame,
     df = df[~df["tournament"].isin(_FRIENDLIES)].copy()
     df["date"] = pd.to_datetime(df["date"], utc=True).dt.tz_convert(None)
     ratios = _squad_ratios()
+    global_mean = float((df["home_goals"].mean() + df["away_goals"].mean()) / 2)
 
     def _team_form(team: str) -> float:
         rows = df[((df["home"] == team) | (df["away"] == team)) & (df["date"] < date)]
@@ -61,7 +62,6 @@ def form_factors(home: str, away: str, match_date: str, df: pd.DataFrame,
         w = np.array(weights)
         w /= w.sum()
         gd_weighted = float(np.dot(w, np.array(gf) - np.array(ga)))
-        GLOBAL_MEAN = 1.2
-        return float(np.clip(1.0 + alpha * gd_weighted / GLOBAL_MEAN, 1 - alpha, 1 + alpha))
+        return float(np.clip(1.0 + alpha * gd_weighted / global_mean, 1 - alpha, 1 + alpha))
 
     return _team_form(home), _team_form(away)
