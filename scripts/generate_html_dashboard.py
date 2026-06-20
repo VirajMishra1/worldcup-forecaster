@@ -1,4 +1,5 @@
 """Generate static HTML dashboard for WC 2026 predictions."""
+import html as _html
 from pathlib import Path
 import json
 import pandas as pd
@@ -237,16 +238,20 @@ def main() -> None:
 
         result_cell = live_score or actual
         no_pred_class = "" if pred else " no-pred"
+        h_esc = _html.escape(home)
+        a_esc = _html.escape(away)
+        scores_esc = _html.escape(scores_str)
+        result_esc = _html.escape(result_cell)
         rows_html += f"""
         <tr class="{status}{no_pred_class}">
           <td class="date-col">{date_str}</td>
-          <td class="team-col home-team">{home}</td>
+          <td class="team-col home-team">{h_esc}</td>
           <td class="prob home-prob">{f'{ph:.0%}' if pred else '—'}</td>
           <td class="prob draw-prob">{f'{pd_:.0%}' if pred else '—'}</td>
           <td class="prob away-prob">{f'{pa:.0%}' if pred else '—'}</td>
-          <td class="team-col away-team">{away}{retro_badge}</td>
-          <td class="scores-col">{scores_str}</td>
-          <td class="result-col">{result_cell}</td>
+          <td class="team-col away-team">{a_esc}{retro_badge}</td>
+          <td class="scores-col">{scores_esc}</td>
+          <td class="result-col">{result_esc}</td>
           <td class="verdict-wdl"><span class="verdict">{wdl_verdict}</span></td>
           <td class="verdict-score"><span class="verdict">{score_verdict}</span></td>
         </tr>"""
@@ -258,7 +263,7 @@ def main() -> None:
         bar = _bar(prob)
         winner_rows += f"""
         <tr>
-          <td>{team}</td>
+          <td>{_html.escape(team)}</td>
           <td class="pct">{prob:.1%}</td>
           <td class="bar-cell"><span class="bar">{bar}</span></td>
           <td class="implied">{implied}</td>

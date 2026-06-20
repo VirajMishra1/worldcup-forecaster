@@ -33,6 +33,7 @@ def main() -> None:
     # WC 2022 (most recent, 64-team transition era) > 2018 > 2014 > 2010.
     hist = hist.copy()
     hist["date"] = pd.to_datetime(hist["date"])
+    hist["tournament_weight"] = 1.0  # reset so stale values from parquet don't survive
     wc_mask = hist["tournament"] == "FIFA World Cup"
     yr = hist["date"].dt.year
     hist.loc[wc_mask & (yr >= 2022), "tournament_weight"] = 3.0
@@ -82,8 +83,9 @@ def main() -> None:
         if substituted:
             logging.info("Substituted xG for actual goals in %d WC 2022 matches", substituted)
 
-    logging.info("Fitting on %d total matches...", len(df))
-    params = fit(df, neutral=True)
+    as_of = pd.Timestamp.today().normalize()
+    logging.info("Fitting on %d total matches (as_of %s)...", len(df), as_of.date())
+    params = fit(df, neutral=True, as_of=as_of)
 
     CACHE_PATH.write_text(json.dumps({
         "attack": params.attack,
@@ -91,6 +93,9 @@ def main() -> None:
         "rho": params.rho,
         "gamma": params.gamma,
         "teams": params.teams,
+        "fit_at": pd.Timestamp.utcnow().isoformat(),
+        "as_of": str(as_of.date()),
+        "n_matches": len(df),
     }))
     logging.info("Saved params → %s  (%d teams)", CACHE_PATH, len(params.teams))
 
