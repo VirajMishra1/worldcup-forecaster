@@ -1,4 +1,4 @@
-## Live Track Record (8 matches)
+## Live Track Record (9 matches)
 
 | Metric | Value | Random baseline |
 |--------|-------|-----------------|
