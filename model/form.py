@@ -1,4 +1,4 @@
-"""Recent-form adjustment: last-5 competitive match goal ratio."""
+"""Recent-form adjustment: last-5 competitive match goal-difference signal."""
 from pathlib import Path
 import pandas as pd
 import numpy as np
@@ -30,9 +30,10 @@ def form_factors(home: str, away: str, match_date: str, df: pd.DataFrame,
             else:
                 gf.append(r["away_goals"])
                 ga.append(r["home_goals"])
-        # ratio vs global mean (historical average: ~1.2 goals/team/match)
+        # Goal difference per game, normalised by global mean. Positive = scoring > conceding.
+        # Accounts for defensive form too: 5 GF / 5 GA → 0 adjustment (not a boost).
         GLOBAL_MEAN = 1.2
-        ratio = np.mean(gf) / GLOBAL_MEAN
-        return float(np.clip(1.0 + alpha * (ratio - 1.0), 1 - alpha, 1 + alpha))
+        gd_per_game = np.mean(gf) - np.mean(ga)
+        return float(np.clip(1.0 + alpha * gd_per_game / GLOBAL_MEAN, 1 - alpha, 1 + alpha))
 
     return _team_form(home), _team_form(away)

@@ -1,6 +1,6 @@
 # worldcup-forecaster
 
-Calibrated probabilistic match predictor for FIFA World Cup 2026. Dixon-Coles score model (independent Poisson + low-score tau correction), time-decayed MLE fit on 30 years of international results, lineup-aware adjustment via Transfermarkt squad values. Predictions are locked at kickoff and published to a public track record that auto-updates after every match.
+Calibrated probabilistic match predictor for FIFA World Cup 2026. Dixon-Coles score model (independent Poisson + low-score tau correction), time-decayed MLE fit on 15 years of international results (2010–2024), lineup-aware adjustment via Transfermarkt squad values. Predictions are locked at kickoff and published to a public track record that auto-updates after every match.
 
 This is not a "pick the winner" tool. It is a forecasting system that estimates the full probability distribution over scorelines, then derives every market (W/D/L, exact score, totals, BTTS) from that distribution. Success is measured by **calibration and log-loss vs a uniform 1/3-1/3-1/3 random baseline**, not by accuracy.
 
@@ -31,7 +31,7 @@ _Squad-value adjustment applied (Transfermarkt €M, exponent 0.375). 32 complet
 
 | | |
 |---|---|
-| What it is | A Dixon-Coles score model (independent Poisson + low-score tau correction), fit on 30 years of historical international matches via MLE with time-decay weighting. Lineup adjustments derived from Transfermarkt market-value deltas. Predictions logged before kickoff, never edited. |
+| What it is | A Dixon-Coles score model (independent Poisson + low-score tau correction), fit on 15 years of historical international matches (2010–2024) via MLE with time-decay weighting. Lineup adjustments derived from Transfermarkt market-value deltas. Predictions logged before kickoff, never edited. |
 | What it isn't | A "guaranteed winner" tool. A high-accuracy exact-score predictor. A replacement for bookmaker odds. |
 | Honest target | Log-loss below 1.09 (uniform baseline) on the live track record; reliability diagram within five percentage points of the diagonal on the historical walk-forward backtest. |
 | Honest range on remaining ~48 WC matches | W/D/L accuracy 50-58%. Log-loss 0.98-1.05. Exact-score accuracy 10-13%. Over/Under 2.5 60-63%. |
@@ -118,7 +118,7 @@ Most substitutions are like-for-like and signal is below noise. Ignore in v1. v2
 
 | Source | Use | Cost | Notes |
 |---|---|---|---|
-| [Football-Data.co.uk](https://www.football-data.co.uk/) | 30 years of historical match results plus closing odds | Free | Backtest anchor. CSV per league/season. |
+| [Football-Data.co.uk](https://www.football-data.co.uk/) | 15 years of international match results (2010–2024) | Free | Backtest anchor. CSV per league/season. |
 | [ClubElo](http://clubelo.com/) | Pre-computed Elo for sanity checking own ratings | Free API | Reference, not source |
 | [Football-Data.org](https://www.football-data.org/) | Live fixtures, lineups, events | Free tier | Pre-kickoff lineup feed |
 | [FBref](https://fbref.com/) | Advanced stats, xG/90, per-player numbers | Scrape, free | Optional v2 input |
@@ -143,10 +143,10 @@ worldcup-forecaster/
     predictions.parquet           # Locked predictions, append-only
     results.parquet               # Realized outcomes
   scripts/
-    fetch_historical.py           # One-shot, pulls 30 years
+    fetch_historical.py           # One-shot, pulls 2010-2024 historical data
     fetch_lineups.py              # Cron, 90min before kickoff
     fetch_results.py              # Cron, 30min after final whistle
-    fetch_odds.py                 # Cron, T-60min: Pinnacle + Polymarket
+    fetch_odds.py                 # Cron, T-60min: Polymarket odds
   model/
     elo.py                        # Time-decay Elo computation
     poisson.py                    # Dixon-Coles MLE fit
@@ -190,7 +190,7 @@ T-24h:   Cron computes pre-lineup probabilistic forecast using squad-strength on
          Stored as "preliminary" prediction.
 T-90m:   Lineup poll starts, every 5 min.
 T-60m:   Lineups locked. Recompute with XI-strength delta.
-         Pull Pinnacle + Polymarket closing odds for benchmarking.
+         Pull Polymarket odds for model-vs-market edge table.
          Write "official" locked prediction to predictions.parquet.
 T+0:     Match kicks off. Prediction frozen.
 T+90:    Result fetched. Written to results.parquet.
@@ -214,7 +214,7 @@ Tracked per match and aggregated:
 - Brier score (three-outcome generalization)
 - Reliability diagram bins
 - Implied vs realized probability scatter
-- ROI per market vs Pinnacle and vs Polymarket
+- ROI per market vs Polymarket
 
 ### What to publish
 
