@@ -25,7 +25,8 @@ def _squad_ratios() -> dict:
 
 
 def form_factors(home: str, away: str, match_date: str, df: pd.DataFrame,
-                 n: int = 5, alpha: float = 0.15) -> tuple[float, float]:
+                 n: int = 5, alpha: float = 0.15,
+                 use_squad_weights: bool = True) -> tuple[float, float]:
     """
     Returns (home_factor, away_factor) — multiplicative adjustments to lambda.
     alpha=0.15 means at most ±15% from form alone.
@@ -37,7 +38,9 @@ def form_factors(home: str, away: str, match_date: str, df: pd.DataFrame,
         date = date.tz_convert(None)
     df = df[~df["tournament"].isin(_FRIENDLIES)].copy()
     df["date"] = pd.to_datetime(df["date"], utc=True).dt.tz_convert(None)
-    ratios = _squad_ratios()
+    # use_squad_weights=False in backtest: squad_values.json is June-2026 data,
+    # using it to weight 2018-2024 matches is forward leakage.
+    ratios = _squad_ratios() if use_squad_weights else {}
     global_mean = float((df["home_goals"].mean() + df["away_goals"].mean()) / 2)
 
     def _team_form(team: str) -> float:
@@ -55,7 +58,6 @@ def form_factors(home: str, away: str, match_date: str, df: pd.DataFrame,
                 opp = r["home"]
                 gf.append(r["away_goals"])
                 ga.append(r["home_goals"])
-            # sqrt dampens extremes: elite opp (ratio 4) → weight 2, minnow (ratio 0.06) → 0.25
             opp_ratio = ratios.get(opp, 1.0)
             weights.append(max(0.25, min(2.5, opp_ratio ** 0.5)))
 

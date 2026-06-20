@@ -58,7 +58,7 @@ def run(
         if home not in params.teams or away not in params.teams:
             continue
 
-        hf, af = form_factors(home, away, str(match_date.date()), df)
+        hf, af = form_factors(home, away, str(match_date.date()), df, use_squad_weights=False)
         hr = rest_factor(home, str(match_date.date()), df)
         ar = rest_factor(away, str(match_date.date()), df)
         grid = scoreline_grid(
