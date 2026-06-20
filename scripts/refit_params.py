@@ -29,6 +29,21 @@ def main() -> None:
     hist = pd.read_parquet(HIST_PATH)
     logging.info("Historical matches: %d", len(hist))
 
+    # Boost past WC tournament matches — same competition, strongest signal after WC 2026 itself.
+    # WC 2022 (most recent, 64-team transition era) > 2018 > 2014 > 2010.
+    hist = hist.copy()
+    hist["date"] = pd.to_datetime(hist["date"])
+    wc_mask = hist["tournament"] == "FIFA World Cup"
+    yr = hist["date"].dt.year
+    hist.loc[wc_mask & (yr >= 2022), "tournament_weight"] = 3.0
+    hist.loc[wc_mask & (yr == 2018), "tournament_weight"] = 2.0
+    hist.loc[wc_mask & (yr == 2014), "tournament_weight"] = 1.5
+    hist.loc[wc_mask & (yr == 2010), "tournament_weight"] = 1.2
+    logging.info(
+        "WC boost applied: 2022×3.0, 2018×2.0, 2014×1.5, 2010×1.2 (%d matches)",
+        wc_mask.sum(),
+    )
+
     frames = [hist]
     if RESULTS_PATH.exists():
         live = pd.read_parquet(RESULTS_PATH)
@@ -42,6 +57,31 @@ def main() -> None:
         logging.info("Adding %d completed WC 2026 results", len(live))
 
     df = pd.concat(frames, ignore_index=True)
+
+    # Substitute WC 2022 xG for actual goals where available.
+    # xG is a better signal of true quality than luck-adjusted scorelines.
+    xg_path = DATA_DIR / "wc2022_xg.json"
+    if xg_path.exists():
+        xg_data = json.loads(xg_path.read_text())
+        xg_by_date_teams: dict = {}
+        for entry in xg_data.values():
+            k = (entry["date"], entry["home"], entry["away"])
+            xg_by_date_teams[k] = (entry["home_xg"], entry["away_xg"])
+        # Cast to float so continuous xG values can be assigned (goals column is int64)
+        df["home_goals"] = df["home_goals"].astype(float)
+        df["away_goals"] = df["away_goals"].astype(float)
+        substituted = 0
+        for idx, row in df.iterrows():
+            date_str = str(pd.to_datetime(row["date"]).date())
+            k = (date_str, str(row["home"]), str(row["away"]))
+            if k in xg_by_date_teams:
+                h_xg, a_xg = xg_by_date_teams[k]
+                df.at[idx, "home_goals"] = h_xg
+                df.at[idx, "away_goals"] = a_xg
+                substituted += 1
+        if substituted:
+            logging.info("Substituted xG for actual goals in %d WC 2022 matches", substituted)
+
     logging.info("Fitting on %d total matches...", len(df))
     params = fit(df, neutral=True)
 

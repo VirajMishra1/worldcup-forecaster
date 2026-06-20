@@ -35,8 +35,17 @@ jobs:
       - name: Fetch Polymarket odds
         run: python -m scripts.fetch_odds
 
+      - name: Fetch WC 2022 xG from StatsBomb (once — skips if file exists)
+        run: |
+          if [ ! -f data/wc2022_xg.json ]; then
+            python -m scripts.fetch_statsbomb_xg
+          fi
+
       - name: Refit model (historical + completed WC results)
         run: python -m scripts.refit_params
+
+      - name: Fit isotonic calibrator from backtest results
+        run: python -m scripts.fit_calibrator
 
       - name: Lock predictions for remaining fixtures
         run: python -m scripts.predict_all_fixtures

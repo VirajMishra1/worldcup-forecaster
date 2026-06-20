@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from model.calibrate import calibrate, load_calibrator
 from model.form import form_factors
 from model.lineup import squad_ratio
 from model.poisson import PoissonParams
@@ -33,6 +34,12 @@ def main() -> None:
         return
     params = _load_params()
     logging.info("Loaded cached params (%d teams)", len(params.teams))
+
+    cal = load_calibrator()
+    if cal:
+        logging.info("Isotonic calibrator loaded")
+    else:
+        logging.info("No calibrator found — predictions will use raw model output")
 
     if not FIXTURES_PATH.exists():
         logging.error("No fixtures file. Run scripts/fetch_fixtures.py first.")
@@ -76,6 +83,12 @@ def main() -> None:
         )
         mkts = derive_markets(grid)
 
+        ph = mkts.p_home_win
+        pd_ = mkts.p_draw
+        pa = mkts.p_away_win
+        if cal:
+            ph, pd_, pa = calibrate(cal, ph, pd_, pa)
+
         top3 = sorted(mkts.exact_scores.items(), key=lambda x: -x[1])[:3]
         rows.append({
             "locked_at": pd.Timestamp.now(),
@@ -83,9 +96,9 @@ def main() -> None:
             "home": home,
             "away": away,
             "stage": fix.get("stage", ""),
-            "p_home": mkts.p_home_win,
-            "p_draw": mkts.p_draw,
-            "p_away": mkts.p_away_win,
+            "p_home": ph,
+            "p_draw": pd_,
+            "p_away": pa,
             "p_over_25": mkts.p_over_25,
             "p_btts": mkts.p_btts,
             "xg_home": mkts.expected_home_goals,

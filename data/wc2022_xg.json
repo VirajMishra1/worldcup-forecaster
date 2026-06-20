@@ -1,0 +1,578 @@
+{
+  "Canada vs Morocco 2022-12-01": {
+    "home": "Canada",
+    "away": "Morocco",
+    "date": "2022-12-01",
+    "home_xg": 1.057,
+    "away_xg": 0.307,
+    "home_goals": 1,
+    "away_goals": 2
+  },
+  "England vs Iran 2022-11-21": {
+    "home": "England",
+    "away": "Iran",
+    "date": "2022-11-21",
+    "home_xg": 1.845,
+    "away_xg": 1.41,
+    "home_goals": 6,
+    "away_goals": 2
+  },
+  "Croatia vs Belgium 2022-12-01": {
+    "home": "Croatia",
+    "away": "Belgium",
+    "date": "2022-12-01",
+    "home_xg": 0.641,
+    "away_xg": 2.068,
+    "home_goals": 0,
+    "away_goals": 0
+  },
+  "Netherlands vs Ecuador 2022-11-25": {
+    "home": "Netherlands",
+    "away": "Ecuador",
+    "date": "2022-11-25",
+    "home_xg": 0.104,
+    "away_xg": 1.382,
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  "Japan vs Spain 2022-12-01": {
+    "home": "Japan",
+    "away": "Spain",
+    "date": "2022-12-01",
+    "home_xg": 1.124,
+    "away_xg": 0.668,
+    "home_goals": 2,
+    "away_goals": 1
+  },
+  "England vs United States 2022-11-25": {
+    "home": "England",
+    "away": "United States",
+    "date": "2022-11-25",
+    "home_xg": 0.355,
+    "away_xg": 0.357,
+    "home_goals": 0,
+    "away_goals": 0
+  },
+  "Iran vs United States 2022-11-29": {
+    "home": "Iran",
+    "away": "United States",
+    "date": "2022-11-29",
+    "home_xg": 0.921,
+    "away_xg": 1.03,
+    "home_goals": 0,
+    "away_goals": 1
+  },
+  "Morocco vs Croatia 2022-11-23": {
+    "home": "Morocco",
+    "away": "Croatia",
+    "date": "2022-11-23",
+    "home_xg": 0.099,
+    "away_xg": 0.531,
+    "home_goals": 0,
+    "away_goals": 0
+  },
+  "Wales vs Iran 2022-11-25": {
+    "home": "Wales",
+    "away": "Iran",
+    "date": "2022-11-25",
+    "home_xg": 0.554,
+    "away_xg": 1.08,
+    "home_goals": 0,
+    "away_goals": 2
+  },
+  "Tunisia vs France 2022-11-30": {
+    "home": "Tunisia",
+    "away": "France",
+    "date": "2022-11-30",
+    "home_xg": 0.298,
+    "away_xg": 0.27,
+    "home_goals": 1,
+    "away_goals": 0
+  },
+  "Wales vs England 2022-11-29": {
+    "home": "Wales",
+    "away": "England",
+    "date": "2022-11-29",
+    "home_xg": 0.132,
+    "away_xg": 2.749,
+    "home_goals": 0,
+    "away_goals": 3
+  },
+  "Switzerland vs Cameroon 2022-11-24": {
+    "home": "Switzerland",
+    "away": "Cameroon",
+    "date": "2022-11-24",
+    "home_xg": 1.156,
+    "away_xg": 0.571,
+    "home_goals": 1,
+    "away_goals": 0
+  },
+  "Portugal vs Ghana 2022-11-24": {
+    "home": "Portugal",
+    "away": "Ghana",
+    "date": "2022-11-24",
+    "home_xg": 1.969,
+    "away_xg": 0.76,
+    "home_goals": 3,
+    "away_goals": 2
+  },
+  "Senegal vs Netherlands 2022-11-21": {
+    "home": "Senegal",
+    "away": "Netherlands",
+    "date": "2022-11-21",
+    "home_xg": 0.585,
+    "away_xg": 0.93,
+    "home_goals": 0,
+    "away_goals": 2
+  },
+  "United States vs Wales 2022-11-21": {
+    "home": "United States",
+    "away": "Wales",
+    "date": "2022-11-21",
+    "home_xg": 0.583,
+    "away_xg": 1.363,
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  "Poland vs Saudi Arabia 2022-11-26": {
+    "home": "Poland",
+    "away": "Saudi Arabia",
+    "date": "2022-11-26",
+    "home_xg": 1.563,
+    "away_xg": 1.888,
+    "home_goals": 2,
+    "away_goals": 0
+  },
+  "Netherlands vs Qatar 2022-11-29": {
+    "home": "Netherlands",
+    "away": "Qatar",
+    "date": "2022-11-29",
+    "home_xg": 1.582,
+    "away_xg": 0.144,
+    "home_goals": 2,
+    "away_goals": 0
+  },
+  "France vs Denmark 2022-11-26": {
+    "home": "France",
+    "away": "Denmark",
+    "date": "2022-11-26",
+    "home_xg": 1.389,
+    "away_xg": 0.848,
+    "home_goals": 2,
+    "away_goals": 1
+  },
+  "Germany vs Japan 2022-11-23": {
+    "home": "Germany",
+    "away": "Japan",
+    "date": "2022-11-23",
+    "home_xg": 2.436,
+    "away_xg": 1.085,
+    "home_goals": 1,
+    "away_goals": 2
+  },
+  "Denmark vs Tunisia 2022-11-22": {
+    "home": "Denmark",
+    "away": "Tunisia",
+    "date": "2022-11-22",
+    "home_xg": 1.414,
+    "away_xg": 0.821,
+    "home_goals": 0,
+    "away_goals": 0
+  },
+  "Mexico vs Poland 2022-11-22": {
+    "home": "Mexico",
+    "away": "Poland",
+    "date": "2022-11-22",
+    "home_xg": 0.434,
+    "away_xg": 0.979,
+    "home_goals": 0,
+    "away_goals": 0
+  },
+  "Qatar vs Senegal 2022-11-25": {
+    "home": "Qatar",
+    "away": "Senegal",
+    "date": "2022-11-25",
+    "home_xg": 0.721,
+    "away_xg": 0.819,
+    "home_goals": 1,
+    "away_goals": 3
+  },
+  "Belgium vs Canada 2022-11-23": {
+    "home": "Belgium",
+    "away": "Canada",
+    "date": "2022-11-23",
+    "home_xg": 0.508,
+    "away_xg": 1.948,
+    "home_goals": 1,
+    "away_goals": 0
+  },
+  "Brazil vs Switzerland 2022-11-28": {
+    "home": "Brazil",
+    "away": "Switzerland",
+    "date": "2022-11-28",
+    "home_xg": 0.499,
+    "away_xg": 0.079,
+    "home_goals": 1,
+    "away_goals": 0
+  },
+  "Netherlands vs Argentina 2022-12-09": {
+    "home": "Netherlands",
+    "away": "Argentina",
+    "date": "2022-12-09",
+    "home_xg": 4.321,
+    "away_xg": 5.534,
+    "home_goals": 2,
+    "away_goals": 2
+  },
+  "Costa Rica vs Germany 2022-12-01": {
+    "home": "Costa Rica",
+    "away": "Germany",
+    "date": "2022-12-01",
+    "home_xg": 0.984,
+    "away_xg": 4.063,
+    "home_goals": 2,
+    "away_goals": 4
+  },
+  "Japan vs Costa Rica 2022-11-27": {
+    "home": "Japan",
+    "away": "Costa Rica",
+    "date": "2022-11-27",
+    "home_xg": 0.402,
+    "away_xg": 0.185,
+    "home_goals": 0,
+    "away_goals": 1
+  },
+  "Argentina vs France 2022-12-18": {
+    "home": "Argentina",
+    "away": "France",
+    "date": "2022-12-18",
+    "home_xg": 5.546,
+    "away_xg": 5.32,
+    "home_goals": 3,
+    "away_goals": 3
+  },
+  "Croatia vs Morocco 2022-12-17": {
+    "home": "Croatia",
+    "away": "Morocco",
+    "date": "2022-12-17",
+    "home_xg": 0.688,
+    "away_xg": 0.862,
+    "home_goals": 2,
+    "away_goals": 1
+  },
+  "Serbia vs Switzerland 2022-12-02": {
+    "home": "Serbia",
+    "away": "Switzerland",
+    "date": "2022-12-02",
+    "home_xg": 1.131,
+    "away_xg": 2.823,
+    "home_goals": 2,
+    "away_goals": 3
+  },
+  "Argentina vs Australia 2022-12-03": {
+    "home": "Argentina",
+    "away": "Australia",
+    "date": "2022-12-03",
+    "home_xg": 1.403,
+    "away_xg": 0.267,
+    "home_goals": 2,
+    "away_goals": 1
+  },
+  "Australia vs Denmark 2022-11-30": {
+    "home": "Australia",
+    "away": "Denmark",
+    "date": "2022-11-30",
+    "home_xg": 0.346,
+    "away_xg": 0.455,
+    "home_goals": 1,
+    "away_goals": 0
+  },
+  "Brazil vs Serbia 2022-11-24": {
+    "home": "Brazil",
+    "away": "Serbia",
+    "date": "2022-11-24",
+    "home_xg": 1.924,
+    "away_xg": 0.144,
+    "home_goals": 2,
+    "away_goals": 0
+  },
+  "Tunisia vs Australia 2022-11-26": {
+    "home": "Tunisia",
+    "away": "Australia",
+    "date": "2022-11-26",
+    "home_xg": 0.567,
+    "away_xg": 0.269,
+    "home_goals": 0,
+    "away_goals": 1
+  },
+  "Ecuador vs Senegal 2022-11-29": {
+    "home": "Ecuador",
+    "away": "Senegal",
+    "date": "2022-11-29",
+    "home_xg": 0.952,
+    "away_xg": 1.57,
+    "home_goals": 1,
+    "away_goals": 2
+  },
+  "Uruguay vs South Korea 2022-11-24": {
+    "home": "Uruguay",
+    "away": "South Korea",
+    "date": "2022-11-24",
+    "home_xg": 0.327,
+    "away_xg": 0.47,
+    "home_goals": 0,
+    "away_goals": 0
+  },
+  "Morocco vs Portugal 2022-12-10": {
+    "home": "Morocco",
+    "away": "Portugal",
+    "date": "2022-12-10",
+    "home_xg": 0.972,
+    "away_xg": 0.671,
+    "home_goals": 1,
+    "away_goals": 0
+  },
+  "Saudi Arabia vs Mexico 2022-11-30": {
+    "home": "Saudi Arabia",
+    "away": "Mexico",
+    "date": "2022-11-30",
+    "home_xg": 1.063,
+    "away_xg": 1.772,
+    "home_goals": 1,
+    "away_goals": 2
+  },
+  "Poland vs Argentina 2022-11-30": {
+    "home": "Poland",
+    "away": "Argentina",
+    "date": "2022-11-30",
+    "home_xg": 0.109,
+    "away_xg": 2.717,
+    "home_goals": 0,
+    "away_goals": 2
+  },
+  "Argentina vs Mexico 2022-11-26": {
+    "home": "Argentina",
+    "away": "Mexico",
+    "date": "2022-11-26",
+    "home_xg": 0.325,
+    "away_xg": 0.166,
+    "home_goals": 2,
+    "away_goals": 0
+  },
+  "Portugal vs Switzerland 2022-12-06": {
+    "home": "Portugal",
+    "away": "Switzerland",
+    "date": "2022-12-06",
+    "home_xg": 2.174,
+    "away_xg": 1.104,
+    "home_goals": 6,
+    "away_goals": 1
+  },
+  "England vs Senegal 2022-12-04": {
+    "home": "England",
+    "away": "Senegal",
+    "date": "2022-12-04",
+    "home_xg": 1.02,
+    "away_xg": 0.845,
+    "home_goals": 3,
+    "away_goals": 0
+  },
+  "Argentina vs Croatia 2022-12-13": {
+    "home": "Argentina",
+    "away": "Croatia",
+    "date": "2022-12-13",
+    "home_xg": 1.837,
+    "away_xg": 0.269,
+    "home_goals": 3,
+    "away_goals": 0
+  },
+  "England vs France 2022-12-10": {
+    "home": "England",
+    "away": "France",
+    "date": "2022-12-10",
+    "home_xg": 2.039,
+    "away_xg": 0.809,
+    "home_goals": 1,
+    "away_goals": 2
+  },
+  "France vs Morocco 2022-12-14": {
+    "home": "France",
+    "away": "Morocco",
+    "date": "2022-12-14",
+    "home_xg": 1.604,
+    "away_xg": 0.475,
+    "home_goals": 2,
+    "away_goals": 0
+  },
+  "Croatia vs Brazil 2022-12-09": {
+    "home": "Croatia",
+    "away": "Brazil",
+    "date": "2022-12-09",
+    "home_xg": 3.683,
+    "away_xg": 4.669,
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  "Morocco vs Spain 2022-12-06": {
+    "home": "Morocco",
+    "away": "Spain",
+    "date": "2022-12-06",
+    "home_xg": 3.704,
+    "away_xg": 2.591,
+    "home_goals": 0,
+    "away_goals": 0
+  },
+  "Japan vs Croatia 2022-12-05": {
+    "home": "Japan",
+    "away": "Croatia",
+    "date": "2022-12-05",
+    "home_xg": 4.068,
+    "away_xg": 3.644,
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  "Brazil vs South Korea 2022-12-05": {
+    "home": "Brazil",
+    "away": "South Korea",
+    "date": "2022-12-05",
+    "home_xg": 3.19,
+    "away_xg": 0.345,
+    "home_goals": 4,
+    "away_goals": 1
+  },
+  "France vs Poland 2022-12-04": {
+    "home": "France",
+    "away": "Poland",
+    "date": "2022-12-04",
+    "home_xg": 1.057,
+    "away_xg": 1.082,
+    "home_goals": 3,
+    "away_goals": 1
+  },
+  "Netherlands vs United States 2022-12-03": {
+    "home": "Netherlands",
+    "away": "United States",
+    "date": "2022-12-03",
+    "home_xg": 1.429,
+    "away_xg": 1.39,
+    "home_goals": 3,
+    "away_goals": 1
+  },
+  "Portugal vs Uruguay 2022-11-28": {
+    "home": "Portugal",
+    "away": "Uruguay",
+    "date": "2022-11-28",
+    "home_xg": 1.058,
+    "away_xg": 1.175,
+    "home_goals": 2,
+    "away_goals": 0
+  },
+  "Spain vs Germany 2022-11-27": {
+    "home": "Spain",
+    "away": "Germany",
+    "date": "2022-11-27",
+    "home_xg": 0.523,
+    "away_xg": 1.032,
+    "home_goals": 1,
+    "away_goals": 1
+  },
+  "Cameroon vs Serbia 2022-11-28": {
+    "home": "Cameroon",
+    "away": "Serbia",
+    "date": "2022-11-28",
+    "home_xg": 1.898,
+    "away_xg": 1.615,
+    "home_goals": 3,
+    "away_goals": 3
+  },
+  "Belgium vs Morocco 2022-11-27": {
+    "home": "Belgium",
+    "away": "Morocco",
+    "date": "2022-11-27",
+    "home_xg": 0.597,
+    "away_xg": 0.991,
+    "home_goals": 0,
+    "away_goals": 2
+  },
+  "Qatar vs Ecuador 2022-11-20": {
+    "home": "Qatar",
+    "away": "Ecuador",
+    "date": "2022-11-20",
+    "home_xg": 0.304,
+    "away_xg": 1.154,
+    "home_goals": 0,
+    "away_goals": 2
+  },
+  "Argentina vs Saudi Arabia 2022-11-22": {
+    "home": "Argentina",
+    "away": "Saudi Arabia",
+    "date": "2022-11-22",
+    "home_xg": 2.057,
+    "away_xg": 0.113,
+    "home_goals": 1,
+    "away_goals": 2
+  },
+  "South Korea vs Ghana 2022-11-28": {
+    "home": "South Korea",
+    "away": "Ghana",
+    "date": "2022-11-28",
+    "home_xg": 0.772,
+    "away_xg": 1.181,
+    "home_goals": 2,
+    "away_goals": 3
+  },
+  "Ghana vs Uruguay 2022-12-02": {
+    "home": "Ghana",
+    "away": "Uruguay",
+    "date": "2022-12-02",
+    "home_xg": 1.243,
+    "away_xg": 1.479,
+    "home_goals": 0,
+    "away_goals": 2
+  },
+  "Spain vs Costa Rica 2022-11-23": {
+    "home": "Spain",
+    "away": "Costa Rica",
+    "date": "2022-11-23",
+    "home_xg": 2.737,
+    "away_xg": 0,
+    "home_goals": 7,
+    "away_goals": 0
+  },
+  "Croatia vs Canada 2022-11-27": {
+    "home": "Croatia",
+    "away": "Canada",
+    "date": "2022-11-27",
+    "home_xg": 2.61,
+    "away_xg": 0.214,
+    "home_goals": 4,
+    "away_goals": 1
+  },
+  "Cameroon vs Brazil 2022-12-02": {
+    "home": "Cameroon",
+    "away": "Brazil",
+    "date": "2022-12-02",
+    "home_xg": 0.341,
+    "away_xg": 2.08,
+    "home_goals": 1,
+    "away_goals": 0
+  },
+  "France vs Australia 2022-11-22": {
+    "home": "France",
+    "away": "Australia",
+    "date": "2022-11-22",
+    "home_xg": 2.587,
+    "away_xg": 0.323,
+    "home_goals": 4,
+    "away_goals": 1
+  },
+  "South Korea vs Portugal 2022-12-02": {
+    "home": "South Korea",
+    "away": "Portugal",
+    "date": "2022-12-02",
+    "home_xg": 1.297,
+    "away_xg": 0.833,
+    "home_goals": 2,
+    "away_goals": 1
+  }
+}
