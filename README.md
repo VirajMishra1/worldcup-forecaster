@@ -54,31 +54,30 @@ _32 completed WC 2026 results included in the refit. Updated 2026-06-20._
 | Log-loss | 0.8687 | 1.0986 |
 | Brier score | 0.5136 | 0.6667 |
 
-_4 predictions from June 17 (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Colombia vs Uzbekistan) were generated after kickoff and are excluded from this table. They are visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
-
 ### Per-match predictions
 
-| Date | Match | H% / D% / A% | Result | LL | Correct |
-|------|-------|--------------|--------|----|---------|
-| 2026-06-18 | Czech Republic vs South Africa | 56%/27%/17% | Draw (1-1) | 1.297 | No |
-| 2026-06-18 | Switzerland vs Bosnia and Herzegovina | 69%/20%/11% | Switzerland (4-1) | 0.369 | Yes |
-| 2026-06-18 | Canada vs Qatar | 44%/31%/26% | Canada (6-0) | 0.823 | Yes |
-| 2026-06-19 | Mexico vs South Korea | 39%/33%/28% | Mexico (1-0) | 0.935 | Yes |
-| 2026-06-19 | United States vs Australia | 33%/33%/34% | United States (2-0) | 1.101 | No |
-| 2026-06-19 | Scotland vs Morocco | 16%/29%/55% | Morocco (0-1) | 0.605 | Yes |
-| 2026-06-20 | Brazil vs Haiti | 95%/4%/1% | Brazil (3-0) | 0.053 | Yes |
-| 2026-06-20 | Turkey vs Paraguay | 56%/27%/17% | Paraguay (0-1) | 1.767 | No |
+| Date | Match | H% / D% / A% | Result | LL | ✓ |
+|------|-------|--------------|--------|----|---|
+| 2026-06-18 | Czech Republic vs South Africa | 56%/27%/17% | Draw (1-1) | 1.297 | ✗ |
+| 2026-06-18 | Switzerland vs Bosnia and Herzegovina | 69%/20%/11% | Switzerland (4-1) | 0.369 | ✓ |
+| 2026-06-18 | Canada vs Qatar | 44%/31%/26% | Canada (6-0) | 0.823 | ✓ |
+| 2026-06-19 | Mexico vs South Korea | 39%/33%/28% | Mexico (1-0) | 0.935 | ✓ |
+| 2026-06-19 | United States vs Australia | 33%/33%/34% | United States (2-0) | 1.101 | ✗ |
+| 2026-06-19 | Scotland vs Morocco | 16%/29%/55% | Morocco (0-1) | 0.605 | ✓ |
+| 2026-06-20 | Brazil vs Haiti | 95%/4%/1% | Brazil (3-0) | 0.053 | ✓ |
+| 2026-06-20 | Turkey vs Paraguay | 56%/27%/17% | Paraguay (0-1) | 1.767 | ✗ |
+
 <!-- TRACK_RECORD_END -->
 
 ---
 
 <!-- ODDS_COMPARISON_START -->
-## Model vs Polymarket
+## Model vs Polymarket · market updated Jun 20 08:40 UTC
 
 | Team | Model | Market | Edge |
 |------|-------|--------|------|
 
-_Edge = Model minus Market. Positive means the model thinks the team is underpriced._
+_Edge = Model% − Market%. Positive = model thinks team is underpriced on Polymarket._
 
 <!-- ODDS_COMPARISON_END -->
 
