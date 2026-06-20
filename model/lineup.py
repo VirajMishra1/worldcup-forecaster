@@ -7,7 +7,6 @@ We pass ratio^0.375 so the effective coefficient is 0.4 * 0.375 = 0.15,
 which avoids over-correcting teams the model already rates via match history.
 """
 import json
-import math
 from pathlib import Path
 
 _PATH = Path(__file__).parent.parent / "data" / "squad_values.json"

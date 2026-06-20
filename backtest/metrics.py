@@ -1,6 +1,5 @@
 """Log-loss, Brier score, and calibration bin computation."""
 import math
-from typing import Sequence
 
 import numpy as np
 import pandas as pd

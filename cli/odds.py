@@ -6,7 +6,7 @@ Usage:
 """
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 DATA_DIR = Path(__file__).parent.parent / "data"
@@ -107,7 +107,7 @@ def main() -> None:
     ]
     pos = sorted([e for e in edges if e[3] > 0], key=lambda x: x[3], reverse=True)
     if pos:
-        print(f"\nTop positive edges (model > market):")
+        print("\nTop positive edges (model > market):")
         for team, pm, mkt, edge in pos[:5]:
             print(f"  {team}: model {pm*100:.1f}%  market {mkt*100:.1f}%  edge {edge*100:+.1f}%")
 

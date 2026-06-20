@@ -34,6 +34,8 @@ def build_track_record() -> str:
         return "_No predictions yet._\n"
 
     preds = pd.read_parquet(preds_path)
+    if "prediction_type" in preds.columns:
+        preds = preds[preds["prediction_type"] == "locked"]
     results = pd.read_parquet(results_path)
     results["outcome"] = results.apply(
         lambda r: _outcome(int(r["home_goals"]), int(r["away_goals"])), axis=1

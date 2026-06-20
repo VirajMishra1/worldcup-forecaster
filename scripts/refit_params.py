@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from model.poisson import fit, PoissonParams
+from model.poisson import fit
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 HIST_PATH = DATA_DIR / "historical_matches.parquet"

@@ -68,4 +68,5 @@ jobs:
             README.md || true
           git diff --cached --quiet || \
             git commit -m "chore: daily update $(date -u +%Y-%m-%d)"
+          git pull --rebase origin main
           git push

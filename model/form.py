@@ -25,9 +25,11 @@ def form_factors(home: str, away: str, match_date: str, df: pd.DataFrame,
         gf, ga = [], []
         for _, r in rows.iterrows():
             if r["home"] == team:
-                gf.append(r["home_goals"]); ga.append(r["away_goals"])
+                gf.append(r["home_goals"])
+                ga.append(r["away_goals"])
             else:
-                gf.append(r["away_goals"]); ga.append(r["home_goals"])
+                gf.append(r["away_goals"])
+                ga.append(r["home_goals"])
         # ratio vs global mean (historical average: ~1.2 goals/team/match)
         GLOBAL_MEAN = 1.2
         ratio = np.mean(gf) / GLOBAL_MEAN

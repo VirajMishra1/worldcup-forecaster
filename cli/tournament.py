@@ -6,7 +6,7 @@ Usage:
 """
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime
 
 
 def main() -> None:

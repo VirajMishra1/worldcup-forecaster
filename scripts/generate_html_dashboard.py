@@ -237,8 +237,6 @@ def main() -> None:
 
         result_cell = live_score or actual
         no_pred_class = "" if pred else " no-pred"
-        prob_str = f"{ph:.0%} / {pd_:.0%} / {pa:.0%}" if pred else "—"
-
         rows_html += f"""
         <tr class="{status}{no_pred_class}">
           <td class="date-col">{date_str}</td>

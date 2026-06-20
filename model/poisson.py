@@ -1,4 +1,4 @@
-"""Bivariate Poisson + Dixon-Coles correction, fit by MLE with time-decay weights."""
+"""Dixon-Coles score model (independent Poisson + low-score tau correction), fit by MLE with time-decay weights."""
 import math
 import warnings
 from dataclasses import dataclass, field
@@ -22,8 +22,8 @@ class PoissonParams:
     teams: List[str] = field(default_factory=list)
 
 
-def _time_weight(date_series: pd.Series) -> np.ndarray:
-    ref = pd.Timestamp.now()
+def _time_weight(date_series: pd.Series, as_of: pd.Timestamp | None = None) -> np.ndarray:
+    ref = as_of if as_of is not None else pd.Timestamp.now()
     days = (ref - pd.to_datetime(date_series)).dt.days.values.astype(float)
     return np.exp(-np.log(2) * days / (HALF_LIFE_YEARS * 365.25))
 
@@ -52,14 +52,20 @@ def _match_ll(hg: int, ag: int, lam_h: float, lam_a: float, rho: float, w: float
     )
 
 
-def fit(df: pd.DataFrame, neutral: bool = True, base_reg: float = 0.003) -> PoissonParams:
+def fit(
+    df: pd.DataFrame,
+    neutral: bool = True,
+    base_reg: float = 0.003,
+    as_of: pd.Timestamp | None = None,
+) -> PoissonParams:
     """
     Fit team attack/defense via MLE with time-decay + tournament weighting.
     neutral=True disables home advantage (correct for WC venues).
+    as_of pins the decay reference date (use match_date in backtest to avoid run-date drift).
     """
     df = df.copy()
     df["date"] = pd.to_datetime(df["date"])
-    tw = _time_weight(df["date"])
+    tw = _time_weight(df["date"], as_of=as_of)
     tourney_w = df.get("tournament_weight", pd.Series(1.0, index=df.index))
     df["w"] = tw * tourney_w.values
 

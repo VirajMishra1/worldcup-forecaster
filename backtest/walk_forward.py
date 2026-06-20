@@ -8,6 +8,8 @@ import pandas as pd
 from model.poisson import fit
 from model.predict import scoreline_grid
 from model.markets import derive_markets
+from model.form import form_factors
+from model.rest import rest_factor
 from backtest.metrics import aggregate_metrics, log_loss_match, brier_score, calibration_bins
 from backtest.plots import reliability_diagram, log_loss_curve
 
@@ -47,14 +49,21 @@ def run(
                 next_refit = match_date + timedelta(days=refit_freq_days)
                 continue
             logging.info("Refitting at %s on %d matches", match_date.date(), len(train))
-            params = fit(train, neutral=True)
+            params = fit(train, neutral=True, as_of=match_date)
             next_refit = match_date + timedelta(days=refit_freq_days)
 
         home, away = str(row["home"]), str(row["away"])
         if home not in params.teams or away not in params.teams:
             continue
 
-        grid = scoreline_grid(home, away, params, is_neutral=True)
+        hf, af = form_factors(home, away, str(match_date.date()), df)
+        hr = rest_factor(home, str(match_date.date()), df)
+        ar = rest_factor(away, str(match_date.date()), df)
+        grid = scoreline_grid(
+            home, away, params, is_neutral=True,
+            home_lineup_ratio=hf * hr,
+            away_lineup_ratio=af * ar,
+        )
         mkts = derive_markets(grid)
         outcome = _outcome(int(row["home_goals"]), int(row["away_goals"]))
 

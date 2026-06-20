@@ -4,7 +4,6 @@ Given current score, minute, and red cards, integrates remaining-time
 Poisson distributions to compute updated p_home / p_draw / p_away.
 """
 import math
-import numpy as np
 
 from model.poisson import PoissonParams
 from model.predict import scoreline_grid

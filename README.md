@@ -1,8 +1,8 @@
 # worldcup-forecaster
 
-Calibrated probabilistic match predictor for FIFA World Cup 2026. Bivariate Poisson with Dixon-Coles correction, time-decayed Elo strength, lineup-aware adjustment via market values. Predictions are locked at kickoff and published to a public track record that auto-updates after every match.
+Calibrated probabilistic match predictor for FIFA World Cup 2026. Dixon-Coles score model (independent Poisson + low-score tau correction), time-decayed MLE fit on 30 years of international results, lineup-aware adjustment via Transfermarkt squad values. Predictions are locked at kickoff and published to a public track record that auto-updates after every match.
 
-This is not a "pick the winner" tool. It is a forecasting system that estimates the full probability distribution over scorelines, then derives every market (W/D/L, exact score, totals, BTTS) from that distribution. Success is measured by **calibration and log-loss vs Pinnacle closing odds**, not by accuracy.
+This is not a "pick the winner" tool. It is a forecasting system that estimates the full probability distribution over scorelines, then derives every market (W/D/L, exact score, totals, BTTS) from that distribution. Success is measured by **calibration and log-loss vs a uniform 1/3-1/3-1/3 random baseline**, not by accuracy.
 
 ---
 
@@ -12,20 +12,18 @@ This is not a "pick the winner" tool. It is a forecasting system that estimates 
 
 | Team | Win% | Implied odds |
 |------|------|-------------|
-| 🇦🇷 Argentina | 15.7% | 6.4:1 |
-| 🇪🇸 Spain | 14.5% | 6.9:1 |
-| 🇫🇷 France | 12.5% | 8.0:1 |
-| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 10.9% | 9.1:1 |
-| 🇵🇹 Portugal | 9.2% | 10.9:1 |
-| 🇧🇷 Brazil | 8.2% | 12.2:1 |
-| 🇩🇪 Germany | 6.0% | 16.8:1 |
-| 🇧🇪 Belgium | 5.2% | 19.4:1 |
-| 🇲🇦 Morocco | 2.9% | 34.2:1 |
-| 🇳🇱 Netherlands | 2.9% | 34.6:1 |
+| 🇦🇷 Argentina | 21.3% | 3.7:1 |
+| 🇪🇸 Spain | 12.3% | 7.1:1 |
+| 🇧🇷 Brazil | 10.8% | 8.3:1 |
+| 🇫🇷 France | 9.7% | 9.3:1 |
+| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 7.5% | 12.3:1 |
+| 🇺🇸 United States | 7.1% | 13.0:1 |
+| 🇲🇦 Morocco | 5.7% | 16.5:1 |
+| 🇵🇹 Portugal | 5.3% | 17.9:1 |
+| 🇩🇪 Germany | 4.5% | 21.4:1 |
+| 🇲🇽 Mexico | 3.5% | 27.7:1 |
 
-_Squad-value adjustment applied (Transfermarkt €M, exponent 0.375). 24 completed WC results included in refit._
-
-Retrospective on WC 2026 group-stage matches (model applied post-hoc): **13/24 correct** W/D/L calls (54% vs 33% random).
+_Squad-value adjustment applied (Transfermarkt €M, exponent 0.375). 32 completed WC results included in refit. Updated 2026-06-20._
 
 ---
 
@@ -33,9 +31,9 @@ Retrospective on WC 2026 group-stage matches (model applied post-hoc): **13/24 c
 
 | | |
 |---|---|
-| What it is | A bivariate Poisson model with Dixon-Coles low-score correction, fit on 30 years of historical international matches via MLE with time-decay weighting. Lineup adjustments derived from Transfermarkt market-value deltas. Predictions logged before kickoff, never edited. |
-| What it isn't | A "guaranteed winner" tool. A high-accuracy exact-score predictor. A betting system that beats Pinnacle on main markets. |
-| Honest target | Log-loss within 0.03 of Pinnacle closing odds, reliability diagram within five percentage points of the diagonal on a 10,000-match historical backtest. |
+| What it is | A Dixon-Coles score model (independent Poisson + low-score tau correction), fit on 30 years of historical international matches via MLE with time-decay weighting. Lineup adjustments derived from Transfermarkt market-value deltas. Predictions logged before kickoff, never edited. |
+| What it isn't | A "guaranteed winner" tool. A high-accuracy exact-score predictor. A replacement for bookmaker odds. |
+| Honest target | Log-loss below 1.09 (uniform baseline) on the live track record; reliability diagram within five percentage points of the diagonal on the historical walk-forward backtest. |
 | Honest range on remaining ~48 WC matches | W/D/L accuracy 50-58%. Log-loss 0.98-1.05. Exact-score accuracy 10-13%. Over/Under 2.5 60-63%. |
 
 ---
@@ -44,22 +42,20 @@ Retrospective on WC 2026 group-stage matches (model applied post-hoc): **13/24 c
 
 Numbers below are realistic best cases over the remaining WC matches. Variance dominates at this sample size. The historical backtest is the credibility anchor; the live tournament is the consistency demo.
 
-| Metric | Random | Bookmaker (Pinnacle) | Realistic best | Realistic worst |
-|---|---|---|---|---|
-| W/D/L accuracy | 33% | 55-58% | 55-58% | 45-50% |
-| Log-loss (W/D/L) | 1.099 | 0.95-0.97 | 0.98-1.02 | 1.05-1.10 |
-| Brier score (3-way) | 0.667 | 0.55-0.57 | 0.58-0.61 | 0.62-0.65 |
-| Exact scoreline accuracy | ~7% | 13-15% | 11-13% | 8-10% |
-| Over/Under 2.5 goals | 50% | 60-64% | 60-63% | 55-58% |
-| BTTS | 50% | 58-62% | 57-60% | 53-56% |
-| ROI vs Pinnacle | -2.5% (vig) | 0% by definition | ~0% | -3% |
-| ROI vs Polymarket | n/a | n/a | +2-5% plausible | -5% |
+| Metric | Random baseline | Realistic model best | Realistic model worst |
+|---|---|---|---|
+| W/D/L accuracy | 33% | 55-58% | 45-50% |
+| Log-loss (W/D/L) | 1.099 | 0.98-1.02 | 1.05-1.10 |
+| Brier score (3-way) | 0.667 | 0.58-0.61 | 0.62-0.65 |
+| Exact scoreline accuracy | ~7% | 11-13% | 8-10% |
+| Over/Under 2.5 goals | 50% | 60-63% | 55-58% |
+| BTTS | 50% | 57-60% | 53-56% |
 
 ---
 
 ## Model
 
-### Core: bivariate Poisson with Dixon-Coles correction
+### Core: Dixon-Coles score model
 
 Each team has time-evolving attack strength `alpha_i` and defense strength `delta_i`. For a match between home team `i` and away team `j`:
 
@@ -130,7 +126,7 @@ Most substitutions are like-for-like and signal is below noise. Ignore in v1. v2
 | [StatsBomb open data](https://github.com/statsbomb/open-data) | Event-level data including past WCs | Free | v2 feature extraction |
 | [Transfermarkt](https://www.transfermarkt.com/) | Market values per player | Scrape, free | Lineup strength delta |
 | [SofaScore](https://www.sofascore.com/) | Live in-play events | Scrape, free | v2 in-play only |
-| [Pinnacle closing odds](https://www.pinnacle.com/) | Benchmark to beat | Free via scrape | Calibration target |
+| [Pinnacle closing odds](https://www.pinnacle.com/) | External benchmark (not yet integrated) | Free via scrape | Future calibration target |
 | [Polymarket](https://polymarket.com/) | Thinner book for ROI comparison | Free API | Edge candidate |
 
 ---
@@ -153,7 +149,7 @@ worldcup-forecaster/
     fetch_odds.py                 # Cron, T-60min: Pinnacle + Polymarket
   model/
     elo.py                        # Time-decay Elo computation
-    poisson.py                    # Bivariate Poisson + Dixon-Coles MLE
+    poisson.py                    # Dixon-Coles MLE fit
     features.py                   # Rest days, travel, lineup delta
     predict.py                    # Distribution over scorelines
     markets.py                    # W/D/L, exact, totals, BTTS from joint
@@ -223,7 +219,7 @@ Tracked per match and aggregated:
 ### What to publish
 
 - Reliability diagram from the 10K-match historical backtest. This is the single most credible artifact.
-- Running log-loss curve across WC matches, with Pinnacle and always-home baselines overlaid.
+- Running log-loss curve across WC matches, with uniform-random and always-home baselines overlaid.
 - Per-market scorecard at end of tournament.
 - Honest write-up of one market where the model beat the book and one where it lost badly.
 
@@ -258,7 +254,7 @@ The README always shows the current state. Anyone landing on the GitHub page see
 - [x] Pull historical match data (JamshadAli18 GitHub mirror, 13,779 matches 2010–2024)
 - [x] Clean and join into one parquet
 - [x] Time-decay weighting (half-life 1.5yr), friendly downweight (0.15)
-- [x] Bivariate Poisson + Dixon-Coles MLE fit (scipy L-BFGS-B, vectorised)
+- [x] Dixon-Coles MLE fit (scipy L-BFGS-B, vectorised; independent Poisson + tau low-score correction)
 - [x] CLI: `predict` outputs scoreline grid plus all markets (W/D/L, O/U 2.5, BTTS, exact scores)
 - [x] Walk-forward backtest on 2018-2024, generate calibration plot
 - [x] Predict every remaining WC fixture — append-only predictions.parquet, top-3 scorelines stored
@@ -339,7 +335,7 @@ pip install -e ".[dev]"
 
 python scripts/fetch_historical.py
 python -m cli.backtest --start 2018-01-01 --end 2024-12-31
-python -m cli.predict --home ENG --away USA
+python -m cli.predict --home France --away Argentina
 ```
 
 ---
@@ -356,11 +352,11 @@ python -m cli.predict --home ENG --away USA
 
 A reliability diagram answers: when the model says 60%, does the outcome happen 60% of the time? Perfect calibration sits on the diagonal.
 
+Historical backtest (walk-forward, no lookahead, form + rest factors included): **log_loss=0.8961 · brier=0.5265 · accuracy=59.0% · n=5,518 matches** (2018–2023, refit every 30 days)
+
 ![Calibration](reports/calibration.png)
 
 ![Log-loss curve](reports/log_loss_curve.png)
-
-Historical backtest (walk-forward, no lookahead): **log_loss=0.8947 · brier=0.5273 · accuracy=58.7% · n=5,518 matches** (2018–2023, refit every 30 days)
 
 ---
 
@@ -369,22 +365,22 @@ Historical backtest (walk-forward, no lookahead): **log_loss=0.8947 · brier=0.5
 
 | Metric | Value | Random baseline |
 |--------|-------|-----------------|
-| W/D/L accuracy | 75.0% | 33.3% |
-| Log-loss | 0.9091 | 1.0986 |
-| Brier score | 0.5579 | 0.6667 |
+| W/D/L accuracy | 62.5% | 33.3% |
+| Log-loss | 0.8687 | 1.0986 |
+| Brier score | 0.5136 | 0.6667 |
 
 ### Per-match predictions
 
 | Date | Match | H% / D% / A% | Result | LL | ✓ |
 |------|-------|--------------|--------|----|---|
-| 2026-06-17 | Portugal vs DR Congo | 77%/17%/6% | Draw (1-1) | 1.761 | ✗ |
-| 2026-06-17 | England vs Croatia | 53%/27%/20% | England (4-2) | 0.636 | ✓ |
-| 2026-06-17 | Ghana vs Panama | 36%/28%/35% | Ghana (1-0) | 1.010 | ✓ |
-| 2026-06-18 | Uzbekistan vs Colombia | 11%/25%/64% | Colombia (1-3) | 0.442 | ✓ |
 | 2026-06-18 | Czech Republic vs South Africa | 56%/27%/17% | Draw (1-1) | 1.297 | ✗ |
 | 2026-06-18 | Switzerland vs Bosnia and Herzegovina | 69%/20%/11% | Switzerland (4-1) | 0.369 | ✓ |
 | 2026-06-18 | Canada vs Qatar | 44%/31%/26% | Canada (6-0) | 0.823 | ✓ |
 | 2026-06-19 | Mexico vs South Korea | 39%/33%/28% | Mexico (1-0) | 0.935 | ✓ |
+| 2026-06-19 | United States vs Australia | 33%/33%/34% | United States (2-0) | 1.101 | ✗ |
+| 2026-06-19 | Scotland vs Morocco | 16%/29%/55% | Morocco (0-1) | 0.605 | ✓ |
+| 2026-06-20 | Brazil vs Haiti | 95%/4%/1% | Brazil (3-0) | 0.053 | ✓ |
+| 2026-06-20 | Turkey vs Paraguay | 56%/27%/17% | Paraguay (0-1) | 1.767 | ✗ |
 
 <!-- TRACK_RECORD_END -->
 
