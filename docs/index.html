@@ -4,329 +4,374 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WC 2026 Forecaster</title>
+<meta name="description" content="Probabilistic match predictions for FIFA World Cup 2026. Dixon-Coles model, locked before kickoff.">
 <meta http-equiv="refresh" content="60">
 <style>
   :root {
     --bg: #0d1117;
     --fg: #e6edf3;
-    --muted: #7d8590;
+    --fg2: #c9d1d9;
+    --muted: #8b949e;
     --muted2: #484f58;
     --green: #3fb950;
-    --green-dim: #1a4a24;
+    --green-dim: #0f2d14;
     --red: #f85149;
-    --yellow: #d29922;
+    --yellow: #e3b341;
     --blue: #58a6ff;
-    --purple: #bc8cff;
     --border: #21262d;
     --border2: #30363d;
     --card: #161b22;
     --card2: #1c2128;
-    --hover: #1c2128;
-    --accent: #238636;
+    --hover: #1f2937;
+    --radius: 8px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     background: var(--bg);
     color: var(--fg);
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', 'Fira Code', 'Courier New', monospace;
-    font-size: 13px;
-    line-height: 1.5;
-    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  a { color: var(--blue); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── Centering wrapper ── */
+  .page-wrap {
+    max-width: 1020px;
+    margin: 0 auto;
+    padding: 0 24px;
   }
 
   /* ── Header ── */
   .site-header {
-    background: var(--card);
     border-bottom: 1px solid var(--border2);
-    padding: 18px 32px 16px;
-    display: flex;
-    align-items: flex-end;
-    gap: 20px;
-    flex-wrap: wrap;
+    padding: 20px 0 18px;
+    margin-bottom: 32px;
   }
-  .site-title {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    color: var(--fg);
-  }
-  .site-title .ball { margin-right: 6px; }
-  .site-meta {
-    color: var(--muted);
-    font-size: 11px;
-    letter-spacing: 0.3px;
-    padding-bottom: 2px;
-  }
-  .site-meta a { color: var(--blue); text-decoration: none; }
-  .site-meta a:hover { text-decoration: underline; }
-  .header-right {
-    margin-left: auto;
-    text-align: right;
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .updated-pill {
-    display: inline-block;
-    background: var(--green-dim);
-    color: var(--green);
-    border: 1px solid #2ea04326;
-    border-radius: 12px;
-    padding: 2px 10px;
-    font-size: 10px;
-    letter-spacing: 0.3px;
-  }
-
-  /* ── Layout ── */
-  .content { padding: 24px 32px; max-width: 1200px; }
-
-  /* ── Section headings ── */
-  h2 {
-    font-size: 10px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1.8px;
-    margin: 32px 0 12px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--border);
+  .header-inner {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
   }
-  h2 .h2-badge {
-    background: var(--card2);
-    border: 1px solid var(--border2);
-    border-radius: 10px;
-    padding: 1px 8px;
-    font-size: 10px;
+  .site-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--fg);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .site-subtitle {
     color: var(--muted);
-    font-weight: normal;
-    letter-spacing: 0;
-    text-transform: none;
+    font-size: 13px;
+    margin-top: 3px;
+  }
+  .updated-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid #3fb95030;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
   }
 
-  /* ── Accuracy box ── */
-  .accuracy-box {
+  /* ── Stat cards ── */
+  .stat-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 32px;
+  }
+  @media (max-width: 640px) { .stat-cards { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card {
     background: var(--card);
     border: 1px solid var(--border2);
-    border-radius: 8px;
-    padding: 18px 22px;
-    margin-bottom: 8px;
+    border-radius: var(--radius);
+    padding: 16px 18px;
   }
-  .acc-header {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-  }
-  .acc-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--fg);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .acc-sub {
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .acc-grid {
-    display: flex;
-    gap: 36px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-  }
-  .acc-val {
-    font-size: 30px;
+  .stat-val {
+    font-size: 32px;
     font-weight: 700;
     color: var(--green);
     line-height: 1;
-    letter-spacing: -0.5px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -1px;
   }
-  .acc-label {
-    font-size: 10px;
+  .stat-label {
+    font-size: 12px;
     color: var(--muted);
-    margin-top: 3px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .acc-note {
-    font-size: 10px;
-    color: var(--muted2);
-    border-top: 1px solid var(--border);
-    padding-top: 10px;
     margin-top: 4px;
   }
-  .retro-inline {
-    color: var(--yellow);
-    font-size: 10px;
+  .stat-baseline {
+    font-size: 11px;
+    color: var(--muted2);
+    margin-top: 2px;
+  }
+  .backtest-note {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 32px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .backtest-note strong { color: var(--fg2); font-weight: 600; }
+
+  /* ── Section heading ── */
+  .section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .section-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--fg);
+  }
+  .section-badge {
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--card2);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 2px 10px;
   }
 
   /* ── Fixtures table ── */
+  .table-wrap {
+    background: var(--card);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
   table { width: 100%; border-collapse: collapse; }
   th {
     text-align: left;
     color: var(--muted);
-    font-weight: normal;
-    font-size: 10px;
+    font-size: 11px;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
-    padding: 5px 8px 7px;
+    letter-spacing: 0.6px;
+    padding: 10px 14px 9px;
+    background: var(--card2);
     border-bottom: 1px solid var(--border2);
     white-space: nowrap;
   }
   td {
-    padding: 6px 8px;
+    padding: 9px 14px;
     border-bottom: 1px solid var(--border);
     vertical-align: middle;
     white-space: nowrap;
+    font-size: 13px;
   }
-  tr.upcoming:hover td { background: var(--hover); cursor: default; }
+  tbody tr:last-child td { border-bottom: none; }
+  tr.upcoming:hover td { background: var(--hover); }
   tr.completed td { color: var(--muted); }
-  tr.live td { background: #1a1200; }
-  tr.live td { color: var(--fg); }
+  tr.live td { background: #1a1200; color: var(--fg); }
   tr.no-pred td { opacity: 0.5; }
 
-  .date-col { width: 52px; color: var(--muted); font-size: 11px; }
-  .team-col { max-width: 190px; overflow: hidden; text-overflow: ellipsis; }
+  .date-col { width: 58px; color: var(--muted); font-size: 12px; }
+  .team-col { min-width: 140px; max-width: 200px; }
   .home-team { text-align: right; }
-  .away-team { text-align: left; padding-left: 4px; }
-  .prob { text-align: right; width: 38px; font-variant-numeric: tabular-nums; font-size: 12px; }
+  .away-team { text-align: left; }
+  .prob {
+    text-align: right;
+    width: 42px;
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+    font-weight: 500;
+  }
   .home-prob { color: var(--blue); }
   .away-prob { color: var(--muted); }
   tr.completed .home-prob,
-  tr.completed .away-prob { color: inherit; }
+  tr.completed .away-prob { color: inherit; font-weight: normal; }
 
   /* Mini 3-segment prob bar */
-  .bar-td { padding: 0 6px; width: 64px; }
-  .mini-bar { display: flex; height: 4px; border-radius: 2px; overflow: hidden; gap: 1px; }
-  .mb-h { background: var(--blue); border-radius: 2px 0 0 2px; min-width: 1px; }
-  .mb-d { background: var(--yellow); min-width: 1px; }
-  .mb-a { background: var(--muted2); border-radius: 0 2px 2px 0; min-width: 1px; }
-  tr.completed .mb-h { background: #2a3040; }
-  tr.completed .mb-d { background: #2a2a1a; }
-  tr.completed .mb-a { background: #222; }
+  .bar-td { padding: 0 8px; width: 68px; }
+  .mini-bar { display: flex; height: 5px; border-radius: 3px; overflow: hidden; gap: 1px; }
+  .mb-h { background: var(--blue); min-width: 2px; }
+  .mb-d { background: var(--yellow); min-width: 2px; }
+  .mb-a { background: var(--muted2); min-width: 2px; }
+  tr.completed .mb-h { background: #1e2d40; }
+  tr.completed .mb-d { background: #28240f; }
+  tr.completed .mb-a { background: #1a1a1a; }
 
-  .scores-col { color: var(--muted); font-size: 11px; min-width: 110px; letter-spacing: 0.3px; }
-  .result-col { font-weight: 600; min-width: 60px; font-size: 12px; }
-  .verdict-wdl, .verdict-score { width: 22px; text-align: center; font-size: 13px; }
-  .verdict { }
+  .scores-col { color: var(--muted); font-size: 12px; min-width: 120px; letter-spacing: 0.2px; font-variant-numeric: tabular-nums; }
+  .result-col { font-weight: 600; min-width: 54px; font-variant-numeric: tabular-nums; }
+  .verdict-wdl, .verdict-score { width: 26px; text-align: center; font-size: 14px; }
   .v-correct { color: var(--green); }
   .v-partial { color: var(--yellow); }
   .v-wrong { color: var(--red); }
   .retro-badge { color: var(--yellow); font-size: 9px; vertical-align: super; }
 
-  /* ── Winner odds table ── */
-  .winner-section { max-width: 560px; }
-  .winner-row:hover td { background: var(--hover); }
-  .rank-col { width: 32px; color: var(--muted2); font-size: 11px; }
-  .wteam-col { min-width: 180px; font-size: 13px; }
-  .wpct { text-align: right; width: 54px; color: var(--green); font-variant-numeric: tabular-nums; font-weight: 600; }
-  .wbar-cell { padding-left: 14px; width: 200px; }
-  .wbar-bg { background: var(--card2); border-radius: 3px; height: 8px; width: 180px; overflow: hidden; }
-  .wbar-fill { background: linear-gradient(90deg, #3fb950, #2ea043); border-radius: 3px; height: 100%; transition: width 0.3s; }
-  .wimplied { color: var(--muted); padding-left: 16px; font-size: 11px; width: 72px; }
-  .winner-note {
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 10px;
-    padding: 8px 0;
-    border-top: 1px solid var(--border);
-  }
-
-  /* ── Legend ── */
   .legend {
     display: flex;
-    gap: 18px;
+    gap: 20px;
     flex-wrap: wrap;
-    font-size: 10px;
+    font-size: 11px;
     color: var(--muted);
-    margin-top: 10px;
-    padding: 8px 0;
-    border-top: 1px solid var(--border);
+    padding: 10px 0 4px;
   }
   .legend span { white-space: nowrap; }
   .leg-h { color: var(--blue); }
   .leg-d { color: var(--yellow); }
-  .leg-a { color: var(--muted); }
+  .retro-inline { color: var(--yellow); }
+
+  /* ── Winner odds ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+    margin-bottom: 40px;
+  }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  .winner-table-wrap {
+    background: var(--card);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .winner-row:hover td { background: var(--hover); }
+  .rank-col { width: 34px; color: var(--muted2); font-size: 12px; padding-right: 4px; }
+  .wteam-col { font-size: 13px; min-width: 150px; }
+  .wpct {
+    text-align: right;
+    width: 52px;
+    color: var(--green);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .wbar-cell { padding-left: 12px; width: 120px; }
+  .wbar-bg { background: var(--card2); border-radius: 4px; height: 6px; width: 100px; overflow: hidden; }
+  .wbar-fill { background: linear-gradient(90deg, #3fb950, #2ea043); border-radius: 4px; height: 100%; }
+  .wimplied { color: var(--muted); padding-left: 12px; font-size: 12px; white-space: nowrap; }
+
+  .winner-explainer {
+    background: var(--card);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    font-size: 13px;
+    color: var(--fg2);
+    line-height: 1.7;
+  }
+  .winner-explainer h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fg);
+    margin-bottom: 10px;
+  }
+  .winner-explainer p { margin-bottom: 10px; color: var(--muted); font-size: 12px; }
+  .winner-explainer p:last-child { margin-bottom: 0; }
+  .winner-explainer strong { color: var(--fg2); font-weight: 600; }
 
   /* ── Footer ── */
   footer {
-    margin-top: 40px;
-    padding: 14px 0;
     border-top: 1px solid var(--border);
+    padding: 20px 0 32px;
     color: var(--muted2);
-    font-size: 10px;
+    font-size: 12px;
     display: flex;
     gap: 16px;
     flex-wrap: wrap;
     align-items: center;
   }
-  footer a { color: var(--muted); text-decoration: none; }
+  footer a { color: var(--muted); }
   footer a:hover { color: var(--blue); }
+  .dot { color: var(--muted2); }
 </style>
 </head>
 <body>
 
+<div class="page-wrap">
+
 <header class="site-header">
-  <div>
-    <div class="site-title"><span class="ball">⚽</span> WC 2026 Forecaster</div>
-    <div class="site-meta">
-      Dixon-Coles score model &middot; 10k Monte Carlo &middot;
-      <a href="https://github.com/VirajMishra1/worldcup-forecaster">github.com/VirajMishra1/worldcup-forecaster</a>
+  <div class="header-inner">
+    <div>
+      <div class="site-title">⚽ WC 2026 Forecaster</div>
+      <div class="site-subtitle">
+        Dixon-Coles score model &middot; predictions locked before kickoff &middot;
+        <a href="https://github.com/VirajMishra1/worldcup-forecaster">GitHub</a>
+      </div>
     </div>
-  </div>
-  <div class="header-right">
-    <div class="updated-pill">⟳ updated 2026-06-21 11:43 UTC</div>
+    <div class="updated-pill">
+      <span>⟳</span> 2026-06-21 12:13 UTC
+    </div>
   </div>
 </header>
 
-<div class="content">
 
-
-<div class="accuracy-box">
-  <div class="acc-header">
-    <span class="acc-title">Live Track Record</span>
-    <span class="acc-sub">36 completed predictions · locked before kickoff</span>
+<div class="stat-cards">
+  <div class="stat-card">
+    <div class="stat-val">61%</div>
+    <div class="stat-label">Win/Draw/Loss correct</div>
+    <div class="stat-baseline">Random baseline: 33%</div>
   </div>
-  <div class="acc-grid">
-    <div class="acc-stat">
-      <div class="acc-val">61%</div>
-      <div class="acc-label">W/D/L correct</div>
-    </div>
-    <div class="acc-stat">
-      <div class="acc-val">36%</div>
-      <div class="acc-label">Score in top 3</div>
-    </div>
-    <div class="acc-stat">
-      <div class="acc-val">8%</div>
-      <div class="acc-label">Exact top-1 score</div>
-    </div>
-    <div class="acc-stat">
-      <div class="acc-val">36</div>
-      <div class="acc-label">Results in</div>
-    </div>
+  <div class="stat-card">
+    <div class="stat-val">36%</div>
+    <div class="stat-label">Exact score in top 3</div>
+    <div class="stat-baseline">Random: ~5–8%</div>
   </div>
-  <div class="acc-note">
-    Backtest (5,518 matches 2018–2023): log-loss 0.8961 vs 1.0986 random · 59% W/D/L accuracy
-    &nbsp;|&nbsp; <span class="retro-inline">[r]</span> = retroactive prediction
+  <div class="stat-card">
+    <div class="stat-val">8%</div>
+    <div class="stat-label">Top-1 score hit</div>
+    <div class="stat-baseline">Random: ~2–3%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">36</div>
+    <div class="stat-label">Results in so far</div>
+    <div class="stat-baseline">36 with locked predictions</div>
   </div>
 </div>
+<div class="backtest-note">
+  <span>📊</span>
+  <span>
+    <strong>Backtest (5,518 matches, 2018–2023):</strong>
+    log-loss 0.8961 vs 1.0986 random &middot; Brier 0.5265 vs 0.6667 random &middot; 59% W/D/L accuracy.
+    All predictions above were <strong>locked before kickoff</strong> and never edited.
+    <span class="retro-inline">[r]</span> = computed after kickoff, excluded from accuracy stats.
+  </span>
+</div>
 
-<h2>All Fixtures — WC 2026 <span class="h2-badge">from Jun 11</span></h2>
+<div class="section-heading">
+  <span class="section-title">Match Predictions</span>
+  <span class="section-badge">WC 2026 · from Jun 11</span>
+</div>
+<div class="table-wrap">
 <table>
   <thead>
     <tr>
       <th>Date</th>
       <th style="text-align:right">Home</th>
-      <th style="text-align:right" title="Home win %">H%</th>
-      <th style="width:64px"></th>
-      <th title="Away win %">A%</th>
+      <th style="text-align:right" title="Home win probability">H%</th>
+      <th style="width:68px"></th>
+      <th title="Away win probability">A%</th>
       <th>Away</th>
-      <th>Top-3 Scores</th>
+      <th>Top 3 scorelines</th>
       <th>Result</th>
-      <th title="W/D/L direction">W/D/L</th>
-      <th title="Score in top-3 prediction">Score</th>
+      <th title="Win/draw/loss direction correct?">W/D/L</th>
+      <th title="Exact score in top 3?">Score</th>
     </tr>
   </thead>
   <tbody>
@@ -1196,28 +1241,35 @@
         </tr>
   </tbody>
 </table>
+</div>
 <div class="legend">
-  <span class="leg-h">■ H%</span>
-  <span class="leg-d">■ D%</span>
-  <span class="leg-a">■ A%</span>
-  <span>W/D/L: ✓ correct &nbsp; ✗ wrong</span>
-  <span>Score: ✓ exact &nbsp; ~ top-3 hit &nbsp; ✗ miss</span>
-  <span class="retro-inline">[r]</span><span> retroactive — computed after match</span>
+  <span><span class="leg-h">▮</span> Home win</span>
+  <span><span class="leg-d">▮</span> Draw</span>
+  <span>▮ Away win</span>
+  <span>&nbsp;·&nbsp; W/D/L: ✓ correct &nbsp; ✗ wrong</span>
+  <span>&nbsp;·&nbsp; Score: ✓ exact top pick &nbsp; ~ in top 3 &nbsp; ✗ miss</span>
+  <span>&nbsp;·&nbsp; <span class="retro-inline">[r]</span> computed after kickoff</span>
 </div>
 
-<h2>Tournament Winner Odds <span class="h2-badge">10k Monte Carlo · 2026-06-21</span></h2>
-<div class="winner-section">
-<table>
-  <thead>
-    <tr>
-      <th></th>
-      <th>Team</th>
-      <th style="text-align:right">Win %</th>
-      <th style="padding-left:14px">Probability</th>
-      <th style="padding-left:16px">Implied odds</th>
-    </tr>
-  </thead>
-  <tbody>
+<div style="height:36px"></div>
+
+<div class="section-heading" style="margin-top:4px">
+  <span class="section-title">Tournament Winner Odds</span>
+  <span class="section-badge">10,000 simulations · updated after every result · 2026-06-21</span>
+</div>
+<div class="two-col">
+  <div class="winner-table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Team</th>
+        <th style="text-align:right">Win %</th>
+        <th style="padding-left:12px">Likelihood</th>
+        <th style="padding-left:12px">Fair odds</th>
+      </tr>
+    </thead>
+    <tbody>
         <tr class="winner-row">
           <td class="rank-col">#1</td>
           <td class="wteam-col">🇦🇷 Argentina</td>
@@ -1394,20 +1446,37 @@
           </td>
           <td class="wimplied">107.7:1</td>
         </tr>
-  </tbody>
-</table>
-<div class="winner-note">
-  Bracket-aware simulation. Refit daily with WC 2026 results at 3× weight.
-  Implied odds = 1/p − 1.
-</div>
+    </tbody>
+  </table>
+  </div>
+  <div class="winner-explainer">
+    <h3>How these numbers work</h3>
+    <p>
+      The model runs <strong>10,000 bracket simulations</strong> of the full tournament,
+      using match probabilities from the Dixon-Coles model — the same model that generates
+      the per-match predictions above. After each completed result, the model is refit and
+      the simulations rerun.
+    </p>
+    <p>
+      <strong>Win %</strong> is how often each team wins the tournament across those 10,000 runs.
+    </p>
+    <p>
+      <strong>Fair odds</strong> = 1/p − 1. If Argentina has a 20% chance, fair decimal odds
+      are 4.0:1 — a £10 bet at fair value returns £50 total (£40 profit). Bookmaker odds
+      will be lower due to their margin.
+    </p>
+    <p>
+      These are <em>model probabilities</em>, not betting advice.
+    </p>
+  </div>
 </div>
 
 <footer>
-  <span>Generated 2026-06-21 11:43 UTC</span>
-  <span>·</span>
+  <span>Built by <a href="https://github.com/VirajMishra1">Viraj Mishra</a></span>
+  <span class="dot">·</span>
   <a href="https://github.com/VirajMishra1/worldcup-forecaster">Source on GitHub</a>
-  <span>·</span>
-  <span>Dixon-Coles · MLE · temperature scaling calibration · 13,779 training matches</span>
+  <span class="dot">·</span>
+  <span>Dixon-Coles (1997) · MLE · temperature scaling · 13,779 training matches</span>
 </footer>
 
 </div>
