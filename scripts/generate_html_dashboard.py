@@ -341,22 +341,21 @@ def main() -> None:
 <meta http-equiv="refresh" content="60">
 <style>
   :root {{
-    --bg: #07091a;
-    --fg: #ede8d8;
-    --fg2: #c8c0a8;
-    --muted: #7a7260;
-    --muted2: #3e3828;
-    --gold: #c9a42a;
-    --gold-bright: #e6be38;
-    --gold-dim: #18120a;
-    --red: #d93025;
-    --amber: #c47c14;
-    --blue: #3d87d4;
-    --border: #16192e;
-    --border2: #22274a;
-    --card: #0c0f22;
-    --card2: #111428;
-    --hover: #181c38;
+    --bg: #0d1117;
+    --fg: #e6edf3;
+    --fg2: #c9d1d9;
+    --muted: #8b949e;
+    --muted2: #484f58;
+    --green: #3fb950;
+    --green-dim: #0f2d14;
+    --red: #f85149;
+    --yellow: #e3b341;
+    --blue: #58a6ff;
+    --border: #21262d;
+    --border2: #30363d;
+    --card: #161b22;
+    --card2: #1c2128;
+    --hover: #1f2937;
     --radius: 8px;
   }}
   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
@@ -408,9 +407,9 @@ def main() -> None:
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: var(--gold-dim);
-    color: var(--gold);
-    border: 1px solid #c9a42a30;
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid #3fb95030;
     border-radius: 20px;
     padding: 4px 12px;
     font-size: 12px;
@@ -435,7 +434,7 @@ def main() -> None:
   .stat-val {{
     font-size: 32px;
     font-weight: 700;
-    color: var(--gold-bright);
+    color: var(--green);
     line-height: 1;
     font-variant-numeric: tabular-nums;
     letter-spacing: -1px;
@@ -526,7 +525,7 @@ def main() -> None:
   tbody tr:last-child td {{ border-bottom: none; }}
   tr.upcoming:hover td {{ background: var(--hover); }}
   tr.completed td {{ color: var(--muted); }}
-  tr.live td {{ background: #1a1400; color: var(--fg); }}
+  tr.live td {{ background: #1a1200; color: var(--fg); }}
   tr.no-pred td {{ opacity: 0.5; }}
 
   .date-col {{ width: 58px; color: var(--muted); font-size: 12px; }}
@@ -549,19 +548,19 @@ def main() -> None:
   .bar-td {{ padding: 0 8px; width: 84px; }}
   .mini-bar {{ display: flex; height: 6px; border-radius: 3px; overflow: hidden; gap: 1px; }}
   .mb-h {{ background: var(--blue); min-width: 2px; }}
-  .mb-d {{ background: var(--gold); min-width: 2px; }}
+  .mb-d {{ background: var(--yellow); min-width: 2px; }}
   .mb-a {{ background: var(--muted2); min-width: 2px; }}
-  tr.completed .mb-h {{ background: #0e1a2e; }}
-  tr.completed .mb-d {{ background: #221a08; }}
-  tr.completed .mb-a {{ background: #181818; }}
+  tr.completed .mb-h {{ background: #1e2d40; }}
+  tr.completed .mb-d {{ background: #28240f; }}
+  tr.completed .mb-a {{ background: #222; }}
 
   .scores-col {{ color: var(--muted); font-size: 12px; min-width: 120px; letter-spacing: 0.2px; font-variant-numeric: tabular-nums; }}
   .result-col {{ font-weight: 600; min-width: 54px; font-variant-numeric: tabular-nums; }}
   .verdict-wdl, .verdict-score {{ width: 26px; text-align: center; font-size: 14px; }}
-  .v-correct {{ color: var(--gold); }}
-  .v-partial {{ color: var(--amber); }}
+  .v-correct {{ color: var(--green); }}
+  .v-partial {{ color: var(--yellow); }}
   .v-wrong {{ color: var(--red); }}
-  .retro-badge {{ color: var(--amber); font-size: 9px; vertical-align: super; }}
+  .retro-badge {{ color: var(--yellow); font-size: 9px; vertical-align: super; }}
 
   .legend {{
     display: flex;
@@ -573,8 +572,8 @@ def main() -> None:
   }}
   .legend span {{ white-space: nowrap; }}
   .leg-h {{ color: var(--blue); }}
-  .leg-d {{ color: var(--gold); }}
-  .retro-inline {{ color: var(--amber); }}
+  .leg-d {{ color: var(--yellow); }}
+  .retro-inline {{ color: var(--yellow); }}
 
   /* ── Winner odds ── */
   .two-col {{
@@ -598,14 +597,14 @@ def main() -> None:
   .wpct {{
     text-align: right;
     width: 52px;
-    color: var(--gold-bright);
+    color: var(--green);
     font-variant-numeric: tabular-nums;
     font-weight: 600;
     font-size: 13px;
   }}
   .wbar-cell {{ padding-left: 12px; width: 120px; }}
   .wbar-bg {{ background: var(--card2); border-radius: 4px; height: 6px; width: 100px; overflow: hidden; }}
-  .wbar-fill {{ background: linear-gradient(90deg, #c9a42a, #e6be38); border-radius: 4px; height: 100%; }}
+  .wbar-fill {{ background: linear-gradient(90deg, #3fb950, #2ea043); border-radius: 4px; height: 100%; }}
   .wimplied {{ color: var(--muted); padding-left: 12px; font-size: 12px; white-space: nowrap; }}
 
   .winner-explainer {{
