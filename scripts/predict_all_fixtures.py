@@ -92,6 +92,7 @@ def main() -> None:
         top3 = sorted(mkts.exact_scores.items(), key=lambda x: -x[1])[:3]
         rows.append({
             "locked_at": pd.Timestamp.now(),
+            "prediction_type": "locked",
             "match_date": fix["date"],
             "home": home,
             "away": away,
