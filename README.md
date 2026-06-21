@@ -31,20 +31,20 @@ Implied odds = 1/p − 1. At 20% win probability, fair implied odds are 4.0:1 (a
 
 | Team | Win % | Implied odds |
 |------|-------|--------------|
-| 🇦🇷 Argentina | 16.6% | 5.0:1 |
-| 🇪🇸 Spain | 15.2% | 5.6:1 |
-| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 11.3% | 7.8:1 |
-| 🇧🇷 Brazil | 8.8% | 10.3:1 |
-| 🇫🇷 France | 8.2% | 11.2:1 |
-| 🇩🇪 Germany | 7.8% | 11.9:1 |
-| 🇳🇱 Netherlands | 5.1% | 18.6:1 |
-| 🇧🇪 Belgium | 4.7% | 20.5:1 |
-| 🇵🇹 Portugal | 4.5% | 21.1:1 |
-| 🇺🇸 United States | 4.3% | 22.0:1 |
-| 🇨🇴 Colombia | 3.9% | 24.4:1 |
-| 🇲🇦 Morocco | 2.3% | 43.2:1 |
+| 🇦🇷 Argentina | 16.8% | 4.9:1 |
+| 🇪🇸 Spain | 14.9% | 5.7:1 |
+| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 12.0% | 7.4:1 |
+| 🇧🇷 Brazil | 8.0% | 11.4:1 |
+| 🇫🇷 France | 8.0% | 11.5:1 |
+| 🇩🇪 Germany | 7.2% | 12.9:1 |
+| 🇳🇱 Netherlands | 5.6% | 16.7:1 |
+| 🇧🇪 Belgium | 4.9% | 19.4:1 |
+| 🇵🇹 Portugal | 4.8% | 20.0:1 |
+| 🇺🇸 United States | 4.2% | 22.8:1 |
+| 🇨🇴 Colombia | 4.2% | 22.8:1 |
+| 🇲🇦 Morocco | 2.4% | 41.0:1 |
 
-_37 completed WC 2026 results included. Updated 2026-06-21._
+_38 completed WC 2026 results included. Updated 2026-06-21._
 
 <!-- WINNER_ODDS_END -->
 
