@@ -17,6 +17,9 @@ MARKER_END = "<!-- TRACK_RECORD_END -->"
 ODDS_MARKER_START = "<!-- ODDS_COMPARISON_START -->"
 ODDS_MARKER_END = "<!-- ODDS_COMPARISON_END -->"
 
+WINNER_MARKER_START = "<!-- WINNER_ODDS_START -->"
+WINNER_MARKER_END = "<!-- WINNER_ODDS_END -->"
+
 
 def _outcome(hg: int, ag: int) -> str:
     if hg > ag:
@@ -34,6 +37,10 @@ def build_track_record() -> str:
         return "_No predictions yet._\n"
 
     preds = pd.read_parquet(preds_path)
+    retroactive = (
+        preds[preds["prediction_type"] == "retroactive"]
+        if "prediction_type" in preds.columns else pd.DataFrame()
+    )
     if "prediction_type" in preds.columns:
         preds = preds[preds["prediction_type"] == "locked"]
     results = pd.read_parquet(results_path)
@@ -74,6 +81,21 @@ def build_track_record() -> str:
         f"| W/D/L accuracy | {metrics['accuracy']:.1%} | 33.3% |",
         f"| Log-loss | {metrics['log_loss']:.4f} | 1.0986 |",
         f"| Brier score | {metrics['brier']:.4f} | 0.6667 |",
+    ]
+
+    if len(retroactive) > 0:
+        teams = retroactive.apply(
+            lambda r: f"{r['home']} vs {r['away']}", axis=1
+        ).tolist()
+        team_list = ", ".join(teams)
+        lines.append(
+            f"\n_{len(retroactive)} predictions generated after kickoff "
+            f"({team_list}) are excluded from this table. "
+            f"They are visible with an [r] badge on the "
+            f"[live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._"
+        )
+
+    lines += [
         "",
         "### Per-match predictions\n",
         "| Date | Match | H% / D% / A% | Result | LL | ✓ |",
@@ -88,6 +110,40 @@ def build_track_record() -> str:
             f"| {r['p_home']:.0%}/{r['p_draw']:.0%}/{r['p_away']:.0%} "
             f"| {result_str} ({score_str}) | {r['log_loss']:.3f} | {'✓' if r['correct'] else '✗'} |"
         )
+
+    return "\n".join(lines) + "\n"
+
+
+def build_winner_odds() -> str:
+    tournament_path = DATA_DIR / "tournament.json"
+    if not tournament_path.exists():
+        return "## WC 2026 Winner Odds\n\n_Not yet generated._\n"
+
+    with open(tournament_path) as f:
+        t = json.load(f)
+
+    win: dict = t.get("win", {})
+    updated_at: str = t.get("updated_at", "")
+    top = sorted(win.items(), key=lambda x: -x[1])[:12]
+
+    lines = [
+        "## WC 2026 Winner Odds\n",
+        "10,000 Monte Carlo simulations, bracket-aware, updated after every result\n",
+        "| Team | Win probability |",
+        "|------|----------------|",
+    ]
+    for team, prob in top:
+        lines.append(f"| {team} | {prob:.1%} |")
+
+    if updated_at:
+        try:
+            from datetime import datetime
+            dt = datetime.fromisoformat(updated_at)
+            date_str = dt.strftime("%Y-%m-%d")
+        except ValueError:
+            date_str = updated_at[:10]
+        n_results = len(pd.read_parquet(DATA_DIR / "results.parquet")) if (DATA_DIR / "results.parquet").exists() else 0
+        lines.append(f"\n_{n_results} completed WC 2026 results included in the refit. Updated {date_str}._")
 
     return "\n".join(lines) + "\n"
 
@@ -171,9 +227,9 @@ def _splice_section(content: str, start_marker: str, end_marker: str, body: str)
 
 def update_readme(track_record: str) -> None:
     content = README.read_text()
+    content = _splice_section(content, WINNER_MARKER_START, WINNER_MARKER_END, build_winner_odds())
     content = _splice_section(content, MARKER_START, MARKER_END, track_record)
-    odds_comparison = build_odds_comparison()
-    content = _splice_section(content, ODDS_MARKER_START, ODDS_MARKER_END, odds_comparison)
+    content = _splice_section(content, ODDS_MARKER_START, ODDS_MARKER_END, build_odds_comparison())
     README.write_text(content)
 
 

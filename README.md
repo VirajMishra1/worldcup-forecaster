@@ -22,9 +22,10 @@ The goal is not to beat bookmakers. It is to build something genuinely calibrate
 
 ---
 
+<!-- WINNER_ODDS_START -->
 ## WC 2026 Winner Odds
 
-10,000 Monte Carlo simulations, bracket-aware, updated daily after every result
+10,000 Monte Carlo simulations, bracket-aware, updated after every result
 
 | Team | Win probability |
 |------|----------------|
@@ -43,6 +44,8 @@ The goal is not to beat bookmakers. It is to build something genuinely calibrate
 
 _32 completed WC 2026 results included in the refit. Updated 2026-06-20._
 
+<!-- WINNER_ODDS_END -->
+
 ---
 
 <!-- TRACK_RECORD_START -->
@@ -53,6 +56,8 @@ _32 completed WC 2026 results included in the refit. Updated 2026-06-20._
 | W/D/L accuracy | 62.5% | 33.3% |
 | Log-loss | 0.8687 | 1.0986 |
 | Brier score | 0.5136 | 0.6667 |
+
+_4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Uzbekistan vs Colombia) are excluded from this table. They are visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
 
 ### Per-match predictions
 
