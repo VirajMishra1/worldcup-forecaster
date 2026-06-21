@@ -375,6 +375,9 @@ def main() -> None:
     margin: 0 auto;
     padding: 0 28px;
   }}
+  @media (max-width: 640px) {{
+    .page-wrap {{ padding: 0 10px; }}
+  }}
 
   /* ── Header ── */
   .site-header {{
@@ -424,7 +427,16 @@ def main() -> None:
     gap: 12px;
     margin-bottom: 32px;
   }}
-  @media (max-width: 640px) {{ .stat-cards {{ grid-template-columns: repeat(2, 1fr); }} }}
+  @media (max-width: 640px) {{
+    .stat-cards {{ grid-template-columns: repeat(2, 1fr); }}
+    .team-col {{ min-width: 90px; max-width: 130px; font-size: 12px; }}
+    td {{ padding: 7px 8px; }}
+    th {{ padding: 8px 8px 7px; }}
+    .bar-td, .scores-col, .verdict-score,
+    th:nth-child(4), th:nth-child(7), th:nth-child(10) {{ display: none; }}
+    .site-title {{ font-size: 18px; }}
+    .updated-pill {{ font-size: 11px; padding: 3px 9px; }}
+  }}
   .stat-card {{
     background: var(--card);
     border: 1px solid var(--border2);
@@ -499,7 +511,7 @@ def main() -> None:
     background: var(--card);
     border: 1px solid var(--border2);
     border-radius: var(--radius);
-    overflow: hidden;
+    overflow-x: auto;
     margin-bottom: 12px;
   }}
   table {{ width: 100%; border-collapse: collapse; }}
