@@ -25,22 +25,24 @@ The goal is not to beat bookmakers. It is to build something genuinely calibrate
 <!-- WINNER_ODDS_START -->
 ## WC 2026 Winner Odds
 
-10,000 Monte Carlo simulations, bracket-aware, updated after every result
+10,000 Monte Carlo bracket simulations, updated after every result.
 
-| Team | Win probability |
-|------|----------------|
-| Argentina | 20.0% |
-| England | 11.1% |
-| Brazil | 10.5% |
-| France | 9.9% |
-| Germany | 6.3% |
-| United States | 6.1% |
-| Spain | 6.1% |
-| Colombia | 5.6% |
-| Netherlands | 5.0% |
-| Portugal | 4.8% |
-| Belgium | 4.7% |
-| Morocco | 2.5% |
+Implied odds = 1/p − 1. At 20% win probability, fair implied odds are 4.0:1 (a £10 bet at fair value returns £50 total).
+
+| Team | Win % | Implied odds |
+|------|-------|--------------|
+| 🇦🇷 Argentina | 18.9% | 4.3:1 |
+| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 11.7% | 7.5:1 |
+| 🇧🇷 Brazil | 9.5% | 9.5:1 |
+| 🇫🇷 France | 8.8% | 10.4:1 |
+| 🇩🇪 Germany | 7.1% | 13.1:1 |
+| 🇪🇸 Spain | 6.9% | 13.6:1 |
+| 🇳🇱 Netherlands | 5.6% | 16.9:1 |
+| 🇺🇸 United States | 5.5% | 17.1:1 |
+| 🇨🇴 Colombia | 5.1% | 18.5:1 |
+| 🇵🇹 Portugal | 5.1% | 18.7:1 |
+| 🇧🇪 Belgium | 5.0% | 19.1:1 |
+| 🇲🇦 Morocco | 2.4% | 40.3:1 |
 
 _36 completed WC 2026 results included. Updated 2026-06-21._
 

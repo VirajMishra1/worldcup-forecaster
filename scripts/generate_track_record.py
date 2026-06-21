@@ -17,6 +17,29 @@ MARKER_END = "<!-- TRACK_RECORD_END -->"
 WINNER_MARKER_START = "<!-- WINNER_ODDS_START -->"
 WINNER_MARKER_END = "<!-- WINNER_ODDS_END -->"
 
+_FLAGS: dict[str, str] = {
+    "Argentina": "🇦🇷", "Australia": "🇦🇺", "Austria": "🇦🇹",
+    "Belgium": "🇧🇪", "Bolivia": "🇧🇴", "Bosnia and Herzegovina": "🇧🇦",
+    "Brazil": "🇧🇷", "Canada": "🇨🇦", "Cape Verde": "🇨🇻",
+    "Chile": "🇨🇱", "Colombia": "🇨🇴", "Costa Rica": "🇨🇷",
+    "Croatia": "🇭🇷", "Czech Republic": "🇨🇿", "Denmark": "🇩🇰",
+    "DR Congo": "🇨🇩", "Ecuador": "🇪🇨", "Egypt": "🇪🇬",
+    "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "France": "🇫🇷", "Germany": "🇩🇪",
+    "Ghana": "🇬🇭", "Haiti": "🇭🇹", "Honduras": "🇭🇳",
+    "Indonesia": "🇮🇩", "Iran": "🇮🇷", "Ivory Coast": "🇨🇮",
+    "Jamaica": "🇯🇲", "Japan": "🇯🇵", "Mali": "🇲🇱",
+    "Mexico": "🇲🇽", "Morocco": "🇲🇦", "Netherlands": "🇳🇱",
+    "New Zealand": "🇳🇿", "Nigeria": "🇳🇬", "Norway": "🇳🇴",
+    "Panama": "🇵🇦", "Paraguay": "🇵🇾", "Peru": "🇵🇪",
+    "Poland": "🇵🇱", "Portugal": "🇵🇹", "Qatar": "🇶🇦",
+    "Saudi Arabia": "🇸🇦", "Scotland": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Senegal": "🇸🇳",
+    "Serbia": "🇷🇸", "Slovakia": "🇸🇰", "South Africa": "🇿🇦",
+    "South Korea": "🇰🇷", "Spain": "🇪🇸", "Sweden": "🇸🇪",
+    "Switzerland": "🇨🇭", "Tanzania": "🇹🇿", "Tunisia": "🇹🇳",
+    "Turkey": "🇹🇷", "Ukraine": "🇺🇦", "United States": "🇺🇸",
+    "Uruguay": "🇺🇾", "Uzbekistan": "🇺🇿", "Venezuela": "🇻🇪",
+}
+
 
 def _outcome(hg: int, ag: int) -> str:
     if hg > ag:
@@ -132,12 +155,16 @@ def build_winner_odds() -> str:
 
     lines = [
         "## WC 2026 Winner Odds\n",
-        "10,000 Monte Carlo simulations, bracket-aware, updated after every result\n",
-        "| Team | Win probability |",
-        "|------|----------------|",
+        "10,000 Monte Carlo bracket simulations, updated after every result.\n",
+        "Implied odds = 1/p − 1. At 20% win probability, fair implied odds are 4.0:1"
+        " (a £10 bet at fair value returns £50 total).\n",
+        "| Team | Win % | Implied odds |",
+        "|------|-------|--------------|",
     ]
     for team, prob in top:
-        lines.append(f"| {team} | {prob:.1%} |")
+        flag = _FLAGS.get(team, "🏳")
+        implied = f"{1/prob - 1:.1f}:1" if prob > 0 else "—"
+        lines.append(f"| {flag} {team} | {prob:.1%} | {implied} |")
 
     if updated_at:
         try:

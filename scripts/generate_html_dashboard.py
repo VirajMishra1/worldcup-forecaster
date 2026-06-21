@@ -132,6 +132,8 @@ def main() -> None:
             if pred is None and params is not None:
                 pred = _retroactive_pred(home, away, params)
                 retro = True
+            elif pred is not None and str(pred.get("prediction_type", "")) == "retroactive":
+                retro = True
             all_entries.append({
                 "date": dt, "home": home, "away": away,
                 "hg": hg, "ag": ag, "pred": pred, "retro": retro, "status": "completed",
