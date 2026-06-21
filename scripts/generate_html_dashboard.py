@@ -128,12 +128,12 @@ def main() -> None:
             seen_keys.add(key)
             hg, ag = int(r["home_goals"]), int(r["away_goals"])
             pred = pred_map.get(key)
-            retro = False
-            if pred is None and params is not None:
-                pred = _retroactive_pred(home, away, params)
+            if pred is not None and str(pred.get("prediction_type", "")) == "locked":
+                retro = False
+            else:
                 retro = True
-            elif pred is not None and str(pred.get("prediction_type", "")) == "retroactive":
-                retro = True
+                if pred is None and params is not None:
+                    pred = _retroactive_pred(home, away, params)
             all_entries.append({
                 "date": dt, "home": home, "away": away,
                 "hg": hg, "ag": ag, "pred": pred, "retro": retro, "status": "completed",
@@ -149,7 +149,7 @@ def main() -> None:
             "hg": None, "ag": None, "pred": p.to_dict(), "retro": False, "status": "upcoming",
         })
 
-    n_total = n_wdl = n_top1 = n_top3 = 0
+    n_total = n_wdl = n_top1 = n_top3 = n_locked = 0
     for e in all_entries:
         if e["status"] != "completed" or e["pred"] is None:
             continue
@@ -164,6 +164,8 @@ def main() -> None:
         s2 = _clean_score(p.get("top_2_scoreline"))
         s3 = _clean_score(p.get("top_3_scoreline"))
         n_total += 1
+        if not e.get("retro"):
+            n_locked += 1
         if pred_wdl == actual_wdl:
             n_wdl += 1
         if s1 == actual:
@@ -236,9 +238,9 @@ def main() -> None:
 
         # Mini prob bars (3 segments)
         def _mini_bar(p_h, p_d, p_a):
-            w_h = round(p_h * 60)
-            w_d = round(p_d * 60)
-            w_a = 60 - w_h - w_d
+            w_h = round(p_h * 96)
+            w_d = round(p_d * 96)
+            w_a = 96 - w_h - w_d
             w_a = max(0, w_a)
             return (
                 f'<div class="mini-bar">'
@@ -308,17 +310,14 @@ def main() -> None:
   <div class="stat-card">
     <div class="stat-val">{n_results}</div>
     <div class="stat-label">Results in so far</div>
-    <div class="stat-baseline">{n_total} with locked predictions</div>
+    <div class="stat-baseline">{n_locked} locked before kickoff</div>
   </div>
 </div>
 <div class="backtest-note">
-  <span>📊</span>
-  <span>
-    <strong>Backtest (5,518 matches, 2018–2023):</strong>
-    log-loss 0.8961 vs 1.0986 random &middot; Brier 0.5265 vs 0.6667 random &middot; 59% W/D/L accuracy.
-    All predictions above were <strong>locked before kickoff</strong> and never edited.
-    <span class="retro-inline">[r]</span> = computed after kickoff, excluded from accuracy stats.
-  </span>
+  <strong>Backtest (5,518 matches, 2018–2023):</strong>
+  log-loss 0.8961 vs 1.0986 random &middot; Brier 0.5265 vs 0.6667 random &middot; 59% W/D/L accuracy.
+  Stats above cover all {n_total} completed matches &mdash; {n_locked} were locked before kickoff,
+  the rest are marked <span class="retro-inline">[r]</span> and excluded from the track record.
 </div>"""
 
     html = f"""<!DOCTYPE html>
@@ -528,8 +527,8 @@ def main() -> None:
   tr.completed .away-prob {{ color: inherit; font-weight: normal; }}
 
   /* Mini 3-segment prob bar */
-  .bar-td {{ padding: 0 8px; width: 68px; }}
-  .mini-bar {{ display: flex; height: 5px; border-radius: 3px; overflow: hidden; gap: 1px; }}
+  .bar-td {{ padding: 0 10px; width: 116px; }}
+  .mini-bar {{ display: flex; height: 6px; border-radius: 3px; overflow: hidden; gap: 1px; }}
   .mb-h {{ background: var(--blue); min-width: 2px; }}
   .mb-d {{ background: var(--yellow); min-width: 2px; }}
   .mb-a {{ background: var(--muted2); min-width: 2px; }}
