@@ -128,12 +128,12 @@ def main() -> None:
             seen_keys.add(key)
             hg, ag = int(r["home_goals"]), int(r["away_goals"])
             pred = pred_map.get(key)
-            if pred is not None and str(pred.get("prediction_type", "")) == "locked":
-                retro = False
-            else:
+            retro = False
+            if pred is None and params is not None:
+                pred = _retroactive_pred(home, away, params)
                 retro = True
-                if pred is None and params is not None:
-                    pred = _retroactive_pred(home, away, params)
+            elif pred is not None and str(pred.get("prediction_type", "")) == "retroactive":
+                retro = True
             all_entries.append({
                 "date": dt, "home": home, "away": away,
                 "hg": hg, "ag": ag, "pred": pred, "retro": retro, "status": "completed",
