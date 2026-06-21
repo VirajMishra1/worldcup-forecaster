@@ -29,20 +29,20 @@ The goal is not to beat bookmakers. It is to build something genuinely calibrate
 
 | Team | Win probability |
 |------|----------------|
-| Argentina | 15.8% |
-| Brazil | 12.2% |
-| England | 10.2% |
-| United States | 10.2% |
-| Germany | 9.3% |
-| France | 7.7% |
-| Spain | 5.9% |
-| Belgium | 5.2% |
+| Argentina | 20.0% |
+| England | 11.1% |
+| Brazil | 10.5% |
+| France | 9.9% |
+| Germany | 6.3% |
+| United States | 6.1% |
+| Spain | 6.1% |
+| Colombia | 5.6% |
+| Netherlands | 5.0% |
 | Portugal | 4.8% |
-| Morocco | 4.1% |
-| Mexico | 3.9% |
-| Colombia | 2.6% |
+| Belgium | 4.7% |
+| Morocco | 2.5% |
 
-_32 completed WC 2026 results included in the refit. Updated 2026-06-20._
+_36 completed WC 2026 results included in the refit. Updated 2026-06-21._
 
 <!-- WINNER_ODDS_END -->
 
@@ -77,7 +77,7 @@ _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia
 ---
 
 <!-- ODDS_COMPARISON_START -->
-## Model vs Polymarket · market updated Jun 20 08:40 UTC
+## Model vs Polymarket · market updated Jun 21 09:35 UTC
 
 | Team | Model | Market | Edge |
 |------|-------|--------|------|
