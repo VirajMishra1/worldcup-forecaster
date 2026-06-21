@@ -6,7 +6,7 @@
 | Log-loss | 0.8687 | 1.0986 |
 | Brier score | 0.5136 | 0.6667 |
 
-_4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Uzbekistan vs Colombia) are excluded from this table. They are visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
+_4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Uzbekistan vs Colombia) are excluded from this table. Visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
 
 ### Per-match predictions
 

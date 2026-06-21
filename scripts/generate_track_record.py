@@ -14,9 +14,6 @@ README = Path(__file__).parent.parent / "README.md"
 MARKER_START = "<!-- TRACK_RECORD_START -->"
 MARKER_END = "<!-- TRACK_RECORD_END -->"
 
-ODDS_MARKER_START = "<!-- ODDS_COMPARISON_START -->"
-ODDS_MARKER_END = "<!-- ODDS_COMPARISON_END -->"
-
 WINNER_MARKER_START = "<!-- WINNER_ODDS_START -->"
 WINNER_MARKER_END = "<!-- WINNER_ODDS_END -->"
 
@@ -29,7 +26,7 @@ def _outcome(hg: int, ag: int) -> str:
     return "A"
 
 
-def build_track_record() -> str:
+def build_track_record(include_table: bool = True) -> str:
     preds_path = DATA_DIR / "predictions.parquet"
     results_path = DATA_DIR / "results.parquet"
 
@@ -91,9 +88,16 @@ def build_track_record() -> str:
         lines.append(
             f"\n_{len(retroactive)} predictions generated after kickoff "
             f"({team_list}) are excluded from this table. "
-            f"They are visible with an [r] badge on the "
+            f"Visible with an [r] badge on the "
             f"[live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._"
         )
+
+    if not include_table:
+        lines.append(
+            "\n_Per-match breakdown on the "
+            "[live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._"
+        )
+        return "\n".join(lines) + "\n"
 
     lines += [
         "",
@@ -142,70 +146,12 @@ def build_winner_odds() -> str:
             date_str = dt.strftime("%Y-%m-%d")
         except ValueError:
             date_str = updated_at[:10]
-        n_results = len(pd.read_parquet(DATA_DIR / "results.parquet")) if (DATA_DIR / "results.parquet").exists() else 0
-        lines.append(f"\n_{n_results} completed WC 2026 results included in the refit. Updated {date_str}._")
-
-    return "\n".join(lines) + "\n"
-
-
-def build_odds_comparison() -> str:
-    """Build a top-5 model vs Polymarket comparison table for the README."""
-    tournament_path = DATA_DIR / "tournament.json"
-    polymarket_path = DATA_DIR / "polymarket_odds.json"
-
-    if not tournament_path.exists():
-        return "_Tournament win probabilities not yet generated._\n"
-
-    with open(tournament_path) as f:
-        tournament = json.load(f)
-    model_win: dict = tournament.get("win", {})
-
-    market_win: dict = {}
-    market_note = ""
-    market_updated = ""
-    if polymarket_path.exists():
-        with open(polymarket_path) as f:
-            poly = json.load(f)
-        market_win = poly.get("win", {})
-        market_note = poly.get("note", "")
-        market_updated = poly.get("updated_at", "")
-
-    if not market_win:
-        note = market_note or "run python -m scripts.fetch_odds"
-        return f"_Polymarket data unavailable ({note})._\n"
-
-    # Build top-5 by model win%, showing edge
-    teams = sorted(
-        [t for t in model_win if model_win[t] >= 0.001 and t in market_win],
-        key=lambda t: model_win[t],
-        reverse=True,
-    )[:5]
-
-    updated_str = ""
-    if market_updated:
-        try:
-            from datetime import datetime
-            dt = datetime.fromisoformat(market_updated)
-            updated_str = f" · market updated {dt.strftime('%b %d %H:%M UTC')}"
-        except ValueError:
-            updated_str = f" · market updated {market_updated}"
-
-    lines = [
-        f"## Model vs Polymarket{updated_str}\n",
-        "| Team | Model | Market | Edge |",
-        "|------|-------|--------|------|",
-    ]
-    for team in teams:
-        pm = model_win[team]
-        mk = market_win[team]
-        edge = pm - mk
-        lines.append(
-            f"| {team} | {pm*100:.1f}% | {mk*100:.1f}% | {edge*100:+.1f}% |"
+        n_results = (
+            len(pd.read_parquet(DATA_DIR / "results.parquet"))
+            if (DATA_DIR / "results.parquet").exists() else 0
         )
+        lines.append(f"\n_{n_results} completed WC 2026 results included. Updated {date_str}._")
 
-    lines.append(
-        "\n_Edge = Model% − Market%. Positive = model thinks team is underpriced on Polymarket._"
-    )
     return "\n".join(lines) + "\n"
 
 
@@ -225,20 +171,20 @@ def _splice_section(content: str, start_marker: str, end_marker: str, body: str)
     return content
 
 
-def update_readme(track_record: str) -> None:
+def update_readme(readme_track_record: str) -> None:
     content = README.read_text()
     content = _splice_section(content, WINNER_MARKER_START, WINNER_MARKER_END, build_winner_odds())
-    content = _splice_section(content, MARKER_START, MARKER_END, track_record)
-    content = _splice_section(content, ODDS_MARKER_START, ODDS_MARKER_END, build_odds_comparison())
+    content = _splice_section(content, MARKER_START, MARKER_END, readme_track_record)
     README.write_text(content)
 
 
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     REPORTS.mkdir(exist_ok=True)
-    track_record = build_track_record()
-    (REPORTS / "track_record.md").write_text(track_record)
-    update_readme(track_record)
+    full_report = build_track_record(include_table=True)
+    readme_section = build_track_record(include_table=False)
+    (REPORTS / "track_record.md").write_text(full_report)
+    update_readme(readme_section)
     logging.info("Track record regenerated.")
 
 
