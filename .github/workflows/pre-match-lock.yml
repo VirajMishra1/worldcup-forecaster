@@ -72,6 +72,7 @@ jobs:
             docs/index.html \
             README.md || true
           git diff --cached --quiet || \
-            git commit -m "chore: pre-match lock $(date -u +%H:%M UTC)"
+            git commit -m "chore: pre-match lock $(date -u +"%H:%M UTC")"
+          git checkout -- .
           git pull --rebase origin main
           git push
