@@ -294,35 +294,39 @@ def main() -> None:
     n_results = len(results) if not results.empty else 0
 
     accuracy_html = ""
-    if n_locked > 0:
+    if n_total > 0:
         accuracy_html = f"""
 <div class="stat-cards">
   <div class="stat-card">
-    <div class="stat-val">{_pct(n_wdl, n_locked)}</div>
+    <div class="stat-val">{_pct(n_wdl_all, n_total)}</div>
+    <div class="stat-frac">{n_wdl_all}/{n_total}</div>
     <div class="stat-label">Win/Draw/Loss correct</div>
     <div class="stat-baseline">Random baseline: 33%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{_pct(n_top3, n_locked)}</div>
+    <div class="stat-val">{_pct(n_top3_all, n_total)}</div>
+    <div class="stat-frac">{n_top3_all}/{n_total}</div>
     <div class="stat-label">Score in top-3 predicted</div>
     <div class="stat-baseline">Random: ~5–8%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{_pct(n_top1, n_locked)}</div>
+    <div class="stat-val">{_pct(n_top1_all, n_total)}</div>
+    <div class="stat-frac">{n_top1_all}/{n_total}</div>
     <div class="stat-label">Top-1 exact score hit</div>
     <div class="stat-baseline">Random: ~2–3%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{n_locked}</div>
-    <div class="stat-label">Pre-kickoff predictions</div>
-    <div class="stat-baseline">{n_results} results in total</div>
+    <div class="stat-val">{n_total}</div>
+    <div class="stat-frac">{n_locked} pre-kickoff</div>
+    <div class="stat-label">Predictions with results</div>
+    <div class="stat-baseline">{n_results} total WC results</div>
   </div>
 </div>
 <div class="backtest-note">
   <strong>Backtest (5,518 matches, 2018–2023):</strong>
   log-loss 0.8961 vs 1.0986 random &middot; Brier 0.5265 vs 0.6667 random &middot; 59% W/D/L accuracy.
-  Stats above are over {n_locked} predictions locked before kickoff.
-  Matches marked <span class="retro-inline">[r]</span> were computed after kickoff and are not counted.
+  Stats above cover all {n_total} completed matches.
+  Matches marked <span class="retro-inline">[r]</span> were computed after kickoff.
 </div>"""
 
     html = f"""<!DOCTYPE html>
@@ -365,9 +369,9 @@ def main() -> None:
 
   /* ── Centering wrapper ── */
   .page-wrap {{
-    max-width: 1020px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 28px;
   }}
 
   /* ── Header ── */
@@ -433,10 +437,17 @@ def main() -> None:
     font-variant-numeric: tabular-nums;
     letter-spacing: -1px;
   }}
+  .stat-frac {{
+    font-size: 13px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    margin-top: 2px;
+    line-height: 1;
+  }}
   .stat-label {{
     font-size: 12px;
     color: var(--muted);
-    margin-top: 4px;
+    margin-top: 6px;
   }}
   .stat-baseline {{
     font-size: 11px;
@@ -486,7 +497,7 @@ def main() -> None:
     background: var(--card);
     border: 1px solid var(--border2);
     border-radius: var(--radius);
-    overflow-x: auto;
+    overflow: hidden;
     margin-bottom: 12px;
   }}
   table {{ width: 100%; border-collapse: collapse; }}

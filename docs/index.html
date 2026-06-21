@@ -38,9 +38,9 @@
 
   /* ── Centering wrapper ── */
   .page-wrap {
-    max-width: 1020px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 28px;
   }
 
   /* ── Header ── */
@@ -106,10 +106,17 @@
     font-variant-numeric: tabular-nums;
     letter-spacing: -1px;
   }
+  .stat-frac {
+    font-size: 13px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    margin-top: 2px;
+    line-height: 1;
+  }
   .stat-label {
     font-size: 12px;
     color: var(--muted);
-    margin-top: 4px;
+    margin-top: 6px;
   }
   .stat-baseline {
     font-size: 11px;
@@ -159,7 +166,7 @@
     background: var(--card);
     border: 1px solid var(--border2);
     border-radius: var(--radius);
-    overflow-x: auto;
+    overflow: hidden;
     margin-bottom: 12px;
   }
   table { width: 100%; border-collapse: collapse; }
@@ -316,7 +323,7 @@
       </div>
     </div>
     <div class="updated-pill">
-      <span>⟳</span> 2026-06-21 12:41 UTC
+      <span>⟳</span> 2026-06-21 12:47 UTC
     </div>
   </div>
 </header>
@@ -324,31 +331,35 @@
 
 <div class="stat-cards">
   <div class="stat-card">
-    <div class="stat-val">67%</div>
+    <div class="stat-val">61%</div>
+    <div class="stat-frac">22/36</div>
     <div class="stat-label">Win/Draw/Loss correct</div>
     <div class="stat-baseline">Random baseline: 33%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">42%</div>
+    <div class="stat-val">36%</div>
+    <div class="stat-frac">13/36</div>
     <div class="stat-label">Score in top-3 predicted</div>
     <div class="stat-baseline">Random: ~5–8%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">17%</div>
+    <div class="stat-val">8%</div>
+    <div class="stat-frac">3/36</div>
     <div class="stat-label">Top-1 exact score hit</div>
     <div class="stat-baseline">Random: ~2–3%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">12</div>
-    <div class="stat-label">Pre-kickoff predictions</div>
-    <div class="stat-baseline">36 results in total</div>
+    <div class="stat-val">36</div>
+    <div class="stat-frac">12 pre-kickoff</div>
+    <div class="stat-label">Predictions with results</div>
+    <div class="stat-baseline">36 total WC results</div>
   </div>
 </div>
 <div class="backtest-note">
   <strong>Backtest (5,518 matches, 2018–2023):</strong>
   log-loss 0.8961 vs 1.0986 random &middot; Brier 0.5265 vs 0.6667 random &middot; 59% W/D/L accuracy.
-  Stats above are over 12 predictions locked before kickoff.
-  Matches marked <span class="retro-inline">[r]</span> were computed after kickoff and are not counted.
+  Stats above cover all 36 completed matches.
+  Matches marked <span class="retro-inline">[r]</span> were computed after kickoff.
 </div>
 
 <div class="section-heading">
