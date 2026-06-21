@@ -8,21 +8,22 @@
 <meta http-equiv="refresh" content="60">
 <style>
   :root {
-    --bg: #0d1117;
-    --fg: #e6edf3;
-    --fg2: #c9d1d9;
-    --muted: #8b949e;
-    --muted2: #484f58;
-    --green: #3fb950;
-    --green-dim: #0f2d14;
-    --red: #f85149;
-    --yellow: #e3b341;
-    --blue: #58a6ff;
-    --border: #21262d;
-    --border2: #30363d;
-    --card: #161b22;
-    --card2: #1c2128;
-    --hover: #1f2937;
+    --bg: #07091a;
+    --fg: #ede8d8;
+    --fg2: #c8c0a8;
+    --muted: #7a7260;
+    --muted2: #3e3828;
+    --gold: #c9a42a;
+    --gold-bright: #e6be38;
+    --gold-dim: #18120a;
+    --red: #d93025;
+    --amber: #c47c14;
+    --blue: #3d87d4;
+    --border: #16192e;
+    --border2: #22274a;
+    --card: #0c0f22;
+    --card2: #111428;
+    --hover: #181c38;
     --radius: 8px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -74,9 +75,9 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: var(--green-dim);
-    color: var(--green);
-    border: 1px solid #3fb95030;
+    background: var(--gold-dim);
+    color: var(--gold);
+    border: 1px solid #c9a42a30;
     border-radius: 20px;
     padding: 4px 12px;
     font-size: 12px;
@@ -101,7 +102,7 @@
   .stat-val {
     font-size: 32px;
     font-weight: 700;
-    color: var(--green);
+    color: var(--gold-bright);
     line-height: 1;
     font-variant-numeric: tabular-nums;
     letter-spacing: -1px;
@@ -192,7 +193,7 @@
   tbody tr:last-child td { border-bottom: none; }
   tr.upcoming:hover td { background: var(--hover); }
   tr.completed td { color: var(--muted); }
-  tr.live td { background: #1a1200; color: var(--fg); }
+  tr.live td { background: #1a1400; color: var(--fg); }
   tr.no-pred td { opacity: 0.5; }
 
   .date-col { width: 58px; color: var(--muted); font-size: 12px; }
@@ -215,19 +216,19 @@
   .bar-td { padding: 0 8px; width: 84px; }
   .mini-bar { display: flex; height: 6px; border-radius: 3px; overflow: hidden; gap: 1px; }
   .mb-h { background: var(--blue); min-width: 2px; }
-  .mb-d { background: var(--yellow); min-width: 2px; }
+  .mb-d { background: var(--gold); min-width: 2px; }
   .mb-a { background: var(--muted2); min-width: 2px; }
-  tr.completed .mb-h { background: #1e2d40; }
-  tr.completed .mb-d { background: #28240f; }
-  tr.completed .mb-a { background: #1a1a1a; }
+  tr.completed .mb-h { background: #0e1a2e; }
+  tr.completed .mb-d { background: #221a08; }
+  tr.completed .mb-a { background: #181818; }
 
   .scores-col { color: var(--muted); font-size: 12px; min-width: 120px; letter-spacing: 0.2px; font-variant-numeric: tabular-nums; }
   .result-col { font-weight: 600; min-width: 54px; font-variant-numeric: tabular-nums; }
   .verdict-wdl, .verdict-score { width: 26px; text-align: center; font-size: 14px; }
-  .v-correct { color: var(--green); }
-  .v-partial { color: var(--yellow); }
+  .v-correct { color: var(--gold); }
+  .v-partial { color: var(--amber); }
   .v-wrong { color: var(--red); }
-  .retro-badge { color: var(--yellow); font-size: 9px; vertical-align: super; }
+  .retro-badge { color: var(--amber); font-size: 9px; vertical-align: super; }
 
   .legend {
     display: flex;
@@ -239,8 +240,8 @@
   }
   .legend span { white-space: nowrap; }
   .leg-h { color: var(--blue); }
-  .leg-d { color: var(--yellow); }
-  .retro-inline { color: var(--yellow); }
+  .leg-d { color: var(--gold); }
+  .retro-inline { color: var(--amber); }
 
   /* ── Winner odds ── */
   .two-col {
@@ -264,14 +265,14 @@
   .wpct {
     text-align: right;
     width: 52px;
-    color: var(--green);
+    color: var(--gold-bright);
     font-variant-numeric: tabular-nums;
     font-weight: 600;
     font-size: 13px;
   }
   .wbar-cell { padding-left: 12px; width: 120px; }
   .wbar-bg { background: var(--card2); border-radius: 4px; height: 6px; width: 100px; overflow: hidden; }
-  .wbar-fill { background: linear-gradient(90deg, #3fb950, #2ea043); border-radius: 4px; height: 100%; }
+  .wbar-fill { background: linear-gradient(90deg, #c9a42a, #e6be38); border-radius: 4px; height: 100%; }
   .wimplied { color: var(--muted); padding-left: 12px; font-size: 12px; white-space: nowrap; }
 
   .winner-explainer {
@@ -323,7 +324,7 @@
       </div>
     </div>
     <div class="updated-pill">
-      <span>⟳</span> 2026-06-21 12:47 UTC
+      <span>⟳</span> 2026-06-21 12:56 UTC
     </div>
   </div>
 </header>
@@ -485,7 +486,7 @@
           <td class="prob home-prob">98%</td>
           <td class="bar-td"><div class="mini-bar"><div class="mb-h" style="width:67px"></div><div class="mb-d" style="width:1px"></div><div class="mb-a" style="width:0px"></div></div></td>
           <td class="prob away-prob">0%</td>
-          <td class="team-col away-team">🏳 Curaçao <sup class="retro-badge">[r]</sup></td>
+          <td class="team-col away-team">🇨🇼 Curaçao <sup class="retro-badge">[r]</sup></td>
           <td class="scores-col">5-0  6-0  4-0</td>
           <td class="result-col">7-1</td>
           <td class="verdict-wdl"><span class="verdict">✓</span></td>
@@ -589,7 +590,7 @@
         </tr>
         <tr class="completed">
           <td class="date-col">Jun 16</td>
-          <td class="team-col home-team">🏳 Iraq</td>
+          <td class="team-col home-team">🇮🇶 Iraq</td>
           <td class="prob home-prob">8%</td>
           <td class="bar-td"><div class="mini-bar"><div class="mb-h" style="width:5px"></div><div class="mb-d" style="width:9px"></div><div class="mb-a" style="width:54px"></div></div></td>
           <td class="prob away-prob">79%</td>
@@ -605,7 +606,7 @@
           <td class="prob home-prob">84%</td>
           <td class="bar-td"><div class="mini-bar"><div class="mb-h" style="width:57px"></div><div class="mb-d" style="width:8px"></div><div class="mb-a" style="width:3px"></div></div></td>
           <td class="prob away-prob">4%</td>
-          <td class="team-col away-team">🏳 Algeria <sup class="retro-badge">[r]</sup></td>
+          <td class="team-col away-team">🇩🇿 Algeria <sup class="retro-badge">[r]</sup></td>
           <td class="scores-col">2-0  3-0  1-0</td>
           <td class="result-col">3-0</td>
           <td class="verdict-wdl"><span class="verdict">✓</span></td>
@@ -617,7 +618,7 @@
           <td class="prob home-prob">79%</td>
           <td class="bar-td"><div class="mini-bar"><div class="mb-h" style="width:53px"></div><div class="mb-d" style="width:10px"></div><div class="mb-a" style="width:5px"></div></div></td>
           <td class="prob away-prob">7%</td>
-          <td class="team-col away-team">🏳 Jordan <sup class="retro-badge">[r]</sup></td>
+          <td class="team-col away-team">🇯🇴 Jordan <sup class="retro-badge">[r]</sup></td>
           <td class="scores-col">2-0  3-0  2-1</td>
           <td class="result-col">3-1</td>
           <td class="verdict-wdl"><span class="verdict">✓</span></td>
@@ -797,7 +798,7 @@
           <td class="prob home-prob">72%</td>
           <td class="bar-td"><div class="mini-bar"><div class="mb-h" style="width:49px"></div><div class="mb-d" style="width:15px"></div><div class="mb-a" style="width:4px"></div></div></td>
           <td class="prob away-prob">6%</td>
-          <td class="team-col away-team">🏳 Curaçao</td>
+          <td class="team-col away-team">🇨🇼 Curaçao</td>
           <td class="scores-col">1-0  2-0  0-0</td>
           <td class="result-col">0-0</td>
           <td class="verdict-wdl"><span class="verdict">✗</span></td>
@@ -881,7 +882,7 @@
           <td class="prob home-prob">96%</td>
           <td class="bar-td"><div class="mini-bar"><div class="mb-h" style="width:65px"></div><div class="mb-d" style="width:2px"></div><div class="mb-a" style="width:1px"></div></div></td>
           <td class="prob away-prob">1%</td>
-          <td class="team-col away-team">🏳 Iraq</td>
+          <td class="team-col away-team">🇮🇶 Iraq</td>
           <td class="scores-col">5-0  4-0  6-0</td>
           <td class="result-col"></td>
           <td class="verdict-wdl"><span class="verdict"></span></td>
@@ -901,11 +902,11 @@
         </tr>
         <tr class="upcoming">
           <td class="date-col">Jun 23</td>
-          <td class="team-col home-team">🏳 Jordan</td>
+          <td class="team-col home-team">🇯🇴 Jordan</td>
           <td class="prob home-prob">32%</td>
           <td class="bar-td"><div class="mini-bar"><div class="mb-h" style="width:22px"></div><div class="mb-d" style="width:18px"></div><div class="mb-a" style="width:28px"></div></div></td>
           <td class="prob away-prob">42%</td>
-          <td class="team-col away-team">🏳 Algeria</td>
+          <td class="team-col away-team">🇩🇿 Algeria</td>
           <td class="scores-col">1-1  0-1  0-2</td>
           <td class="result-col"></td>
           <td class="verdict-wdl"><span class="verdict"></span></td>
@@ -1045,7 +1046,7 @@
         </tr>
         <tr class="upcoming">
           <td class="date-col">Jun 25</td>
-          <td class="team-col home-team">🏳 Curaçao</td>
+          <td class="team-col home-team">🇨🇼 Curaçao</td>
           <td class="prob home-prob">7%</td>
           <td class="bar-td"><div class="mini-bar"><div class="mb-h" style="width:4px"></div><div class="mb-d" style="width:13px"></div><div class="mb-a" style="width:51px"></div></div></td>
           <td class="prob away-prob">74%</td>
@@ -1121,7 +1122,7 @@
           <td class="prob home-prob">70%</td>
           <td class="bar-td"><div class="mini-bar"><div class="mb-h" style="width:48px"></div><div class="mb-d" style="width:15px"></div><div class="mb-a" style="width:5px"></div></div></td>
           <td class="prob away-prob">7%</td>
-          <td class="team-col away-team">🏳 Iraq</td>
+          <td class="team-col away-team">🇮🇶 Iraq</td>
           <td class="scores-col">2-0  1-0  1-1</td>
           <td class="result-col"></td>
           <td class="verdict-wdl"><span class="verdict"></span></td>
@@ -1225,7 +1226,7 @@
         </tr>
         <tr class="upcoming">
           <td class="date-col">Jun 28</td>
-          <td class="team-col home-team">🏳 Jordan</td>
+          <td class="team-col home-team">🇯🇴 Jordan</td>
           <td class="prob home-prob">4%</td>
           <td class="bar-td"><div class="mini-bar"><div class="mb-h" style="width:3px"></div><div class="mb-d" style="width:2px"></div><div class="mb-a" style="width:63px"></div></div></td>
           <td class="prob away-prob">93%</td>
@@ -1237,7 +1238,7 @@
         </tr>
         <tr class="upcoming">
           <td class="date-col">Jun 28</td>
-          <td class="team-col home-team">🏳 Algeria</td>
+          <td class="team-col home-team">🇩🇿 Algeria</td>
           <td class="prob home-prob">22%</td>
           <td class="bar-td"><div class="mini-bar"><div class="mb-h" style="width:15px"></div><div class="mb-d" style="width:14px"></div><div class="mb-a" style="width:39px"></div></div></td>
           <td class="prob away-prob">57%</td>
