@@ -432,8 +432,8 @@ def main() -> None:
     .team-col {{ min-width: 90px; max-width: 130px; font-size: 12px; }}
     td {{ padding: 7px 8px; }}
     th {{ padding: 8px 8px 7px; }}
-    .bar-td, .verdict-score,
-    th:nth-child(4), th:nth-child(10) {{ display: none; }}
+    .bar-td,
+    th:nth-child(4) {{ display: none; }}
     .site-title {{ font-size: 18px; }}
     .updated-pill {{ font-size: 11px; padding: 3px 9px; }}
   }}
