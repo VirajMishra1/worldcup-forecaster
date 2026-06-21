@@ -14,3 +14,5 @@ data/raw/
 .pytest_cache/
 .ruff_cache/
 data/calibrator.joblib
+.playwright-mcp/
+reports/dashboard.html
