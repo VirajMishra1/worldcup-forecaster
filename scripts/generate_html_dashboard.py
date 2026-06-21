@@ -149,7 +149,9 @@ def main() -> None:
             "hg": None, "ag": None, "pred": p.to_dict(), "retro": False, "status": "upcoming",
         })
 
-    n_total = n_wdl = n_top1 = n_top3 = n_locked = 0
+    n_total = n_locked = 0
+    n_wdl = n_top1 = n_top3 = 0          # over pre-kickoff predictions only
+    n_wdl_all = n_top1_all = n_top3_all = 0  # over all completed matches
     for e in all_entries:
         if e["status"] != "completed" or e["pred"] is None:
             continue
@@ -163,15 +165,18 @@ def main() -> None:
         s1 = _clean_score(p.get("top_scoreline"))
         s2 = _clean_score(p.get("top_2_scoreline"))
         s3 = _clean_score(p.get("top_3_scoreline"))
+        wdl_ok = pred_wdl == actual_wdl
+        top1_ok = s1 == actual
+        top3_ok = actual in (s1, s2, s3)
         n_total += 1
+        n_wdl_all += wdl_ok
+        n_top1_all += top1_ok
+        n_top3_all += top3_ok
         if not e.get("retro"):
             n_locked += 1
-        if pred_wdl == actual_wdl:
-            n_wdl += 1
-        if s1 == actual:
-            n_top1 += 1
-        if actual in (s1, s2, s3):
-            n_top3 += 1
+            n_wdl += wdl_ok
+            n_top1 += top1_ok
+            n_top3 += top3_ok
 
     def _pct(n, d):
         return f"{n/d:.0%}" if d else "—"
@@ -238,9 +243,9 @@ def main() -> None:
 
         # Mini prob bars (3 segments)
         def _mini_bar(p_h, p_d, p_a):
-            w_h = round(p_h * 96)
-            w_d = round(p_d * 96)
-            w_a = 96 - w_h - w_d
+            w_h = round(p_h * 68)
+            w_d = round(p_d * 68)
+            w_a = 68 - w_h - w_d
             w_a = max(0, w_a)
             return (
                 f'<div class="mini-bar">'
@@ -289,35 +294,35 @@ def main() -> None:
     n_results = len(results) if not results.empty else 0
 
     accuracy_html = ""
-    if n_total > 0:
+    if n_locked > 0:
         accuracy_html = f"""
 <div class="stat-cards">
   <div class="stat-card">
-    <div class="stat-val">{_pct(n_wdl, n_total)}</div>
+    <div class="stat-val">{_pct(n_wdl, n_locked)}</div>
     <div class="stat-label">Win/Draw/Loss correct</div>
     <div class="stat-baseline">Random baseline: 33%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{_pct(n_top3, n_total)}</div>
-    <div class="stat-label">Exact score in top 3</div>
+    <div class="stat-val">{_pct(n_top3, n_locked)}</div>
+    <div class="stat-label">Score in top-3 predicted</div>
     <div class="stat-baseline">Random: ~5–8%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{_pct(n_top1, n_total)}</div>
-    <div class="stat-label">Top-1 score hit</div>
+    <div class="stat-val">{_pct(n_top1, n_locked)}</div>
+    <div class="stat-label">Top-1 exact score hit</div>
     <div class="stat-baseline">Random: ~2–3%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{n_results}</div>
-    <div class="stat-label">Results in so far</div>
-    <div class="stat-baseline">{n_locked} locked before kickoff</div>
+    <div class="stat-val">{n_locked}</div>
+    <div class="stat-label">Pre-kickoff predictions</div>
+    <div class="stat-baseline">{n_results} results in total</div>
   </div>
 </div>
 <div class="backtest-note">
   <strong>Backtest (5,518 matches, 2018–2023):</strong>
   log-loss 0.8961 vs 1.0986 random &middot; Brier 0.5265 vs 0.6667 random &middot; 59% W/D/L accuracy.
-  Stats above cover all {n_total} completed matches &mdash; {n_locked} were locked before kickoff,
-  the rest are marked <span class="retro-inline">[r]</span> and excluded from the track record.
+  Stats above are over {n_locked} predictions locked before kickoff.
+  Matches marked <span class="retro-inline">[r]</span> were computed after kickoff and are not counted.
 </div>"""
 
     html = f"""<!DOCTYPE html>
@@ -481,7 +486,7 @@ def main() -> None:
     background: var(--card);
     border: 1px solid var(--border2);
     border-radius: var(--radius);
-    overflow: hidden;
+    overflow-x: auto;
     margin-bottom: 12px;
   }}
   table {{ width: 100%; border-collapse: collapse; }}
@@ -527,7 +532,7 @@ def main() -> None:
   tr.completed .away-prob {{ color: inherit; font-weight: normal; }}
 
   /* Mini 3-segment prob bar */
-  .bar-td {{ padding: 0 10px; width: 116px; }}
+  .bar-td {{ padding: 0 8px; width: 84px; }}
   .mini-bar {{ display: flex; height: 6px; border-radius: 3px; overflow: hidden; gap: 1px; }}
   .mb-h {{ background: var(--blue); min-width: 2px; }}
   .mb-d {{ background: var(--yellow); min-width: 2px; }}
@@ -750,9 +755,9 @@ def main() -> None:
         out.write_text(html, encoding="utf-8")
     size_kb = (DOCS_DIR / "index.html").stat().st_size / 1024
     print(f"Dashboard written → docs/index.html  ({size_kb:.1f} KB)")
-    print(f"Accuracy: {n_wdl}/{n_total} W/D/L ({_pct(n_wdl,n_total)})  |  "
-          f"{n_top3}/{n_total} top-3 ({_pct(n_top3,n_total)})  |  "
-          f"{n_top1}/{n_total} exact ({_pct(n_top1,n_total)})")
+    print(f"Pre-kickoff accuracy: {n_wdl}/{n_locked} W/D/L ({_pct(n_wdl,n_locked)})  |  "
+          f"{n_top3}/{n_locked} top-3 ({_pct(n_top3,n_locked)})  |  "
+          f"{n_top1}/{n_locked} exact ({_pct(n_top1,n_locked)})")
 
 
 if __name__ == "__main__":
