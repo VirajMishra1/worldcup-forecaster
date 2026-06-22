@@ -1,17 +1,1 @@
-{
-  "Uruguay vs Cape Verde": {
-    "home": "Uruguay",
-    "away": "Cape Verde",
-    "home_goals": 2,
-    "away_goals": 1,
-    "minute": 45,
-    "red_cards": {
-      "home": 0,
-      "away": 0
-    },
-    "status": "STATUS_HALFTIME",
-    "p_home": 0.8895,
-    "p_draw": 0.1005,
-    "p_away": 0.01
-  }
-}
+{}
