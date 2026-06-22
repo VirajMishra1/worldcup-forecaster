@@ -83,6 +83,31 @@ def main() -> None:
         if substituted:
             logging.info("Substituted xG for actual goals in %d WC 2022 matches", substituted)
 
+    # Substitute WC 2026 xG for actual goals where available.
+    # Keyed by "Home vs Away" (no date) — Kaggle dataset lags by ~1 day so date matching is unreliable.
+    xg2026_path = DATA_DIR / "wc2026_xg.json"
+    if xg2026_path.exists():
+        xg2026 = json.loads(xg2026_path.read_text())
+        xg_by_teams_2026: dict = {
+            (v["home"], v["away"]): (v["home_xg"], v["away_xg"])
+            for v in xg2026.values()
+        }
+        wc2026_start = pd.Timestamp("2026-06-11")
+        df["home_goals"] = df["home_goals"].astype(float)
+        df["away_goals"] = df["away_goals"].astype(float)
+        sub2026 = 0
+        for idx, row in df.iterrows():
+            if pd.to_datetime(row["date"]) < wc2026_start:
+                continue
+            k = (str(row["home"]), str(row["away"]))
+            if k in xg_by_teams_2026:
+                h_xg, a_xg = xg_by_teams_2026[k]
+                df.at[idx, "home_goals"] = h_xg
+                df.at[idx, "away_goals"] = a_xg
+                sub2026 += 1
+        if sub2026:
+            logging.info("Substituted xG for actual goals in %d WC 2026 matches", sub2026)
+
     as_of = pd.Timestamp.today().normalize()
     logging.info("Fitting on %d total matches (as_of %s)...", len(df), as_of.date())
     params = fit(df, neutral=True, as_of=as_of)
