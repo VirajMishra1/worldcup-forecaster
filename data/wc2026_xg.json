@@ -190,5 +190,77 @@
     "away": "Paraguay",
     "home_xg": 0.4,
     "away_xg": 0.3
+  },
+  "Germany vs Ivory Coast": {
+    "home": "Germany",
+    "away": "Ivory Coast",
+    "home_xg": 1.85,
+    "away_xg": 0.72
+  },
+  "Ecuador vs Cura\u00e7ao": {
+    "home": "Ecuador",
+    "away": "Cura\u00e7ao",
+    "home_xg": 1.92,
+    "away_xg": 0.08
+  },
+  "Netherlands vs Sweden": {
+    "home": "Netherlands",
+    "away": "Sweden",
+    "home_xg": 3.45,
+    "away_xg": 0.88
+  },
+  "Tunisia vs Japan": {
+    "home": "Tunisia",
+    "away": "Japan",
+    "home_xg": 0.35,
+    "away_xg": 3.12
+  },
+  "Belgium vs Iran": {
+    "home": "Belgium",
+    "away": "Iran",
+    "home_xg": 1.45,
+    "away_xg": 0.62
+  },
+  "New Zealand vs Egypt": {
+    "home": "New Zealand",
+    "away": "Egypt",
+    "home_xg": 0.55,
+    "away_xg": 2.15
+  },
+  "Spain vs Saudi Arabia": {
+    "home": "Spain",
+    "away": "Saudi Arabia",
+    "home_xg": 3.28,
+    "away_xg": 0.25
+  },
+  "Uruguay vs Cape Verde": {
+    "home": "Uruguay",
+    "away": "Cape Verde",
+    "home_xg": 1.65,
+    "away_xg": 1.1
+  },
+  "France vs Iraq": {
+    "home": "France",
+    "away": "Iraq",
+    "home_xg": 2.21,
+    "away_xg": 0.45
+  },
+  "Norway vs Senegal": {
+    "home": "Norway",
+    "away": "Senegal",
+    "home_xg": 1.95,
+    "away_xg": 1.48
+  },
+  "Argentina vs Austria": {
+    "home": "Argentina",
+    "away": "Austria",
+    "home_xg": 1.78,
+    "away_xg": 0.55
+  },
+  "Jordan vs Algeria": {
+    "home": "Jordan",
+    "away": "Algeria",
+    "home_xg": 0.88,
+    "away_xg": 1.92
   }
 }
