@@ -1,17 +1,1 @@
-{
-  "Panama vs Croatia": {
-    "home": "Panama",
-    "away": "Croatia",
-    "home_goals": 0,
-    "away_goals": 0,
-    "minute": 15,
-    "red_cards": {
-      "home": 0,
-      "away": 0
-    },
-    "status": "STATUS_IN_PROGRESS",
-    "p_home": 0.0737,
-    "p_draw": 0.1752,
-    "p_away": 0.7512
-  }
-}
+{}
