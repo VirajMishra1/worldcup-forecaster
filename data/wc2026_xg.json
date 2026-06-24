@@ -262,5 +262,29 @@
     "away": "Algeria",
     "home_xg": 0.88,
     "away_xg": 1.92
+  },
+  "Portugal vs Uzbekistan": {
+    "home": "Portugal",
+    "away": "Uzbekistan",
+    "home_xg": 3.54,
+    "away_xg": 0.42
+  },
+  "Colombia vs DR Congo": {
+    "home": "Colombia",
+    "away": "DR Congo",
+    "home_xg": 1.62,
+    "away_xg": 0.58
+  },
+  "England vs Ghana": {
+    "home": "England",
+    "away": "Ghana",
+    "home_xg": 1.12,
+    "away_xg": 0.89
+  },
+  "Panama vs Croatia": {
+    "home": "Panama",
+    "away": "Croatia",
+    "home_xg": 0.42,
+    "away_xg": 1.48
   }
 }
