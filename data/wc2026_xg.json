@@ -286,5 +286,29 @@
     "away": "Croatia",
     "home_xg": 0.42,
     "away_xg": 1.48
+  },
+  "Czech Republic vs Mexico": {
+    "home": "Czech Republic",
+    "away": "Mexico",
+    "home_xg": 1.1,
+    "away_xg": 1.27
+  },
+  "South Africa vs South Korea": {
+    "home": "South Africa",
+    "away": "South Korea",
+    "home_xg": 1.26,
+    "away_xg": 1.39
+  },
+  "Switzerland vs Canada": {
+    "home": "Switzerland",
+    "away": "Canada",
+    "home_xg": 0.71,
+    "away_xg": 1.35
+  },
+  "Bosnia and Herzegovina vs Qatar": {
+    "home": "Bosnia and Herzegovina",
+    "away": "Qatar",
+    "home_xg": 1.48,
+    "away_xg": 0.95
   }
 }
