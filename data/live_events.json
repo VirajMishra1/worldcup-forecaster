@@ -1,17 +1,1 @@
-{
-  "Cura\u00e7ao vs Ivory Coast": {
-    "home": "Cura\u00e7ao",
-    "away": "Ivory Coast",
-    "home_goals": 0,
-    "away_goals": 1,
-    "minute": 32,
-    "red_cards": {
-      "home": 0,
-      "away": 0
-    },
-    "status": "STATUS_IN_PROGRESS",
-    "p_home": 0.0033,
-    "p_draw": 0.0428,
-    "p_away": 0.9539
-  }
-}
+{}
