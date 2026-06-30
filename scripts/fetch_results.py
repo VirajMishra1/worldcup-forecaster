@@ -39,17 +39,24 @@ def fetch_results() -> pd.DataFrame:
     for m in r.json().get("matches", []):
         score = m["score"]
         # ponytail: football-data.org's fullTime = regularTime + penalty count for
-        # PENALTY_SHOOTOUT matches (not goals). Use regularTime (includes extra time)
-        # as the actual match score in that case.
+        # PENALTY_SHOOTOUT matches (not goals). regularTime is the 90-min score and
+        # extraTime is goals scored *during* ET only (not cumulative) — sum them to
+        # get the actual AET score before penalties.
         on_pens = score.get("duration") == "PENALTY_SHOOTOUT"
-        ft = score["regularTime"] if on_pens else score["fullTime"]
+        if on_pens:
+            et = score.get("extraTime") or {"home": 0, "away": 0}
+            home_goals = score["regularTime"]["home"] + (et.get("home") or 0)
+            away_goals = score["regularTime"]["away"] + (et.get("away") or 0)
+        else:
+            home_goals = score["fullTime"]["home"]
+            away_goals = score["fullTime"]["away"]
         pens = score.get("penalties") or {}
         rows.append({
             "date": pd.Timestamp(m["utcDate"]),
             "home": _norm(m["homeTeam"]["name"]),
             "away": _norm(m["awayTeam"]["name"]),
-            "home_goals": ft["home"],
-            "away_goals": ft["away"],
+            "home_goals": home_goals,
+            "away_goals": away_goals,
             "home_pens": pens.get("home") if on_pens else None,
             "away_pens": pens.get("away") if on_pens else None,
             "stage": m["stage"],
