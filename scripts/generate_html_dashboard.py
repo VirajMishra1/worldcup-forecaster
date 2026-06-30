@@ -129,6 +129,7 @@ def main() -> None:
             key = (home, away)
             seen_keys.add(key)
             hg, ag = int(r["home_goals"]), int(r["away_goals"])
+            hp, ap = r.get("home_pens"), r.get("away_pens")
             pred = pred_map.get(key)
             retro = False
             if pred is None and params is not None:
@@ -139,6 +140,8 @@ def main() -> None:
             all_entries.append({
                 "date": dt, "home": home, "away": away,
                 "hg": hg, "ag": ag, "pred": pred, "retro": retro, "status": "completed",
+                "hp": int(hp) if hp is not None and hp == hp else None,
+                "ap": int(ap) if ap is not None and ap == ap else None,
             })
 
     for _, p in preds.sort_values("match_date").iterrows():
@@ -233,7 +236,8 @@ def main() -> None:
             live_score = f"🔴 {lhg}–{lag} ({minute}')"
 
         retro_badge = ' <sup class="retro-badge">[r]</sup>' if e.get("retro") else ""
-        result_cell = live_score or actual
+        pens_suffix = f" ({e['hp']}-{e['ap']} pens)" if e.get("hp") is not None else ""
+        result_cell = live_score or (actual + pens_suffix)
         no_pred_class = "" if pred else " no-pred"
 
         hf = _flag(home)
