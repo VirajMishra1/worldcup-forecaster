@@ -197,6 +197,11 @@ def main() -> None:
 
         live_key = f"{home} vs {away}"
         live_data = live.get(live_key, {})
+        # ponytail: live_events.json also includes STATUS_FINAL matches (fetch
+        # script keeps "recently finished" for a window) — only treat as live
+        # if actually in progress, otherwise fall through to the real result.
+        if live_data.get("status") == "STATUS_FINAL":
+            live_data = {}
         if live_data:
             status = "live"
 

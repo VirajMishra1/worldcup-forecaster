@@ -1,17 +1,1 @@
-{
-  "Netherlands vs Morocco": {
-    "home": "Netherlands",
-    "away": "Morocco",
-    "home_goals": 0,
-    "away_goals": 0,
-    "minute": 27,
-    "red_cards": {
-      "home": 0,
-      "away": 0
-    },
-    "status": "STATUS_IN_PROGRESS",
-    "p_home": 0.4204,
-    "p_draw": 0.3774,
-    "p_away": 0.2023
-  }
-}
+{}
