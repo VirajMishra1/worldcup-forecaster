@@ -1,10 +1,10 @@
-## Live Track Record (12 matches)
+## Live Track Record (13 matches)
 
 | Metric | Value | Random baseline |
 |--------|-------|-----------------|
-| W/D/L accuracy | 58.3% | 33.3% |
-| Log-loss | 0.9141 | 1.0986 |
-| Brier score | 0.5599 | 0.6667 |
+| W/D/L accuracy | 53.8% | 33.3% |
+| Log-loss | 0.9432 | 1.0986 |
+| Brier score | 0.5778 | 0.6667 |
 
 _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Uzbekistan vs Colombia) are excluded from this table. Visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
 
@@ -24,3 +24,4 @@ _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia
 | 2026-06-29 | Brazil vs Japan | 56%/25%/18% | Brazil (2-1) | 0.573 | ✓ |
 | 2026-06-29 | Germany vs Paraguay | 73%/22%/5% | Draw (1-1) | 1.503 | ✗ |
 | 2026-06-30 | Netherlands vs Morocco | 52%/26%/22% | Draw (1-1) | 1.359 | ✗ |
+| 2026-06-30 | Ivory Coast vs Norway | 40%/32%/27% | Norway (1-2) | 1.293 | ✗ |
