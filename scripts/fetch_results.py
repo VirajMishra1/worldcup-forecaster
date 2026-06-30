@@ -37,12 +37,17 @@ def fetch_results() -> pd.DataFrame:
     r.raise_for_status()
     rows = []
     for m in r.json().get("matches", []):
+        score = m["score"]
+        # ponytail: football-data.org's fullTime = regularTime + penalty count for
+        # PENALTY_SHOOTOUT matches (not goals). Use regularTime (includes extra time)
+        # as the actual match score in that case.
+        ft = score["regularTime"] if score.get("duration") == "PENALTY_SHOOTOUT" else score["fullTime"]
         rows.append({
             "date": pd.Timestamp(m["utcDate"]),
             "home": _norm(m["homeTeam"]["name"]),
             "away": _norm(m["awayTeam"]["name"]),
-            "home_goals": m["score"]["fullTime"]["home"],
-            "away_goals": m["score"]["fullTime"]["away"],
+            "home_goals": ft["home"],
+            "away_goals": ft["away"],
             "stage": m["stage"],
             "matchday": m.get("matchday"),
         })
@@ -54,7 +59,7 @@ def main() -> None:
     new = fetch_results()
     if RESULTS_PATH.exists():
         existing = pd.read_parquet(RESULTS_PATH)
-        combined = pd.concat([existing, new]).drop_duplicates(subset=["date", "home", "away"])
+        combined = pd.concat([existing, new]).drop_duplicates(subset=["date", "home", "away"], keep="last")
     else:
         combined = new
     combined.to_parquet(RESULTS_PATH, index=False)
