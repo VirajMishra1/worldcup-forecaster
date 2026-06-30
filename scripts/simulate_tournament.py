@@ -401,14 +401,68 @@ def _assign_thirds_to_slots(
     return {slot: third_by_group[grp] for slot, grp in match_slot.items()}
 
 
+def _compute_real_third_slots(
+    group_standings: Dict[str, List[Tuple[str, int, int, int]]],
+    results_df: pd.DataFrame,
+) -> Dict[str, str]:
+    """Recover the real 3rd-place opponent for any R32 slot already played.
+
+    Group winner/runner-up identity is deterministic once groups are
+    complete, so a played LAST_32 fixture against a known W/R team reveals
+    the real 3rd-place team for that slot — this must override the random
+    bipartite slot assignment, which only applies to *unplayed* R32 ties.
+    """
+    gw = {g: s[0][0] for g, s in group_standings.items()}
+    gr = {g: s[1][0] for g, s in group_standings.items()}
+    last32 = results_df[results_df["stage"] == "LAST_32"]
+    opponent: Dict[str, str] = {}
+    for _, row in last32.iterrows():
+        opponent[row["home"]] = row["away"]
+        opponent[row["away"]] = row["home"]
+
+    real_slots: Dict[str, str] = {}
+    for slot, side_a, side_b in R32_MATCHES:
+        for spec, other in ((side_a, side_b), (side_b, side_a)):
+            kind, ref = spec
+            if kind not in ("W", "R") or other[0] != "3":
+                continue
+            known_team = gw.get(ref) if kind == "W" else gr.get(ref)
+            if known_team in opponent:
+                real_slots[other[1]] = opponent[known_team]
+    return real_slots
+
+
+def _actual_winner(
+    team_a: str,
+    team_b: str,
+    results_lookup: Dict[Tuple[str, str], Tuple[int, int, float, float]],
+) -> str | None:
+    """If this knockout fixture has already been played, return the real winner."""
+    for home, away in ((team_a, team_b), (team_b, team_a)):
+        row = results_lookup.get((home, away))
+        if row is None:
+            continue
+        hg, ag, hp, ap = row
+        if hg != ag:
+            return home if hg > ag else away
+        if hp == hp and ap == ap:  # not NaN — decided on penalties
+            return home if hp > ap else away
+    return None
+
+
 def simulate_knockout_match(
     team_a: str,
     team_b: str,
     tidx: Dict[str, int],
     p_advance: np.ndarray,
     rng: np.random.Generator,
+    results_lookup: Dict[Tuple[str, str], Tuple[int, int, float, float]] | None = None,
 ) -> str:
-    """Returns winner. Uses pre-computed advance probability."""
+    """Returns winner. Uses the real result if already played, else simulates."""
+    if results_lookup is not None:
+        actual = _actual_winner(team_a, team_b, results_lookup)
+        if actual is not None:
+            return actual
     ia, ib = tidx[team_a], tidx[team_b]
     p = p_advance[ia, ib]
     return team_a if rng.random() < p else team_b
@@ -420,6 +474,8 @@ def run_simulation(
     tidx: Dict[str, int],
     p_advance: np.ndarray,
     rng: np.random.Generator,
+    results_lookup: Dict[Tuple[str, str], Tuple[int, int, float, float]] | None = None,
+    real_third_slot: Dict[str, str] | None = None,
 ) -> Dict[str, Dict[str, int]]:
     """
     Simulate one full WC 2026 tournament using the actual FIFA bracket.
@@ -467,13 +523,18 @@ def run_simulation(
             return gw[ref]
         if kind == "R":
             return gr[ref]
-        return third_slot.get(ref, "")  # ref = slot_id for 3rd-place
+        # ref = slot_id for 3rd-place. Once this slot's fixture has actually
+        # been played, its real opponent is fixed — don't let the random
+        # bipartite matching substitute a different (fictional) team.
+        if real_third_slot and ref in real_third_slot:
+            return real_third_slot[ref]
+        return third_slot.get(ref, "")
 
     # --- R32 ---
     r32_winners: Dict[str, str] = {}
     for slot, side_a, side_b in R32_MATCHES:
         team_a, team_b = _resolve(side_a), _resolve(side_b)
-        w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng)
+        w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng, results_lookup)
         r32_winners[slot] = w
         reached["r16"][w] = 1
 
@@ -481,7 +542,7 @@ def run_simulation(
     r16_winners: Dict[str, str] = {}
     for slot, src_a, src_b in R16_MATCHES:
         team_a, team_b = r32_winners[src_a], r32_winners[src_b]
-        w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng)
+        w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng, results_lookup)
         r16_winners[slot] = w
         reached["qf"][w] = 1
 
@@ -489,7 +550,7 @@ def run_simulation(
     qf_winners: Dict[str, str] = {}
     for slot, src_a, src_b in QF_MATCHES:
         team_a, team_b = r16_winners[src_a], r16_winners[src_b]
-        w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng)
+        w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng, results_lookup)
         qf_winners[slot] = w
         reached["sf"][w] = 1
 
@@ -497,12 +558,12 @@ def run_simulation(
     sf_winners: Dict[str, str] = {}
     for slot, src_a, src_b in SF_MATCHES:
         team_a, team_b = qf_winners[src_a], qf_winners[src_b]
-        w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng)
+        w = simulate_knockout_match(team_a, team_b, tidx, p_advance, rng, results_lookup)
         sf_winners[slot] = w
         reached["final"][w] = 1
 
     # --- Final ---
-    champion = simulate_knockout_match(sf_winners["SF1"], sf_winners["SF2"], tidx, p_advance, rng)
+    champion = simulate_knockout_match(sf_winners["SF1"], sf_winners["SF2"], tidx, p_advance, rng, results_lookup)
     reached["win"][champion] = 1
 
     return reached
@@ -529,10 +590,13 @@ def main() -> None:
 
     # Build completed match dict keyed by (home, away) as they appear in the data
     completed: Dict[Tuple[str, str], Tuple[int, int]] = {}
+    results_lookup: Dict[Tuple[str, str], Tuple[int, int, float, float]] = {}
     for _, row in results_df.iterrows():
-        completed[(row["home"], row["away"])] = (
-            int(row["home_goals"]),
-            int(row["away_goals"]),
+        key = (row["home"], row["away"])
+        completed[key] = (int(row["home_goals"]), int(row["away_goals"]))
+        results_lookup[key] = (
+            int(row["home_goals"]), int(row["away_goals"]),
+            row.get("home_pens", float("nan")), row.get("away_pens", float("nan")),
         )
     log.info(f"  {len(completed)} completed matches loaded.")
 
@@ -544,6 +608,16 @@ def main() -> None:
 
     tidx, p_advance = build_advance_matrix(params, all_matches)
 
+    # Group standings are deterministic once every group match is in `completed`
+    # — compute once to derive any already-played 3rd-place R32 matchups.
+    group_standings_real = {
+        group: simulate_group(group, teams, completed, match_info, rng)
+        for group, teams in GROUPS.items()
+    }
+    real_third_slot = _compute_real_third_slots(group_standings_real, results_df)
+    if real_third_slot:
+        log.info(f"  {len(real_third_slot)} R32 3rd-place slots pinned to real results.")
+
     # Accumulators: stage → team → count
     counts: Dict[str, Dict[str, int]] = {
         stage: {t: 0 for t in ALL_TEAMS}
@@ -554,7 +628,7 @@ def main() -> None:
     for sim_i in range(N_SIMS):
         if (sim_i + 1) % 1000 == 0:
             log.info(f"  {sim_i + 1:,} / {N_SIMS:,}")
-        result = run_simulation(completed, match_info, tidx, p_advance, rng)
+        result = run_simulation(completed, match_info, tidx, p_advance, rng, results_lookup, real_third_slot)
         for stage, teams_reached in result.items():
             for team in teams_reached:
                 counts[stage][team] += 1
