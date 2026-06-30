@@ -1,17 +1,1 @@
-{
-  "France vs Sweden": {
-    "home": "France",
-    "away": "Sweden",
-    "home_goals": 1,
-    "away_goals": 0,
-    "minute": 45,
-    "red_cards": {
-      "home": 0,
-      "away": 0
-    },
-    "status": "STATUS_HALFTIME",
-    "p_home": 0.8611,
-    "p_draw": 0.1138,
-    "p_away": 0.0252
-  }
-}
+{}
