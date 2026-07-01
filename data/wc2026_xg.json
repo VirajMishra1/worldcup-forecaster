@@ -436,5 +436,23 @@
     "away": "Canada",
     "home_xg": 0.13,
     "away_xg": 1.32
+  },
+  "Brazil vs Japan": {
+    "home": "Brazil",
+    "away": "Japan",
+    "home_xg": 1.69,
+    "away_xg": 0.23
+  },
+  "Germany vs Paraguay": {
+    "home": "Germany",
+    "away": "Paraguay",
+    "home_xg": 0.72,
+    "away_xg": 0.42
+  },
+  "Netherlands vs Morocco": {
+    "home": "Netherlands",
+    "away": "Morocco",
+    "home_xg": 0.23,
+    "away_xg": 1.4
   }
 }
