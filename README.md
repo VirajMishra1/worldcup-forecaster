@@ -31,33 +31,33 @@ Implied odds = 1/p − 1. At 20% win probability, fair implied odds are 4.0:1 (a
 
 | Team | Win % | Implied odds |
 |------|-------|--------------|
-| 🇦🇷 Argentina | 18.8% | 4.3:1 |
-| 🇪🇸 Spain | 15.0% | 5.7:1 |
-| 🇧🇷 Brazil | 13.9% | 6.2:1 |
-| 🇨🇴 Colombia | 11.5% | 7.7:1 |
-| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 10.3% | 8.7:1 |
-| 🇫🇷 France | 7.1% | 13.0:1 |
-| 🇧🇪 Belgium | 5.9% | 16.1:1 |
-| 🇲🇦 Morocco | 3.7% | 26.3:1 |
-| 🇵🇹 Portugal | 3.6% | 26.4:1 |
-| 🇨🇦 Canada | 2.8% | 35.1:1 |
-| 🇺🇸 United States | 2.0% | 49.5:1 |
-| 🇳🇴 Norway | 1.4% | 71.5:1 |
+| 🇦🇷 Argentina | 17.3% | 4.8:1 |
+| 🇧🇷 Brazil | 14.5% | 5.9:1 |
+| 🇪🇸 Spain | 13.5% | 6.4:1 |
+| 🇫🇷 France | 13.0% | 6.7:1 |
+| 🇨🇴 Colombia | 10.6% | 8.4:1 |
+| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 9.8% | 9.2:1 |
+| 🇧🇪 Belgium | 5.5% | 17.0:1 |
+| 🇲🇦 Morocco | 4.4% | 21.8:1 |
+| 🇵🇹 Portugal | 3.5% | 27.9:1 |
+| 🇨🇦 Canada | 2.1% | 46.8:1 |
+| 🇺🇸 United States | 1.6% | 62.7:1 |
+| 🇳🇴 Norway | 1.0% | 98.0:1 |
 
-_78 completed WC 2026 results included. Updated 2026-06-30._
+_79 completed WC 2026 results included. Updated 2026-07-01._
 
 <!-- WINNER_ODDS_END -->
 
 ---
 
 <!-- TRACK_RECORD_START -->
-## Live Track Record (14 matches)
+## Live Track Record (15 matches)
 
 | Metric | Value | Random baseline |
 |--------|-------|-----------------|
-| W/D/L accuracy | 57.1% | 33.3% |
-| Log-loss | 0.9017 | 1.0986 |
-| Brier score | 0.5466 | 0.6667 |
+| W/D/L accuracy | 53.3% | 33.3% |
+| Log-loss | 0.9160 | 1.0986 |
+| Brier score | 0.5556 | 0.6667 |
 
 _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Uzbekistan vs Colombia) are excluded from this table. Visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
 
