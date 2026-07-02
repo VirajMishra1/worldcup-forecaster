@@ -70,7 +70,11 @@ def main() -> None:
     new = fetch_results()
     if RESULTS_PATH.exists():
         existing = pd.read_parquet(RESULTS_PATH)
-        combined = pd.concat([existing, new]).drop_duplicates(subset=["date", "home", "away"], keep="last")
+        # ponytail: dedupe on (home, away) only, not date — two teams play at
+        # most once in this tournament, but the API can correct a fixture's
+        # kickoff time between fetches, which would otherwise look like a
+        # second, separate match and duplicate the row.
+        combined = pd.concat([existing, new]).drop_duplicates(subset=["home", "away"], keep="last")
     else:
         combined = new
     combined.to_parquet(RESULTS_PATH, index=False)

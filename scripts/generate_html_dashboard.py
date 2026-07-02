@@ -127,6 +127,8 @@ def main() -> None:
                 continue
             home, away = str(r["home"]), str(r["away"])
             key = (home, away)
+            if key in seen_keys:
+                continue  # ponytail: guards a stale-duplicate row surviving upstream dedup
             seen_keys.add(key)
             hg, ag = int(r["home_goals"]), int(r["away_goals"])
             hp, ap = r.get("home_pens"), r.get("away_pens")
@@ -142,6 +144,7 @@ def main() -> None:
                 "hg": hg, "ag": ag, "pred": pred, "retro": retro, "status": "completed",
                 "hp": int(hp) if hp is not None and hp == hp else None,
                 "ap": int(ap) if ap is not None and ap == ap else None,
+                "stage": str(r.get("stage", "")),
             })
 
     for _, p in preds.sort_values("match_date").iterrows():
@@ -152,6 +155,7 @@ def main() -> None:
         all_entries.append({
             "date": p["match_date"], "home": p["home"], "away": p["away"],
             "hg": None, "ag": None, "pred": p.to_dict(), "retro": False, "status": "upcoming",
+            "stage": str(p.get("stage", "")),
         })
 
     n_total = n_locked = 0
@@ -216,6 +220,14 @@ def main() -> None:
         else:
             ph = pd_ = pa = 0.0
 
+        # ponytail: knockout matches can't actually end in a draw (extra time
+        # + penalties decide it) — fold the draw probability into H/A "chance
+        # to advance" for display so the bar doesn't show an impossible draw.
+        stage = e.get("stage", pred.get("stage", "") if pred else "")
+        if stage and stage != "GROUP_STAGE":
+            ph, pa = ph + pd_ / 2, pa + pd_ / 2
+            pd_ = 0.0
+
         if pred:
             s1 = _clean_score(pred.get("top_scoreline"))
             s2 = _clean_score(pred.get("top_2_scoreline"))
@@ -228,7 +240,12 @@ def main() -> None:
 
         wdl_verdict = score_verdict = ""
         if actual and pred:
-            actual_wdl = "H" if hg > ag else ("D" if hg == ag else "A")
+            # Knockout draws are decided by penalties, not a real "draw" outcome —
+            # grade against who actually advanced, matching the H/A-only fold above.
+            if hg == ag and e.get("hp") is not None:
+                actual_wdl = "H" if e["hp"] > e["ap"] else "A"
+            else:
+                actual_wdl = "H" if hg > ag else ("D" if hg == ag else "A")
             pred_wdl = "H" if ph > pd_ and ph > pa else ("D" if pd_ > pa else "A")
             wdl_verdict = "✓" if pred_wdl == actual_wdl else "✗"
             score_verdict = "✓" if actual == s1 else ("~" if actual in (s2, s3) else "✗")
