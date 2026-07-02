@@ -454,5 +454,41 @@
     "away": "Morocco",
     "home_xg": 0.23,
     "away_xg": 1.4
+  },
+  "Ivory Coast vs Norway": {
+    "home": "Ivory Coast",
+    "away": "Norway",
+    "home_xg": 1.15,
+    "away_xg": 2.02
+  },
+  "France vs Sweden": {
+    "home": "France",
+    "away": "Sweden",
+    "home_xg": 3.17,
+    "away_xg": 0.67
+  },
+  "Mexico vs Ecuador": {
+    "home": "Mexico",
+    "away": "Ecuador",
+    "home_xg": 1.02,
+    "away_xg": 0.73
+  },
+  "England vs DR Congo": {
+    "home": "England",
+    "away": "DR Congo",
+    "home_xg": 2.04,
+    "away_xg": 0.76
+  },
+  "Belgium vs Senegal": {
+    "home": "Belgium",
+    "away": "Senegal",
+    "home_xg": 1.74,
+    "away_xg": 3.58
+  },
+  "United States vs Bosnia and Herzegovina": {
+    "home": "United States",
+    "away": "Bosnia and Herzegovina",
+    "home_xg": 0.92,
+    "away_xg": 0.25
   }
 }
