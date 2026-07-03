@@ -1,10 +1,10 @@
-## Live Track Record (21 matches)
+## Live Track Record (22 matches)
 
 | Metric | Value | Random baseline |
 |--------|-------|-----------------|
-| W/D/L accuracy | 66.7% | 33.3% |
-| Log-loss | 0.7943 | 1.0986 |
-| Brier score | 0.4642 | 0.6667 |
+| W/D/L accuracy | 68.2% | 33.3% |
+| Log-loss | 0.7956 | 1.0986 |
+| Brier score | 0.4646 | 0.6667 |
 
 _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Uzbekistan vs Colombia) are excluded from this table. Visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
 
@@ -29,7 +29,8 @@ _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia
 | 2026-07-01 | Mexico vs Ecuador | 33%/38%/29% | Mexico (2-0) | 1.115 | ✗ |
 | 2026-07-01 | England vs DR Congo | 69%/23%/7% | England (2-1) | 0.368 | ✓ |
 | 2026-07-01 | Belgium vs Senegal | 47%/29%/23% | Belgium (3-2) | 0.745 | ✓ |
-| 2026-07-02 | Portugal vs Croatia | 59%/24%/17% | Portugal (2-1) | 0.527 | ✓ |
 | 2026-07-02 | Spain vs Austria | 71%/19%/10% | Spain (3-0) | 0.341 | ✓ |
+| 2026-07-02 | Portugal vs Croatia | 59%/24%/17% | Portugal (2-1) | 0.527 | ✓ |
 | 2026-07-02 | United States vs Bosnia and Herzegovina | 74%/19%/7% | United States (2-0) | 0.300 | ✓ |
 | 2026-07-03 | Switzerland vs Algeria | 52%/28%/21% | Switzerland (2-0) | 0.660 | ✓ |
+| 2026-07-03 | Australia vs Egypt | 29%/44%/27% | Draw (1-1) | 0.822 | ✓ |
