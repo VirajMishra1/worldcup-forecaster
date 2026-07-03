@@ -490,5 +490,23 @@
     "away": "Bosnia and Herzegovina",
     "home_xg": 0.92,
     "away_xg": 0.25
+  },
+  "Spain vs Austria": {
+    "home": "Spain",
+    "away": "Austria",
+    "home_xg": 2.84,
+    "away_xg": 0.32
+  },
+  "Portugal vs Croatia": {
+    "home": "Portugal",
+    "away": "Croatia",
+    "home_xg": 2.18,
+    "away_xg": 1.34
+  },
+  "Switzerland vs Algeria": {
+    "home": "Switzerland",
+    "away": "Algeria",
+    "home_xg": 2.52,
+    "away_xg": 0.73
   }
 }
