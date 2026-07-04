@@ -65,9 +65,21 @@ def fetch_results() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _drop_invalid_pens(df: pd.DataFrame) -> pd.DataFrame:
+    """A penalty shootout can never end level — a tied pens score means the
+    API returned a transient mid-shootout state despite tagging the match
+    FINISHED. Drop those rows so they're re-fetched fresh once resolved,
+    instead of persisting an impossible scoreline.
+    """
+    tied_pens = (df["home_pens"].notna()) & (df["home_pens"] == df["away_pens"])
+    if tied_pens.any():
+        logging.warning("Dropping %d row(s) with tied penalty score (transient API state)", tied_pens.sum())
+    return df[~tied_pens]
+
+
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
-    new = fetch_results()
+    new = _drop_invalid_pens(fetch_results())
     if RESULTS_PATH.exists():
         existing = pd.read_parquet(RESULTS_PATH)
         # ponytail: dedupe on (home, away) only, not date — two teams play at
@@ -75,6 +87,7 @@ def main() -> None:
         # kickoff time between fetches, which would otherwise look like a
         # second, separate match and duplicate the row.
         combined = pd.concat([existing, new]).drop_duplicates(subset=["home", "away"], keep="last")
+        combined = _drop_invalid_pens(combined)
     else:
         combined = new
     combined.to_parquet(RESULTS_PATH, index=False)
