@@ -1,10 +1,10 @@
-## Live Track Record (27 matches)
+## Live Track Record (28 matches)
 
 | Metric | Value | Random baseline |
 |--------|-------|-----------------|
-| W/D/L accuracy | 66.7% | 33.3% |
-| Log-loss | 0.7939 | 1.0986 |
-| Brier score | 0.4611 | 0.6667 |
+| W/D/L accuracy | 67.9% | 33.3% |
+| Log-loss | 0.7902 | 1.0986 |
+| Brier score | 0.4580 | 0.6667 |
 
 _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Uzbekistan vs Colombia) are excluded from this table. Visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
 
@@ -35,7 +35,8 @@ _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia
 | 2026-07-03 | Switzerland vs Algeria | 52%/28%/21% | Switzerland (2-0) | 0.660 | ✓ |
 | 2026-07-03 | Australia vs Egypt | 29%/44%/27% | Draw (1-1) | 0.822 | ✓ |
 | 2026-07-03 | Argentina vs Cape Verde | 80%/16%/4% | Argentina (3-2) | 0.219 | ✓ |
-| 2026-07-04 | Paraguay vs France | 5%/29%/66% | France (0-1) | 0.420 | ✓ |
 | 2026-07-04 | Colombia vs Ghana | 65%/28%/7% | Colombia (1-0) | 0.435 | ✓ |
 | 2026-07-04 | Canada vs Morocco | 28%/40%/32% | Morocco (0-3) | 1.138 | ✗ |
+| 2026-07-04 | Paraguay vs France | 5%/29%/66% | France (0-1) | 0.420 | ✓ |
 | 2026-07-05 | Brazil vs Norway | 55%/27%/18% | Norway (1-2) | 1.723 | ✗ |
+| 2026-07-06 | Mexico vs England | 20%/30%/50% | England (2-3) | 0.688 | ✓ |
