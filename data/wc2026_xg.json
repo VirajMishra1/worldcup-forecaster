@@ -550,5 +550,17 @@
     "away": "England",
     "home_xg": 1.88,
     "away_xg": 1.61
+  },
+  "Portugal vs Spain": {
+    "home": "Portugal",
+    "away": "Spain",
+    "home_xg": 0.63,
+    "away_xg": 1.69
+  },
+  "United States vs Belgium": {
+    "home": "United States",
+    "away": "Belgium",
+    "home_xg": 0.67,
+    "away_xg": 2.15
   }
 }
