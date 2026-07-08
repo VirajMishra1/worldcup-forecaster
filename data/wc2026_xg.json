@@ -562,5 +562,17 @@
     "away": "Belgium",
     "home_xg": 0.67,
     "away_xg": 2.15
+  },
+  "Argentina vs Egypt": {
+    "home": "Argentina",
+    "away": "Egypt",
+    "home_xg": 2.12,
+    "away_xg": 1.54
+  },
+  "Switzerland vs Colombia": {
+    "home": "Switzerland",
+    "away": "Colombia",
+    "home_xg": 1.15,
+    "away_xg": 1.46
   }
 }
