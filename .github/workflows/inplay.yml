@@ -7,6 +7,12 @@ on:
     - cron: "*/5 14-23 * 6-7 *"
   workflow_dispatch:
 
+# all three pipelines commit generated files to main; serialize them so
+# concurrent runs stop conflicting on docs/index.html and reports/
+concurrency:
+  group: wc-pipeline
+  cancel-in-progress: false
+
 permissions:
   contents: write
   actions: none
