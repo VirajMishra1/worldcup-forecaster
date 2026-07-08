@@ -64,7 +64,9 @@ def build_track_record(include_table: bool = True) -> str:
         if "prediction_type" in preds.columns else pd.DataFrame()
     )
     if "prediction_type" in preds.columns:
-        preds = preds[preds["prediction_type"] == "locked"]
+        # rows locked before the prediction_type column existed carry NaN;
+        # they are pre-kickoff locks too, so exclude only retroactive ones
+        preds = preds[preds["prediction_type"] != "retroactive"]
     results = pd.read_parquet(results_path)
     results["outcome"] = results.apply(
         lambda r: _outcome(int(r["home_goals"]), int(r["away_goals"])), axis=1

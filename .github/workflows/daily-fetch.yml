@@ -59,11 +59,13 @@ jobs:
       - name: Lock predictions for remaining fixtures
         run: python -m scripts.predict_all_fixtures
 
-      - name: Regenerate track record + README
-        run: python -m scripts.generate_track_record
-
       - name: Simulate tournament (winner odds)
         run: python -m scripts.simulate_tournament
+
+      # after simulate_tournament: the README winner-odds block reads
+      # tournament.json, so this must run on today's sims, not yesterday's
+      - name: Regenerate track record + README
+        run: python -m scripts.generate_track_record
 
       - name: Generate HTML dashboard
         run: python -m scripts.generate_html_dashboard

@@ -51,13 +51,13 @@ _96 completed WC 2026 results included. Updated 2026-07-08._
 ---
 
 <!-- TRACK_RECORD_START -->
-## Live Track Record (32 matches)
+## Live Track Record (72 matches)
 
 | Metric | Value | Random baseline |
 |--------|-------|-----------------|
-| W/D/L accuracy | 68.8% | 33.3% |
-| Log-loss | 0.7862 | 1.0986 |
-| Brier score | 0.4559 | 0.6667 |
+| W/D/L accuracy | 68.1% | 33.3% |
+| Log-loss | 0.7983 | 1.0986 |
+| Brier score | 0.4674 | 0.6667 |
 
 _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Uzbekistan vs Colombia) are excluded from this table. Visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
 
