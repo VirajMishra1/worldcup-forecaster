@@ -574,5 +574,11 @@
     "away": "Colombia",
     "home_xg": 1.15,
     "away_xg": 1.46
+  },
+  "France vs Morocco": {
+    "home": "France",
+    "away": "Morocco",
+    "home_xg": 3.1,
+    "away_xg": 0.13
   }
 }
