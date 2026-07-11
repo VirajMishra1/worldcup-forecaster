@@ -580,5 +580,11 @@
     "away": "Morocco",
     "home_xg": 3.1,
     "away_xg": 0.13
+  },
+  "Spain vs Belgium": {
+    "home": "Spain",
+    "away": "Belgium",
+    "home_xg": 2.08,
+    "away_xg": 0.37
   }
 }
