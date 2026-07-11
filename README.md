@@ -31,11 +31,11 @@ Implied odds = 1/p − 1. At 20% win probability, fair implied odds are 4.0:1 (a
 
 | Team | Win % | Implied odds |
 |------|-------|--------------|
-| 🇪🇸 Spain | 46.6% | 1.1:1 |
-| 🇫🇷 France | 27.5% | 2.6:1 |
-| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 12.3% | 7.1:1 |
-| 🇦🇷 Argentina | 11.3% | 7.9:1 |
-| 🇨🇭 Switzerland | 2.3% | 42.9:1 |
+| 🇪🇸 Spain | 45.8% | 1.2:1 |
+| 🇫🇷 France | 26.4% | 2.8:1 |
+| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 12.6% | 6.9:1 |
+| 🇦🇷 Argentina | 12.6% | 6.9:1 |
+| 🇨🇭 Switzerland | 2.5% | 38.4:1 |
 | 🇲🇽 Mexico | 0.0% | — |
 | 🇰🇷 South Korea | 0.0% | — |
 | 🇨🇿 Czech Republic | 0.0% | — |
