@@ -1,10 +1,10 @@
-## Live Track Record (77 matches)
+## Live Track Record (78 matches)
 
 | Metric | Value | Random baseline |
 |--------|-------|-----------------|
-| W/D/L accuracy | 70.1% | 33.3% |
-| Log-loss | 0.7970 | 1.0986 |
-| Brier score | 0.4656 | 0.6667 |
+| W/D/L accuracy | 70.5% | 33.3% |
+| Log-loss | 0.7992 | 1.0986 |
+| Brier score | 0.4670 | 0.6667 |
 
 _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Uzbekistan vs Colombia) are excluded from this table. Visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
 
@@ -56,8 +56,8 @@ _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia
 | 2026-06-27 | Panama vs England | 6%/8%/86% | England (0-2) | 0.155 | ✓ |
 | 2026-06-27 | Uruguay vs Spain | 26%/28%/46% | Spain (0-1) | 0.787 | ✓ |
 | 2026-06-27 | New Zealand vs Belgium | 8%/19%/73% | Belgium (1-5) | 0.321 | ✓ |
-| 2026-06-27 | Cape Verde vs Saudi Arabia | 39%/43%/18% | Draw (0-0) | 0.845 | ✓ |
 | 2026-06-27 | Egypt vs Iran | 49%/31%/20% | Draw (1-1) | 1.173 | ✗ |
+| 2026-06-27 | Cape Verde vs Saudi Arabia | 39%/43%/18% | Draw (0-0) | 0.845 | ✓ |
 | 2026-06-28 | Jordan vs Argentina | 4%/3%/93% | Argentina (1-3) | 0.072 | ✓ |
 | 2026-06-28 | Algeria vs Austria | 22%/21%/57% | Draw (3-3) | 1.580 | ✗ |
 | 2026-06-28 | South Africa vs Canada | 12%/32%/56% | Canada (0-1) | 0.584 | ✓ |
@@ -69,12 +69,12 @@ _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia
 | 2026-07-01 | Mexico vs Ecuador | 33%/38%/29% | Mexico (2-0) | 1.115 | ✗ |
 | 2026-07-01 | England vs DR Congo | 69%/23%/7% | England (2-1) | 0.368 | ✓ |
 | 2026-07-01 | Belgium vs Senegal | 47%/29%/23% | Belgium (3-2) | 0.745 | ✓ |
-| 2026-07-02 | Spain vs Austria | 71%/19%/10% | Spain (3-0) | 0.341 | ✓ |
 | 2026-07-02 | Portugal vs Croatia | 59%/24%/17% | Portugal (2-1) | 0.527 | ✓ |
+| 2026-07-02 | Spain vs Austria | 71%/19%/10% | Spain (3-0) | 0.341 | ✓ |
 | 2026-07-02 | United States vs Bosnia and Herzegovina | 74%/19%/7% | United States (2-0) | 0.300 | ✓ |
+| 2026-07-03 | Argentina vs Cape Verde | 80%/16%/4% | Argentina (3-2) | 0.219 | ✓ |
 | 2026-07-03 | Switzerland vs Algeria | 52%/28%/21% | Switzerland (2-0) | 0.660 | ✓ |
 | 2026-07-03 | Australia vs Egypt | 29%/44%/27% | Draw (1-1) | 0.822 | ✓ |
-| 2026-07-03 | Argentina vs Cape Verde | 80%/16%/4% | Argentina (3-2) | 0.219 | ✓ |
 | 2026-07-04 | Colombia vs Ghana | 65%/28%/7% | Colombia (1-0) | 0.435 | ✓ |
 | 2026-07-04 | Canada vs Morocco | 28%/40%/32% | Morocco (0-3) | 1.138 | ✗ |
 | 2026-07-04 | Paraguay vs France | 5%/29%/66% | France (0-1) | 0.420 | ✓ |
@@ -89,3 +89,4 @@ _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia
 | 2026-07-11 | Norway vs England | 27%/28%/45% | England (1-2) | 0.801 | ✓ |
 | 2026-07-12 | Argentina vs Switzerland | 45%/32%/23% | Argentina (3-1) | 0.792 | ✓ |
 | 2026-07-14 | France vs Spain | 25%/30%/45% | Spain (0-2) | 0.796 | ✓ |
+| 2026-07-15 | England vs Argentina | 32%/30%/38% | Argentina (1-2) | 0.968 | ✓ |
