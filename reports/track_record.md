@@ -1,9 +1,9 @@
-## Live Track Record (79 matches)
+## Live Track Record (80 matches)
 
 | Metric | Value | Random baseline |
 |--------|-------|-----------------|
-| W/D/L accuracy | 69.6% | 33.3% |
-| Log-loss | 0.8045 | 1.0986 |
+| W/D/L accuracy | 70.0% | 33.3% |
+| Log-loss | 0.8044 | 1.0986 |
 | Brier score | 0.4705 | 0.6667 |
 
 _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Uzbekistan vs Colombia) are excluded from this table. Visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
@@ -73,8 +73,8 @@ _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia
 | 2026-07-02 | Spain vs Austria | 71%/19%/10% | Spain (3-0) | 0.341 | ✓ |
 | 2026-07-02 | United States vs Bosnia and Herzegovina | 74%/19%/7% | United States (2-0) | 0.300 | ✓ |
 | 2026-07-03 | Argentina vs Cape Verde | 80%/16%/4% | Argentina (3-2) | 0.219 | ✓ |
-| 2026-07-03 | Switzerland vs Algeria | 52%/28%/21% | Switzerland (2-0) | 0.660 | ✓ |
 | 2026-07-03 | Australia vs Egypt | 29%/44%/27% | Draw (1-1) | 0.822 | ✓ |
+| 2026-07-03 | Switzerland vs Algeria | 52%/28%/21% | Switzerland (2-0) | 0.660 | ✓ |
 | 2026-07-04 | Colombia vs Ghana | 65%/28%/7% | Colombia (1-0) | 0.435 | ✓ |
 | 2026-07-04 | Canada vs Morocco | 28%/40%/32% | Morocco (0-3) | 1.138 | ✗ |
 | 2026-07-04 | Paraguay vs France | 5%/29%/66% | France (0-1) | 0.420 | ✓ |
@@ -91,3 +91,4 @@ _4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia
 | 2026-07-14 | France vs Spain | 25%/30%/45% | Spain (0-2) | 0.796 | ✓ |
 | 2026-07-15 | England vs Argentina | 32%/30%/38% | Argentina (1-2) | 0.968 | ✓ |
 | 2026-07-18 | France vs England | 39%/31%/30% | England (4-6) | 1.215 | ✗ |
+| 2026-07-19 | Spain vs Argentina | 45%/34%/21% | Spain (1-0) | 0.802 | ✓ |
