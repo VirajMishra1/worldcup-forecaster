@@ -610,5 +610,11 @@
     "away": "Argentina",
     "home_xg": 0.54,
     "away_xg": 1.8
+  },
+  "France vs England": {
+    "home": "France",
+    "away": "England",
+    "home_xg": 2.88,
+    "away_xg": 2.88
   }
 }
