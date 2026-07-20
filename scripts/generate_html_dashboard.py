@@ -147,11 +147,10 @@ def main() -> None:
             "stage": str(p.get("stage", "")),
         })
 
-    n_locked = 0
-    n_wdl = n_top1 = n_top3 = 0
-    ko_locked = ko_wdl = ko_top1 = ko_top3 = 0
+    gs_n = gs_wdl = gs_top1 = gs_top3 = 0
+    ko_n = ko_wdl = ko_top1 = ko_top3 = 0
     for e in all_entries:
-        if e["status"] != "completed" or e["pred"] is None or e.get("retro"):
+        if e["status"] != "completed" or e["pred"] is None:
             continue
         hg, ag = e["hg"], e["ag"]
         actual = f"{hg}-{ag}"
@@ -173,15 +172,10 @@ def main() -> None:
         wdl_ok = pred_wdl == actual_wdl
         top1_ok = s1 == actual
         top3_ok = actual in (s1, s2, s3)
-        n_locked += 1
-        n_wdl += wdl_ok
-        n_top1 += top1_ok
-        n_top3 += top3_ok
         if is_ko:
-            ko_locked += 1
-            ko_wdl += wdl_ok
-            ko_top1 += top1_ok
-            ko_top3 += top3_ok
+            ko_n += 1; ko_wdl += wdl_ok; ko_top1 += top1_ok; ko_top3 += top3_ok
+        else:
+            gs_n += 1; gs_wdl += wdl_ok; gs_top1 += top1_ok; gs_top3 += top3_ok
 
     def _pct(n, d):
         return f"{n/d:.0%}" if d else "—"
@@ -288,79 +282,79 @@ def main() -> None:
         <tr class="winner-row">
           <td class="rank-col">#{rank}</td>
           <td class="wteam-col">{tf} {_html.escape(team)}</td>
+          <td class="wpct">{_html.escape(odds)}</td>
           <td class="wpct">{_html.escape(result)}</td>
         </tr>"""
 
     updated = "Tournament complete · Jul 19, 2026"
-    n_results = len(results) if not results.empty else 0
 
     accuracy_html = ""
-    if n_locked > 0:
+    if gs_n > 0:
         accuracy_html = f"""
 <div class="section-heading" style="margin-bottom:14px">
-  <span class="section-title">All Pre-Kickoff Predictions</span>
-  <span class="section-badge">{n_locked} matches · locked before kickoff</span>
+  <span class="section-title">Group Stage</span>
+  <span class="section-badge">{gs_n} matches · includes [r] retroactive</span>
 </div>
 <div class="stat-cards">
   <div class="stat-card">
-    <div class="stat-val">{_pct(n_wdl, n_locked)}</div>
-    <div class="stat-frac">{n_wdl}/{n_locked}</div>
+    <div class="stat-val">{_pct(gs_wdl, gs_n)}</div>
+    <div class="stat-frac">{gs_wdl}/{gs_n}</div>
     <div class="stat-label">Win/Draw/Loss correct</div>
     <div class="stat-baseline">Random baseline: 33%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{_pct(n_top3, n_locked)}</div>
-    <div class="stat-frac">{n_top3}/{n_locked}</div>
+    <div class="stat-val">{_pct(gs_top3, gs_n)}</div>
+    <div class="stat-frac">{gs_top3}/{gs_n}</div>
     <div class="stat-label">Score in top-3 predicted</div>
     <div class="stat-baseline">Random: ~5-8%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{_pct(n_top1, n_locked)}</div>
-    <div class="stat-frac">{n_top1}/{n_locked}</div>
+    <div class="stat-val">{_pct(gs_top1, gs_n)}</div>
+    <div class="stat-frac">{gs_top1}/{gs_n}</div>
     <div class="stat-label">Top-1 exact score hit</div>
     <div class="stat-baseline">Random: ~2-3%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{n_locked}</div>
-    <div class="stat-frac">{n_results} total WC results</div>
-    <div class="stat-label">Pre-kickoff predictions</div>
-    <div class="stat-baseline">All predictions locked before kickoff</div>
+    <div class="stat-val">{gs_n}</div>
+    <div class="stat-frac">of 72 group games</div>
+    <div class="stat-label">Group stage matches</div>
+    <div class="stat-baseline">48 locked + 24 retroactive</div>
   </div>
 </div>
 <div class="section-heading" style="margin-bottom:14px; margin-top:24px">
-  <span class="section-title">Knockout Stage Performance</span>
-  <span class="section-badge">{ko_locked} matches · Round of 32 to Final</span>
+  <span class="section-title">Knockout Stage</span>
+  <span class="section-badge">{ko_n} matches · R32 to Final · all locked before kickoff</span>
 </div>
 <div class="stat-cards" style="margin-bottom:16px">
   <div class="stat-card">
-    <div class="stat-val">{_pct(ko_wdl, ko_locked)}</div>
-    <div class="stat-frac">{ko_wdl}/{ko_locked}</div>
+    <div class="stat-val">{_pct(ko_wdl, ko_n)}</div>
+    <div class="stat-frac">{ko_wdl}/{ko_n}</div>
     <div class="stat-label">Winner predicted correctly</div>
     <div class="stat-baseline">Random baseline: 50%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{_pct(ko_top3, ko_locked)}</div>
-    <div class="stat-frac">{ko_top3}/{ko_locked}</div>
+    <div class="stat-val">{_pct(ko_top3, ko_n)}</div>
+    <div class="stat-frac">{ko_top3}/{ko_n}</div>
     <div class="stat-label">Score in top-3 predicted</div>
     <div class="stat-baseline">Random: ~5-8%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{_pct(ko_top1, ko_locked)}</div>
-    <div class="stat-frac">{ko_top1}/{ko_locked}</div>
+    <div class="stat-val">{_pct(ko_top1, ko_n)}</div>
+    <div class="stat-frac">{ko_top1}/{ko_n}</div>
     <div class="stat-label">Top-1 exact score hit</div>
     <div class="stat-baseline">Random: ~2-3%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{ko_locked}</div>
+    <div class="stat-val">{ko_n}</div>
     <div class="stat-frac">R32 to Final</div>
-    <div class="stat-label">Knockout matches predicted</div>
+    <div class="stat-label">Knockout matches</div>
     <div class="stat-baseline">Draw prob folded into H/A</div>
   </div>
 </div>
 <div class="backtest-note">
   <strong>Backtest (5,518 matches, 2018-2023):</strong>
   log-loss 0.8961 vs 1.0986 random &middot; Brier 0.5265 vs 0.6667 random &middot; 59% W/D/L accuracy.
-  Matches marked <span class="retro-inline">[r]</span> were computed after kickoff and excluded from stats above.
+  Matches marked <span class="retro-inline">[r]</span> were computed after kickoff.
 </div>"""
 
     html = f"""<!DOCTYPE html>
@@ -751,6 +745,7 @@ def main() -> None:
       <tr>
         <th></th>
         <th>Team</th>
+        <th>Final Odds</th>
         <th>Result</th>
       </tr>
     </thead>
@@ -804,9 +799,9 @@ def main() -> None:
         out.write_text(html, encoding="utf-8")
     size_kb = (DOCS_DIR / "index.html").stat().st_size / 1024
     print(f"Dashboard written → docs/index.html  ({size_kb:.1f} KB)")
-    print(f"Pre-kickoff accuracy: {n_wdl}/{n_locked} W/D/L ({_pct(n_wdl,n_locked)})  |  "
-          f"{n_top3}/{n_locked} top-3 ({_pct(n_top3,n_locked)})  |  "
-          f"{n_top1}/{n_locked} exact ({_pct(n_top1,n_locked)})")
+    print(f"Group stage: {gs_wdl}/{gs_n} W/D/L ({_pct(gs_wdl,gs_n)})  |  "
+          f"{gs_top3}/{gs_n} top-3 ({_pct(gs_top3,gs_n)})  |  "
+          f"{gs_top1}/{gs_n} exact ({_pct(gs_top1,gs_n)})")
 
 
 if __name__ == "__main__":
