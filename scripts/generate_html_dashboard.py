@@ -275,23 +275,20 @@ def main() -> None:
         </tr>"""
 
     FINAL_STANDINGS = [
-        ("Spain", "Winner"),
-        ("Argentina", "Runner-up"),
-        ("England", "Third place"),
-        ("France", "Fourth place"),
+        ("Spain", "Winner", "100.0%"),
+        ("Argentina", "Runner-up", "—"),
+        ("England", "Third place", "—"),
+        ("France", "Fourth place", "—"),
     ]
 
     winner_rows = ""
-    for rank, (team, result) in enumerate(FINAL_STANDINGS, 1):
+    for rank, (team, result, odds) in enumerate(FINAL_STANDINGS, 1):
         tf = _flag(team)
-        model_prob = tourn.get("win", {}).get(team, 0)
-        model_pct = f"{model_prob:.1%}"
         winner_rows += f"""
         <tr class="winner-row">
           <td class="rank-col">#{rank}</td>
           <td class="wteam-col">{tf} {_html.escape(team)}</td>
           <td class="wpct">{_html.escape(result)}</td>
-          <td class="wbar-cell" style="font-size:12px;color:var(--muted)">{model_pct} final model odds</td>
         </tr>"""
 
     updated = "Tournament complete · Jul 19, 2026"
@@ -755,7 +752,6 @@ def main() -> None:
         <th></th>
         <th>Team</th>
         <th>Result</th>
-        <th style="padding-left:12px">Model prediction</th>
       </tr>
     </thead>
     <tbody>{winner_rows}
