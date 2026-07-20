@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-07-19T07:59:19.819913+00:00",
+  "updated_at": "2026-07-20T08:40:12.379216+00:00",
   "win": {
-    "Yes": 0.5905,
-    "No": 0.4095
+    "Spurs": 0.0,
+    "Grizzlies": 1.0
   },
-  "market_id": "558934",
-  "market_question": "Will Spain win the 2026 FIFA World Cup?"
+  "market_id": "200261",
+  "market_question": "Will the Spurs or the Grizzlies win their NBA play-in tournament matchup?"
 }
