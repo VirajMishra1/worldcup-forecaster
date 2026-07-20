@@ -1,10 +1,9 @@
 name: pre-match-lock
 
 on:
-  schedule:
-    # Every 30 min between 14:00-23:30 UTC (covers all WC kickoff windows).
-    # 20 runs/day x ~1 min each = ~20 min/day — well within free tier.
-    - cron: "*/30 14-23 * 6-7 *"
+  # schedule disabled — WC 2026 complete
+  # schedule:
+  #   - cron: "*/30 14-23 * 6-7 *"
   workflow_dispatch:
 
 concurrency:

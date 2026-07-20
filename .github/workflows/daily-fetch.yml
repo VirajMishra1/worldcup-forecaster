@@ -1,8 +1,9 @@
 name: daily-fetch
 
 on:
-  schedule:
-    - cron: "0 6 * * *"   # 06:00 UTC daily
+  # schedule disabled — WC 2026 complete
+  # schedule:
+  #   - cron: "0 6 * * *"
   workflow_dispatch:
 
 concurrency:

@@ -1,10 +1,9 @@
 name: inplay
 
 on:
-  schedule:
-    # Every 5 min between 14:00-23:55 UTC during June-July (WC match windows).
-    # GitHub Actions enforces ~5min minimum — as fast as possible.
-    - cron: "*/5 14-23 * 6-7 *"
+  # schedule disabled — WC 2026 complete
+  # schedule:
+  #   - cron: "*/5 14-23 * 6-7 *"
   workflow_dispatch:
 
 # all three pipelines commit generated files to main; serialize them so

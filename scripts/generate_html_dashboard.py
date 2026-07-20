@@ -40,16 +40,6 @@ def _flag(team: str) -> str:
     return FLAGS.get(team, "🏳")
 
 
-def _load_live() -> dict:
-    p = DATA_DIR / "live_events.json"
-    if not p.exists():
-        return {}
-    try:
-        return json.loads(p.read_text())
-    except Exception:
-        return {}
-
-
 def _load_params():
     cache_path = DATA_DIR / "params_cache.json"
     if not cache_path.exists():
@@ -91,7 +81,6 @@ def _clean_score(v) -> str:
 
 
 def main() -> None:
-    live = _load_live()
     params = _load_params()
 
     preds = pd.read_parquet(DATA_DIR / "predictions.parquet")
@@ -158,34 +147,41 @@ def main() -> None:
             "stage": str(p.get("stage", "")),
         })
 
-    n_total = n_locked = 0
-    n_wdl = n_top1 = n_top3 = 0          # over pre-kickoff predictions only
-    n_wdl_all = n_top1_all = n_top3_all = 0  # over all completed matches
+    n_locked = 0
+    n_wdl = n_top1 = n_top3 = 0
+    ko_locked = ko_wdl = ko_top1 = ko_top3 = 0
     for e in all_entries:
-        if e["status"] != "completed" or e["pred"] is None:
+        if e["status"] != "completed" or e["pred"] is None or e.get("retro"):
             continue
         hg, ag = e["hg"], e["ag"]
         actual = f"{hg}-{ag}"
-        actual_wdl = "H" if hg > ag else ("D" if hg == ag else "A")
         p = e["pred"]
-        pred_wdl = "H" if p["p_home"] > p["p_draw"] and p["p_home"] > p["p_away"] else (
-            "D" if p["p_draw"] > p["p_away"] else "A"
-        )
+        ph, pd_s, pa = p["p_home"], p["p_draw"], p["p_away"]
+        stage = e.get("stage", "")
+        is_ko = stage and stage != "GROUP_STAGE"
+        if is_ko:
+            ph, pa = ph + pd_s / 2, pa + pd_s / 2
+            pd_s = 0.0
+        if hg == ag and e.get("hp") is not None:
+            actual_wdl = "H" if e["hp"] > e["ap"] else "A"
+        else:
+            actual_wdl = "H" if hg > ag else ("D" if hg == ag else "A")
+        pred_wdl = "H" if ph > pd_s and ph > pa else ("D" if pd_s > pa else "A")
         s1 = _clean_score(p.get("top_scoreline"))
         s2 = _clean_score(p.get("top_2_scoreline"))
         s3 = _clean_score(p.get("top_3_scoreline"))
         wdl_ok = pred_wdl == actual_wdl
         top1_ok = s1 == actual
         top3_ok = actual in (s1, s2, s3)
-        n_total += 1
-        n_wdl_all += wdl_ok
-        n_top1_all += top1_ok
-        n_top3_all += top3_ok
-        if not e.get("retro"):
-            n_locked += 1
-            n_wdl += wdl_ok
-            n_top1 += top1_ok
-            n_top3 += top3_ok
+        n_locked += 1
+        n_wdl += wdl_ok
+        n_top1 += top1_ok
+        n_top3 += top3_ok
+        if is_ko:
+            ko_locked += 1
+            ko_wdl += wdl_ok
+            ko_top1 += top1_ok
+            ko_top3 += top3_ok
 
     def _pct(n, d):
         return f"{n/d:.0%}" if d else "—"
@@ -199,21 +195,7 @@ def main() -> None:
         hg, ag = e["hg"], e["ag"]
         actual = f"{hg}-{ag}" if hg is not None else ""
 
-        live_key = f"{home} vs {away}"
-        live_data = live.get(live_key, {})
-        # ponytail: live_events.json also includes STATUS_FINAL matches (fetch
-        # script keeps "recently finished" for a window) — only treat as live
-        # if actually in progress, otherwise fall through to the real result.
-        if live_data.get("status") == "STATUS_FINAL":
-            live_data = {}
-        if live_data:
-            status = "live"
-
-        if live_data:
-            ph = live_data.get("p_home", pred["p_home"] if pred else 0.33)
-            pd_ = live_data.get("p_draw", pred["p_draw"] if pred else 0.33)
-            pa = live_data.get("p_away", pred["p_away"] if pred else 0.33)
-        elif pred:
+        if pred:
             ph = pred["p_home"]
             pd_ = pred["p_draw"]
             pa = pred["p_away"]
@@ -250,16 +232,9 @@ def main() -> None:
             wdl_verdict = "✓" if pred_wdl == actual_wdl else "✗"
             score_verdict = "✓" if actual == s1 else ("~" if actual in (s2, s3) else "✗")
 
-        live_score = ""
-        if live_data:
-            lhg = live_data.get("home_goals", 0)
-            lag = live_data.get("away_goals", 0)
-            minute = live_data.get("minute", "?")
-            live_score = f"🔴 {lhg}–{lag} ({minute}')"
-
         retro_badge = ' <sup class="retro-badge">[r]</sup>' if e.get("retro") else ""
         pens_suffix = f" ({e['hp']}-{e['ap']} pens)" if e.get("hp") is not None else ""
-        result_cell = live_score or (actual + pens_suffix)
+        result_cell = actual + pens_suffix
         no_pred_class = "" if pred else " no-pred"
 
         hf = _flag(home)
@@ -299,62 +274,96 @@ def main() -> None:
           <td class="verdict-score"><span class="verdict">{score_verdict}</span></td>
         </tr>"""
 
+    FINAL_STANDINGS = [
+        ("Spain", "Winner"),
+        ("Argentina", "Runner-up"),
+        ("England", "Third place"),
+        ("France", "Fourth place"),
+    ]
+
     winner_rows = ""
-    max_prob = win_odds[0][1] if win_odds else 0.01
-    for rank, (team, prob) in enumerate(win_odds, 1):
-        implied = f"{1/prob - 1:.1f}:1" if prob > 0 else "—"
-        bar_w = round((prob / max_prob) * 180)
+    for rank, (team, result) in enumerate(FINAL_STANDINGS, 1):
         tf = _flag(team)
+        model_prob = tourn.get("win", {}).get(team, 0)
+        model_pct = f"{model_prob:.1%}"
         winner_rows += f"""
         <tr class="winner-row">
           <td class="rank-col">#{rank}</td>
           <td class="wteam-col">{tf} {_html.escape(team)}</td>
-          <td class="wpct">{prob:.1%}</td>
-          <td class="wbar-cell">
-            <div class="wbar-bg">
-              <div class="wbar-fill" style="width:{bar_w}px"></div>
-            </div>
-          </td>
-          <td class="wimplied">{implied}</td>
+          <td class="wpct">{_html.escape(result)}</td>
+          <td class="wbar-cell" style="font-size:12px;color:var(--muted)">{model_pct} final model odds</td>
         </tr>"""
 
-    updated = pd.Timestamp.now("UTC").strftime("%Y-%m-%d %H:%M UTC")
+    updated = "Tournament complete · Jul 19, 2026"
     n_results = len(results) if not results.empty else 0
 
     accuracy_html = ""
-    if n_total > 0:
+    if n_locked > 0:
         accuracy_html = f"""
+<div class="section-heading" style="margin-bottom:14px">
+  <span class="section-title">All Pre-Kickoff Predictions</span>
+  <span class="section-badge">{n_locked} matches · locked before kickoff</span>
+</div>
 <div class="stat-cards">
   <div class="stat-card">
-    <div class="stat-val">{_pct(n_wdl_all, n_total)}</div>
-    <div class="stat-frac">{n_wdl_all}/{n_total}</div>
+    <div class="stat-val">{_pct(n_wdl, n_locked)}</div>
+    <div class="stat-frac">{n_wdl}/{n_locked}</div>
     <div class="stat-label">Win/Draw/Loss correct</div>
     <div class="stat-baseline">Random baseline: 33%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{_pct(n_top3_all, n_total)}</div>
-    <div class="stat-frac">{n_top3_all}/{n_total}</div>
+    <div class="stat-val">{_pct(n_top3, n_locked)}</div>
+    <div class="stat-frac">{n_top3}/{n_locked}</div>
     <div class="stat-label">Score in top-3 predicted</div>
-    <div class="stat-baseline">Random: ~5–8%</div>
+    <div class="stat-baseline">Random: ~5-8%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{_pct(n_top1_all, n_total)}</div>
-    <div class="stat-frac">{n_top1_all}/{n_total}</div>
+    <div class="stat-val">{_pct(n_top1, n_locked)}</div>
+    <div class="stat-frac">{n_top1}/{n_locked}</div>
     <div class="stat-label">Top-1 exact score hit</div>
-    <div class="stat-baseline">Random: ~2–3%</div>
+    <div class="stat-baseline">Random: ~2-3%</div>
   </div>
   <div class="stat-card">
-    <div class="stat-val">{n_total}</div>
-    <div class="stat-frac">{n_locked} pre-kickoff</div>
-    <div class="stat-label">Predictions with results</div>
-    <div class="stat-baseline">{n_results} total WC results</div>
+    <div class="stat-val">{n_locked}</div>
+    <div class="stat-frac">{n_results} total WC results</div>
+    <div class="stat-label">Pre-kickoff predictions</div>
+    <div class="stat-baseline">All predictions locked before kickoff</div>
+  </div>
+</div>
+<div class="section-heading" style="margin-bottom:14px; margin-top:24px">
+  <span class="section-title">Knockout Stage Performance</span>
+  <span class="section-badge">{ko_locked} matches · Round of 32 to Final</span>
+</div>
+<div class="stat-cards" style="margin-bottom:16px">
+  <div class="stat-card">
+    <div class="stat-val">{_pct(ko_wdl, ko_locked)}</div>
+    <div class="stat-frac">{ko_wdl}/{ko_locked}</div>
+    <div class="stat-label">Winner predicted correctly</div>
+    <div class="stat-baseline">Random baseline: 50%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{_pct(ko_top3, ko_locked)}</div>
+    <div class="stat-frac">{ko_top3}/{ko_locked}</div>
+    <div class="stat-label">Score in top-3 predicted</div>
+    <div class="stat-baseline">Random: ~5-8%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{_pct(ko_top1, ko_locked)}</div>
+    <div class="stat-frac">{ko_top1}/{ko_locked}</div>
+    <div class="stat-label">Top-1 exact score hit</div>
+    <div class="stat-baseline">Random: ~2-3%</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-val">{ko_locked}</div>
+    <div class="stat-frac">R32 to Final</div>
+    <div class="stat-label">Knockout matches predicted</div>
+    <div class="stat-baseline">Draw prob folded into H/A</div>
   </div>
 </div>
 <div class="backtest-note">
-  <strong>Backtest (5,518 matches, 2018–2023):</strong>
+  <strong>Backtest (5,518 matches, 2018-2023):</strong>
   log-loss 0.8961 vs 1.0986 random &middot; Brier 0.5265 vs 0.6667 random &middot; 59% W/D/L accuracy.
-  Stats above cover all {n_total} completed matches.
-  Matches marked <span class="retro-inline">[r]</span> were computed after kickoff.
+  Matches marked <span class="retro-inline">[r]</span> were computed after kickoff and excluded from stats above.
 </div>"""
 
     html = f"""<!DOCTYPE html>
@@ -364,7 +373,6 @@ def main() -> None:
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>WC 2026 Forecaster</title>
 <meta name="description" content="Probabilistic match predictions for FIFA World Cup 2026. Dixon-Coles model, locked before kickoff.">
-<meta http-equiv="refresh" content="60">
 <style>
   :root {{
     --bg: #0d1117;
@@ -563,7 +571,6 @@ def main() -> None:
   tbody tr:last-child td {{ border-bottom: none; }}
   tr.upcoming:hover td {{ background: var(--hover); }}
   tr.completed td {{ color: var(--muted); }}
-  tr.live td {{ background: #1a1200; color: var(--fg); }}
   tr.no-pred td {{ opacity: 0.5; }}
 
   .date-col {{ width: 58px; color: var(--muted); font-size: 12px; }}
@@ -737,8 +744,8 @@ def main() -> None:
 <div style="height:36px"></div>
 
 <div class="section-heading" style="margin-top:4px">
-  <span class="section-title">Tournament Winner Odds</span>
-  <span class="section-badge">10,000 simulations · updated after every result · {tourn_updated}</span>
+  <span class="section-title">Final Standings</span>
+  <span class="section-badge">FIFA World Cup 2026</span>
 </div>
 <div class="two-col">
   <div class="winner-table-wrap">
@@ -747,9 +754,8 @@ def main() -> None:
       <tr>
         <th></th>
         <th>Team</th>
-        <th style="text-align:right">Win %</th>
-        <th style="padding-left:12px">Likelihood</th>
-        <th style="padding-left:12px">Fair odds</th>
+        <th>Result</th>
+        <th style="padding-left:12px">Model prediction</th>
       </tr>
     </thead>
     <tbody>{winner_rows}
@@ -757,23 +763,19 @@ def main() -> None:
   </table>
   </div>
   <div class="winner-explainer">
-    <h3>How these numbers work</h3>
+    <h3>How the model worked</h3>
     <p>
-      The model runs <strong>10,000 bracket simulations</strong> of the full tournament,
-      using match probabilities from the Dixon-Coles model — the same model that generates
-      the per-match predictions above. After each completed result, the model is refit and
+      The model ran <strong>10,000 bracket simulations</strong> of the full tournament
+      using match probabilities from the Dixon-Coles model — the same model that generated
+      the per-match predictions above. After each completed result, the model was refit and
       the simulations rerun.
     </p>
     <p>
-      <strong>Win %</strong> is how often each team wins the tournament across those 10,000 runs.
+      <strong>Model prediction</strong> shows each team's win probability from the final
+      simulation run before the tournament ended.
     </p>
     <p>
-      <strong>Fair odds</strong> = 1/p − 1. If Argentina has a 20% chance, fair decimal odds
-      are 4.0:1 — a £10 bet at fair value returns £50 total (£40 profit). Bookmaker odds
-      will be lower due to their margin.
-    </p>
-    <p>
-      These are <em>model probabilities</em>, not betting advice.
+      All predictions were <em>locked before kickoff</em> — no hindsight adjustments.
     </p>
   </div>
 </div>
