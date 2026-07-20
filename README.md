@@ -23,45 +23,42 @@ The goal is not to beat bookmakers. It is to build something genuinely calibrate
 ---
 
 <!-- WINNER_ODDS_START -->
-## WC 2026 Winner Odds
+## WC 2026 Final Standings
 
-10,000 Monte Carlo bracket simulations, updated after every result.
+🏆 Tournament complete. Spain are world champions.
 
-Implied odds = 1/p − 1. At 20% win probability, fair implied odds are 4.0:1 (a £10 bet at fair value returns £50 total).
+| # | Team | Result | Final model odds |
+|---|------|--------|-----------------|
+| 1 | 🇪🇸 Spain | Winner | 100.0% |
+| 2 | 🇦🇷 Argentina | Runner-up | — |
+| 3 | 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | Third place | — |
+| 4 | 🇫🇷 France | Fourth place | — |
 
-| Team | Win % | Implied odds |
-|------|-------|--------------|
-| 🇪🇸 Spain | 72.8% | 0.4:1 |
-| 🏴󠁧󠁢󠁥󠁮󠁧󠁿 England | 27.3% | 2.7:1 |
-| 🇲🇽 Mexico | 0.0% | — |
-| 🇰🇷 South Korea | 0.0% | — |
-| 🇨🇿 Czech Republic | 0.0% | — |
-| 🇿🇦 South Africa | 0.0% | — |
-| 🇨🇭 Switzerland | 0.0% | — |
-| 🇨🇦 Canada | 0.0% | — |
-| 🇶🇦 Qatar | 0.0% | — |
-| 🇧🇦 Bosnia and Herzegovina | 0.0% | — |
-| 🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scotland | 0.0% | — |
-| 🇲🇦 Morocco | 0.0% | — |
+### Final accuracy (80 pre-kickoff predictions)
 
-_104 completed WC 2026 results included. Updated 2026-07-20._
+| Stage | W/D/L | Top-3 score | Exact score | N |
+|-------|-------|-------------|-------------|---|
+| Group stage | 58% (42/72) | 31% (22/72) | 12% (9/72) | 72 |
+| Knockout | 78% (25/32) | 34% (11/32) | 22% (7/32) | 32 |
+| Pre-kickoff total | 71% (57/80) | 34% (27/80) | 20% (16/80) | 80 |
+
+_Group stage includes 24 retroactive [r] predictions. Knockout: all 32 locked before kickoff._
 
 <!-- WINNER_ODDS_END -->
 
 ---
 
 <!-- TRACK_RECORD_START -->
-## Live Track Record (80 matches)
+## Final Track Record (80 pre-kickoff predictions)
 
 | Metric | Value | Random baseline |
 |--------|-------|-----------------|
-| W/D/L accuracy | 70.0% | 33.3% |
-| Log-loss | 0.8044 | 1.0986 |
-| Brier score | 0.4705 | 0.6667 |
+| W/D/L accuracy | 71% (57/80) | 33.3% |
+| Knockout winner accuracy | 78% (25/32) | 50% |
+| Top-3 exact score | 34% (27/80) | ~5-8% |
+| Exact score (top-1) | 20% (16/80) | ~2-3% |
 
-_4 predictions generated after kickoff (Portugal vs DR Congo, England vs Croatia, Ghana vs Panama, Uzbekistan vs Colombia) are excluded from this table. Visible with an [r] badge on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
-
-_Per-match breakdown on the [live dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
+_24 retroactive [r] predictions excluded from this table. Full per-match breakdown on the [dashboard](https://virajmishra1.github.io/worldcup-forecaster/)._
 
 <!-- TRACK_RECORD_END -->
 
