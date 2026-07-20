@@ -41,6 +41,7 @@ The goal is not to beat bookmakers. It is to build something genuinely calibrate
 | Group stage | 58% (42/72) | 31% (22/72) | 12% (9/72) | 72 |
 | Knockout | 78% (25/32) | 34% (11/32) | 22% (7/32) | 32 |
 | Pre-kickoff total | 71% (57/80) | 34% (27/80) | 20% (16/80) | 80 |
+| All 104 games (incl. [r]) | 64% (67/104) | 32% (33/104) | 15% (16/104) | 104 |
 
 _Group stage includes 24 retroactive [r] predictions. Knockout: all 32 locked before kickoff._
 
