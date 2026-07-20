@@ -181,7 +181,7 @@ def main() -> None:
         return f"{n/d:.0%}" if d else "—"
 
     rows_html = ""
-    for e in all_entries:
+    for e in reversed(all_entries):
         home, away = e["home"], e["away"]
         date_str = e["date"].strftime("%b %d")
         status = e["status"]
