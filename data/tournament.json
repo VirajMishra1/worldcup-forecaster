@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-07-20T08:42:14.296662+00:00",
-  "simulations": 10000,
+  "updated_at": "2026-07-20T09:54:09.262858+00:00",
+  "simulations": 1000,
   "qualify": {
     "Mexico": 1.0,
     "South Korea": 0.0,
@@ -238,7 +238,7 @@
     "France": 0.0,
     "Senegal": 0.0,
     "Iraq": 0.0,
-    "Argentina": 0.0,
+    "Argentina": 1.0,
     "Austria": 0.0,
     "Jordan": 0.0,
     "Algeria": 0.0,
@@ -246,7 +246,7 @@
     "Colombia": 0.0,
     "Portugal": 0.0,
     "Uzbekistan": 0.0,
-    "England": 1.0,
+    "England": 0.0,
     "Ghana": 0.0,
     "Croatia": 0.0,
     "Panama": 0.0
@@ -282,7 +282,7 @@
     "Egypt": 0.0,
     "Uruguay": 0.0,
     "Saudi Arabia": 0.0,
-    "Spain": 0.7275,
+    "Spain": 1.0,
     "Cape Verde": 0.0,
     "Norway": 0.0,
     "France": 0.0,
@@ -296,7 +296,7 @@
     "Colombia": 0.0,
     "Portugal": 0.0,
     "Uzbekistan": 0.0,
-    "England": 0.2725,
+    "England": 0.0,
     "Ghana": 0.0,
     "Croatia": 0.0,
     "Panama": 0.0

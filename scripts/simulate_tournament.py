@@ -110,8 +110,8 @@ R16_MATCHES: List[Tuple[str, str, str]] = [
 # QF: R16 winners bracket
 QF_MATCHES: List[Tuple[str, str, str]] = [
     ("QF1", "M89", "M90"),
-    ("QF2", "M91", "M92"),
-    ("QF3", "M93", "M94"),
+    ("QF2", "M93", "M94"),
+    ("QF3", "M91", "M92"),
     ("QF4", "M95", "M96"),
 ]
 
